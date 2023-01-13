@@ -11,11 +11,12 @@ export const Button: React.FC<
   return (
     <button
       className={clsx(
-        "box-content h-9 rounded-md border border-transparent px-3 font-medium outline-primary-500 transition",
+        "h-9 rounded-md border border-transparent px-3 font-medium outline-primary-500 transition",
         {
           "bg-primary-600 text-white hover:bg-primary-500":
             variant === "primary",
-          "border bg-white hover:bg-slate-50": variant === "outline",
+          "border border-slate-200 bg-white hover:bg-slate-50":
+            variant === "outline",
         },
         className
       )}

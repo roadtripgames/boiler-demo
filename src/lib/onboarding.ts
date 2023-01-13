@@ -23,8 +23,6 @@ export const useOnOnboardingComplete = () => {
       console.error(error);
       return;
     }
-
-    console.log(data);
   };
 
   return updateFn;

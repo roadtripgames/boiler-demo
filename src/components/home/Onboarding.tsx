@@ -109,11 +109,11 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                   <h2 className="mb-4 text-xl font-medium">{step.title}</h2>
                   <form
                     className="flex flex-col items-start gap-y-2"
-                    onSubmit={(e) => {
+                    onSubmit={async (e) => {
                       e.preventDefault();
                       const newIndex = stepIndex + 1;
                       if (newIndex === ONBOARDING_STEPS.length) {
-                        onOnboardingComplete(response);
+                        await onOnboardingComplete(response);
                         onComplete?.();
                       } else {
                         setStepIndex(newIndex);
