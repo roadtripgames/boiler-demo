@@ -33,7 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={clsx(inter.className, "h-full")}>
+      <main className={clsx(inter.className, "h-full text-slate-900")}>
         <Component {...pageProps} className={""} />
       </main>
     </SessionContextProvider>

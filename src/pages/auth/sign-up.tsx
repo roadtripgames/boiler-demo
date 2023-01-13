@@ -5,31 +5,28 @@ import companyLogo from "../../../public/logo.svg";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { supabase } from "../../utils/supabase-client";
 import { useRouter } from "next/router";
+import { TextInput } from "../../components/shared/TextInput";
+import { Button } from "../../components/shared/Button";
 
 export default function SignUpPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignUp = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      setLoading(true);
 
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
 
-      setLoading(false);
-
       if (error) {
         console.error(error);
         return;
       }
 
-      console.log(data);
       router.push("/");
     },
     [email, password]
@@ -52,10 +49,13 @@ export default function SignUpPage() {
                 className="my-4 flex flex-col gap-y-6"
                 onSubmit={handleSignUp}
               >
-                <button className="flex w-full items-center justify-center gap-x-2 rounded-lg border bg-white py-2">
+                <Button
+                  variant="outline"
+                  className="flex w-full items-center justify-center gap-x-2 rounded-lg py-2"
+                >
                   <Image priority src={googleIcon} alt={"google icon"} />
                   <span>Sign up with Google</span>
-                </button>
+                </Button>
                 <div className="relative flex items-center">
                   <div className="w-full border-b" />
                   <span className="inset z-10 mx-4 bg-white text-center text-xs font-medium text-slate-500">
@@ -67,26 +67,25 @@ export default function SignUpPage() {
                   <label className="mb-2 font-medium" htmlFor="email">
                     Email
                   </label>
-                  <input
-                    className="rounded border border-slate-300 px-3 py-2"
+                  <TextInput
+                    className=""
                     type="email"
                     name="email"
-                    id="email"
                     placeholder="jane@company.com"
-                    onChange={(e) => setEmail(e.target.value)}
+                    onValueChange={setEmail}
                   />
                 </div>
                 <div className="flex flex-col">
                   <label htmlFor="password" className="mb-2 font-medium">
                     Password
                   </label>
-                  <input
+                  <TextInput
                     className="rounded border border-slate-300 px-3 py-2"
                     type="password"
                     name="password"
                     id="password"
                     placeholder="••••••••"
-                    onChange={(e) => setPassword(e.target.value)}
+                    onValueChange={setPassword}
                   />
                 </div>
                 <div className="flex items-center gap-x-2">
@@ -98,9 +97,9 @@ export default function SignUpPage() {
                   />
                   <label htmlFor="remember">Remember me</label>
                 </div>
-                <button className="w-full rounded-lg bg-primary-600 py-2 text-white">
+                <Button variant="primary" className="w-full">
                   Sign up
-                </button>
+                </Button>
               </form>
               <p className="my-2 text-center text-slate-500">
                 Already have an account?{" "}

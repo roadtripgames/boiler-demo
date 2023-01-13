@@ -11,30 +11,23 @@ import { supabase } from "../../utils/supabase-client";
 export default function SignInPage() {
   const user = useUser();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignInWithPassword = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      setLoading(true);
-
-      console.log({ email, password });
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      setLoading(false);
-
       if (error) {
         console.error(error);
         return;
       }
 
-      console.log(data);
       router.push("/");
     },
     [email, password]

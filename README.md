@@ -42,6 +42,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ```
 vercel login
 vercel link
+vercel env pull .env.local
 ```
 
 ### Docker
@@ -58,6 +59,8 @@ brew install --cask docker
 brew install supabase/tap/supabase
 supabase login # and follow instructions to add token
 supabase link --project-ref YOUR_PROJECT_REF_HERE # get from your console
+supabase start
+# Fill in your .env.local with the "anon key" from running `supabase start`
 ```
 
 ## Deployment setup

@@ -7,6 +7,9 @@ create table users (
   id uuid references auth.users not null primary key,
   full_name text,
   avatar_url text,
+  has_onboarded boolean default false,
+  job_title text,
+  interests text[],
   -- The customer's billing address, stored in JSON format.
   billing_address jsonb,
   -- Stores your customer's payment instruments.
