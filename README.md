@@ -34,3 +34,51 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Local Setup
+
+### Vercel
+
+```
+vercel login
+vercel link
+```
+
+### Docker
+
+```
+brew install --cask docker
+# Start docker based on your OS (For mac, open in Applications)
+```
+
+### Supabase
+
+```
+# Follow instructions to get supabase going on your personal development machine
+brew install supabase/tap/supabase
+supabase login # and follow instructions to add token
+supabase link --project-ref YOUR_PROJECT_REF_HERE # get from your console
+```
+
+## Deployment setup
+
+```
+supabase db push --dry-run # this should output the 2023***_init.sql migration
+supabase db push # actually run the migration to setup your supabase tables
+```
+
+## Regular development
+
+```
+supabase start
+yarn dev
+
+```
+
+### Fetch types
+
+This fetches types from the server
+
+```
+yarn fetch-types
+```

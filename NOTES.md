@@ -2,6 +2,10 @@
 
 ## Jan 12
 
+- include in documentation
+
+  - using supabase cli (fetch types)
+
 - planning on using:
   - supabase auth
     - good way to see if you can swap in another auth provider

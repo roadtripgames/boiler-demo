@@ -3,8 +3,47 @@ import Image from "next/image";
 
 import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";
+import { useUser } from "@supabase/auth-helpers-react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { supabase } from "../../utils/supabase-client";
 
-export default function SignUpPage() {
+export default function SignInPage() {
+  const user = useUser();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignInWithPassword = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
+
+      console.log({ email, password });
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      setLoading(false);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      console.log(data);
+      router.push("/");
+    },
+    [email, password]
+  );
+
+  useEffect(() => {
+    console.log("user", user);
+  }, [user]);
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex flex-auto overflow-y-auto">
@@ -15,7 +54,10 @@ export default function SignUpPage() {
           <div className="my-8 flex flex-auto items-center">
             <div className="mx-auto w-full max-w-sm">
               <h1 className="text-3xl font-semibold">Sign in</h1>
-              <form className="my-4 flex flex-col gap-y-6">
+              <form
+                className="my-4 flex flex-col gap-y-6"
+                onSubmit={handleSignInWithPassword}
+              >
                 <button className="flex w-full items-center justify-center gap-x-2 rounded-lg border bg-white py-2">
                   <Image priority src={googleIcon} alt={"google icon"} />
                   <span>Sign in with Google</span>
@@ -37,6 +79,7 @@ export default function SignUpPage() {
                     name="email"
                     id="email"
                     placeholder="jane@company.com"
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -49,6 +92,7 @@ export default function SignUpPage() {
                     name="password"
                     id="password"
                     placeholder="••••••••"
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -66,7 +110,7 @@ export default function SignUpPage() {
                   </Link>
                 </div>
                 <button className="w-full rounded-lg bg-primary-600 py-2 text-white">
-                  Sign up
+                  Sign in
                 </button>
               </form>
               <p className="my-2 text-center text-slate-500">

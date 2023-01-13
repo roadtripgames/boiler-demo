@@ -1,8 +1,12 @@
+import clsx from "clsx";
 import Head from "next/head";
 import { Inter } from "@next/font/google";
 import type { AppProps } from "next/app";
+import { SessionContextProvider } from "@supabase/auth-helpers-react";
+
 import "../styles/globals.css";
-import clsx from "clsx";
+import { useState } from "react";
+import { supabase } from "../utils/supabase-client";
 
 // if (
 //   typeof window !== "undefined" &&
@@ -16,8 +20,13 @@ import clsx from "clsx";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [supabaseClient] = useState(() => supabase);
+
   return (
-    <>
+    <SessionContextProvider
+      supabaseClient={supabaseClient}
+      initialSession={pageProps.initialSession}
+    >
       <Head>
         <title>Boiler</title>
         <meta name="description" content="The best product ever built." />
@@ -27,6 +36,6 @@ export default function App({ Component, pageProps }: AppProps) {
       <main className={clsx(inter.className, "h-full")}>
         <Component {...pageProps} className={""} />
       </main>
-    </>
+    </SessionContextProvider>
   );
 }

@@ -1,10 +1,40 @@
 import Link from "next/link";
 import Image from "next/image";
-
 import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";
+import { FormEvent, useCallback, useEffect, useState } from "react";
+import { supabase } from "../../utils/supabase-client";
+import { useRouter } from "next/router";
 
 export default function SignUpPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignUp = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      setLoading(false);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      console.log(data);
+      router.push("/");
+    },
+    [email, password]
+  );
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex flex-auto overflow-y-auto">
@@ -18,7 +48,10 @@ export default function SignUpPage() {
               <p className="my-2 text-slate-500">
                 Start your free 30 day trial. Cancel anytime.
               </p>
-              <form className="my-4 flex flex-col gap-y-6">
+              <form
+                className="my-4 flex flex-col gap-y-6"
+                onSubmit={handleSignUp}
+              >
                 <button className="flex w-full items-center justify-center gap-x-2 rounded-lg border bg-white py-2">
                   <Image priority src={googleIcon} alt={"google icon"} />
                   <span>Sign up with Google</span>
@@ -40,6 +73,7 @@ export default function SignUpPage() {
                     name="email"
                     id="email"
                     placeholder="jane@company.com"
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -52,6 +86,7 @@ export default function SignUpPage() {
                     name="password"
                     id="password"
                     placeholder="••••••••"
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
                 <div className="flex items-center gap-x-2">
