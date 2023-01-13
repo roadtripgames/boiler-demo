@@ -94,6 +94,8 @@ export const DropdownMenuContent = React.forwardRef<
   );
 });
 
+DropdownMenuContent.displayName = "DropdownMenuContent";
+
 export const DropdownMenuLabel = DropdownMenuPrimitive.Label;
 export const DropdownMenuItem = React.forwardRef<
   HTMLDivElement,
@@ -113,6 +115,8 @@ export const DropdownMenuItem = React.forwardRef<
   );
 });
 
+DropdownMenuItem.displayName = "DropdownMenuItem";
+
 export const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 
 export const DropdownMenuCheckboxItem = React.forwardRef<
@@ -130,6 +134,8 @@ export const DropdownMenuCheckboxItem = React.forwardRef<
   );
 });
 
+DropdownMenuCheckboxItem.displayName = "DropdownMenuCheckboxItem";
+
 export const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 
 export const DropdownMenuRadioItem = React.forwardRef<
@@ -145,5 +151,7 @@ export const DropdownMenuRadioItem = React.forwardRef<
     </DropdownMenuPrimitive.RadioItem>
   );
 });
+
+DropdownMenuRadioItem.displayName = "DropdownMenuRadioItem";
 
 export const DropdownMenuSeparator = DropdownMenuPrimitive.Separator;

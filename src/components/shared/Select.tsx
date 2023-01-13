@@ -50,6 +50,8 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
   }
 );
 
+Select.displayName = "Select";
+
 export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
   ({ children, ...props }, forwardedRef) => {
     return (
@@ -66,3 +68,5 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
     );
   }
 );
+
+SelectItem.displayName = "SelectItem";
