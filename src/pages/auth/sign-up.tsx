@@ -115,8 +115,8 @@ export default function SignUpPage() {
         <div className="hidden flex-1 items-center justify-center border-l bg-slate-50 lg:flex">
           <div className="mx-8 flex flex-col gap-y-4">
             <h2 className="max-w-lg text-3xl">
-              "Selene has been the greatest help to our operations since we
-              started our business."
+              &ldquo;Selene has been the greatest help to our operations since
+              we started our business.&rdquo;
             </h2>
             <div>
               <p className="text-xl">Jeremy Allen White</p>

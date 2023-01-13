@@ -114,7 +114,7 @@ export default function SignInPage() {
                 </button>
               </form>
               <p className="my-2 text-center text-slate-500">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link href="/auth/sign-up" className="text-primary-500">
                   Sign up
                 </Link>{" "}
@@ -126,8 +126,8 @@ export default function SignInPage() {
         <div className="hidden flex-1 items-center justify-center border-l bg-slate-50 lg:flex">
           <div className="mx-8 flex flex-col gap-y-4">
             <h2 className="max-w-lg text-3xl">
-              "Selene has been the greatest help to our operations since we
-              started our business."
+              &ldquo;Selene has been the greatest help to our operations since
+              we started our business.&rdquo;
             </h2>
             <div>
               <p className="text-xl">Jeremy Allen White</p>
