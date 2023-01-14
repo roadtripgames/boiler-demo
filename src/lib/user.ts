@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Database } from "../../databaseTypes";
+import type { Database } from "../../databaseTypes";
 import { supabase } from "../utils/supabase-client";
 import { useAuth } from "./auth";
 import { USER_KEY } from "./query-keys";
 
 export type User = Database["public"]["Tables"]["users"]["Row"];
 
-export const useUser = (): User | null => {
+export const useUser = () => {
   const { user: authUser } = useAuth();
 
   const { data: user } = useQuery(
@@ -25,7 +25,11 @@ export const useUser = (): User | null => {
     { enabled: !!authUser }
   );
 
-  return user ?? null;
+  if (user) {
+    return { ...user, email: authUser?.email };
+  }
+
+  return null;
 };
 
 export const useUpdateUser = () => {

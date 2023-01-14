@@ -28,12 +28,12 @@ export default function App({ Component, pageProps }: AppProps) {
   const [supabaseClient] = useState(() => supabase);
 
   return (
-    <SessionContextProvider
-      supabaseClient={supabaseClient}
-      initialSession={pageProps.initialSession}
-    >
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <SessionContextProvider
+        supabaseClient={supabaseClient}
+        initialSession={pageProps.initialSession}
+      >
+        <AuthProvider>
           <Head>
             <title>Boiler</title>
             <meta name="description" content="The best product ever built." />
@@ -50,8 +50,8 @@ export default function App({ Component, pageProps }: AppProps) {
             initialIsOpen={false}
             toggleButtonProps={{ style: { left: "unset", right: 0 } }}
           />
-        </QueryClientProvider>
-      </AuthProvider>
-    </SessionContextProvider>
+        </AuthProvider>
+      </SessionContextProvider>
+    </QueryClientProvider>
   );
 }

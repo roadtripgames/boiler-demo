@@ -1,11 +1,12 @@
 import Image from "next/image";
 import companyLogo from "../../../public/logo.svg";
 import { useCallback, useState } from "react";
-import { Button } from "../shared/Button";
-import { DropdownMenu } from "../shared/Dropdown";
-import { TextInput } from "../shared/TextInput";
-import { ButtonGroup } from "../shared/ButtonGroup";
-import { useFinishOnboarding, UserOnboardingInformation } from "../../lib/user";
+import { Button } from "../design-system/Button";
+import { DropdownMenu } from "../design-system/Dropdown";
+import { TextInput } from "../design-system/TextInput";
+import { ButtonGroup } from "../design-system/ButtonGroup";
+import type { UserOnboardingInformation } from "../../lib/user";
+import { useFinishOnboarding } from "../../lib/user";
 
 type BaseStep = {
   key: string;

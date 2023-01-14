@@ -2,10 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import type { FormEvent } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { TextInput } from "../../components/shared/TextInput";
-import { Button } from "../../components/shared/Button";
+import { TextInput } from "../../components/design-system/TextInput";
+import { Button } from "../../components/design-system/Button";
 import { useAuth } from "../../lib/auth";
 
 export default function SignUpPage() {
