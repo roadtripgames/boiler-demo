@@ -1,5 +1,5 @@
 import { useUser } from "@supabase/auth-helpers-react";
-import { User } from "@supabase/supabase-js";
+import type { User } from "@supabase/supabase-js";
 import React, { createContext, useCallback } from "react";
 import { supabase } from "../utils/supabase-client";
 
@@ -53,9 +53,15 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoaded: false,
   isSignedIn: false,
-  signUpWithEmail: async () => {},
-  signInWithPassword: async () => {},
-  signOut: async () => {},
+  signUpWithEmail: async () => {
+    return;
+  },
+  signInWithPassword: async () => {
+    return;
+  },
+  signOut: async () => {
+    return;
+  },
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
