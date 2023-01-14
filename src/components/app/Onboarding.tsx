@@ -5,10 +5,7 @@ import { Button } from "../shared/Button";
 import { DropdownMenu } from "../shared/Dropdown";
 import { TextInput } from "../shared/TextInput";
 import { ButtonGroup } from "../shared/ButtonGroup";
-import {
-  OnboardingResults,
-  useOnOnboardingComplete,
-} from "../../lib/onboarding";
+import { useFinishOnboarding, UserOnboardingInformation } from "../../lib/user";
 
 type BaseStep = {
   key: string;
@@ -69,13 +66,9 @@ const ONBOARDING_STEPS: Step[] = [
   },
 ];
 
-type OnboardingProps = {
-  onComplete?: () => void;
-};
-
-export default function Onboarding({ onComplete }: OnboardingProps) {
+export default function Onboarding() {
   const [stepIndex, setStepIndex] = useState(0);
-  const [response, setResponse] = useState<OnboardingResults>({
+  const [response, setResponse] = useState<UserOnboardingInformation>({
     full_name: "",
     job_title: "",
     interests: [],
@@ -90,7 +83,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
 
   const step = ONBOARDING_STEPS[stepIndex]!;
 
-  const onOnboardingComplete = useOnOnboardingComplete();
+  const finishOnboardingMutation = useFinishOnboarding();
 
   return (
     <div className="flex h-full flex-col">
@@ -113,8 +106,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                       e.preventDefault();
                       const newIndex = stepIndex + 1;
                       if (newIndex === ONBOARDING_STEPS.length) {
-                        await onOnboardingComplete(response);
-                        onComplete?.();
+                        await finishOnboardingMutation.mutateAsync(response);
                       } else {
                         setStepIndex(newIndex);
                       }
@@ -135,7 +127,6 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                         className="w-full max-w-[300px]"
                         selectMultiple={step.selectMultiple}
                         onChange={(indexes) => {
-                          console.log(indexes);
                           const value = step.selectMultiple
                             ? indexes.map((i) => step.options[i])
                             : step.options[indexes[0] ?? 0];

@@ -3,13 +3,12 @@ import Image from "next/image";
 
 import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";
-import { useUser } from "@supabase/auth-helpers-react";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { supabase } from "../../utils/supabase-client";
+import { useAuth } from "../../lib/auth";
 
 export default function SignInPage() {
-  const user = useUser();
+  const { user, signInWithPassword } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,15 +17,7 @@ export default function SignInPage() {
     async (e: FormEvent) => {
       e.preventDefault();
 
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        console.error(error);
-        return;
-      }
+      await signInWithPassword({ email, password });
 
       router.push("/");
     },

@@ -7,17 +7,22 @@ import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import "../styles/globals.css";
 import { useState } from "react";
 import { supabase } from "../utils/supabase-client";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
-// if (
-//   typeof window !== "undefined" &&
-//   process.env.NODE_ENV === "development"
-//   // && /VIVID_ENABLED=true/.test(document.cookie)
-// ) {
-//   import("vivid-studio").then((v) => v.run());
-//   import("vivid-studio/style.css");
-// }
+import { AuthProvider } from "../lib/auth";
+
+if (
+  typeof window !== "undefined" &&
+  process.env.NODE_ENV === "development"
+  // && /VIVID_ENABLED=true/.test(document.cookie)
+) {
+  import("vivid-studio").then((v) => v.run());
+  import("vivid-studio/style.css");
+}
 
 const inter = Inter({ subsets: ["latin"] });
+const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
   const [supabaseClient] = useState(() => supabase);
@@ -27,15 +32,26 @@ export default function App({ Component, pageProps }: AppProps) {
       supabaseClient={supabaseClient}
       initialSession={pageProps.initialSession}
     >
-      <Head>
-        <title>Boiler</title>
-        <meta name="description" content="The best product ever built." />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className={clsx(inter.className, "h-full text-slate-900")}>
-        <Component {...pageProps} className={""} />
-      </main>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <Head>
+            <title>Boiler</title>
+            <meta name="description" content="The best product ever built." />
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1"
+            />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
+          <main className={clsx(inter.className, "h-full text-slate-900")}>
+            <Component {...pageProps} className={""} />
+          </main>
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            toggleButtonProps={{ style: { left: "unset", right: 0 } }}
+          />
+        </QueryClientProvider>
+      </AuthProvider>
     </SessionContextProvider>
   );
 }

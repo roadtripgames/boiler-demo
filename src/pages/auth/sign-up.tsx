@@ -3,12 +3,13 @@ import Image from "next/image";
 import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import { supabase } from "../../utils/supabase-client";
 import { useRouter } from "next/router";
 import { TextInput } from "../../components/shared/TextInput";
 import { Button } from "../../components/shared/Button";
+import { useAuth } from "../../lib/auth";
 
 export default function SignUpPage() {
+  const { user, signUpWithEmail } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,20 +18,21 @@ export default function SignUpPage() {
     async (e: FormEvent) => {
       e.preventDefault();
 
-      const { data, error } = await supabase.auth.signUp({
+      await signUpWithEmail({
         email,
         password,
       });
-
-      if (error) {
-        console.error(error);
-        return;
-      }
 
       router.push("/");
     },
     [email, password]
   );
+
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  }, [user]);
 
   return (
     <div className="flex h-full flex-col">
