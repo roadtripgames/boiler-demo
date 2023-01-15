@@ -2,7 +2,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ExitIcon, GearIcon, ReaderIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useCallback } from "react";
 import { useAuth } from "../../lib/auth";
 import { useUser } from "../../lib/user";
 import { Avatar } from "../design-system/Avatar";
@@ -34,6 +34,11 @@ export default function UserProfileButton() {
   const auth = useAuth();
   const user = useUser();
 
+  const handleSignOut = useCallback(async () => {
+    await auth.signOut();
+    router.push("/auth/sign-in");
+  }, [auth, router]);
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -63,7 +68,7 @@ export default function UserProfileButton() {
             Documentation
           </MenuItem>
           <div className="border-b" />
-          <MenuItem onClick={auth.signOut} className="text-slate-500">
+          <MenuItem onClick={handleSignOut} className="text-slate-500">
             <ExitIcon />
             Sign out
           </MenuItem>

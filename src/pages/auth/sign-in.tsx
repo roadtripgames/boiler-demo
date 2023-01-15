@@ -3,12 +3,13 @@ import Image from "next/image";
 
 import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import type { FormEvent } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../../lib/auth";
 
 export default function SignInPage() {
-  const { user, signInWithPassword } = useAuth();
+  const { signInWithPassword } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,12 +22,8 @@ export default function SignInPage() {
 
       router.push("/");
     },
-    [email, password]
+    [email, password, router, signInWithPassword]
   );
-
-  useEffect(() => {
-    console.log("user", user);
-  }, [user]);
 
   return (
     <div className="flex h-full flex-col">
