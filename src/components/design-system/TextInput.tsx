@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export type TextInputProps = {
   className?: string;
@@ -7,29 +7,33 @@ export type TextInputProps = {
   variant?: "outline" | "flush";
   placeholder?: string;
   defaultValue?: string;
-  value?: string;
   onValueChange?: (value: string) => void;
 };
 
-export const TextInput: React.FC<
-  TextInputProps & React.ComponentPropsWithoutRef<"input">
-> = ({
+type HTMLInputProps = React.ComponentPropsWithoutRef<"input">;
+
+export const TextInput: React.FC<TextInputProps & HTMLInputProps> = ({
   className,
   variant = "outline",
   placeholder,
-  value: _value,
+  value,
+  // value: _value,
   defaultValue,
   onValueChange,
   ...props
 }) => {
-  const [value, setValue] = useState<string | undefined>(
-    _value ?? defaultValue ?? ""
-  );
+  // const [value, setValue] = useState<HTMLInputProps["value"]>(
+  //   _value ?? defaultValue ?? ""
+  // );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-    onValueChange?.(e.target.value);
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setValue(e.target.value);
+  //   onValueChange?.(e.target.value);
+  // };
+
+  // useEffect(() => {
+  //   setValue(_value);
+  // }, [_value]);
 
   return (
     <input
@@ -45,7 +49,7 @@ export const TextInput: React.FC<
       )}
       value={value}
       placeholder={placeholder}
-      onChange={handleChange}
+      onChange={e => onValueChange?.(e.target.value)}
       {...props}
     />
   );

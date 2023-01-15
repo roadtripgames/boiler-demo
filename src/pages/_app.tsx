@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import Head from "next/head";
+import { Toaster } from "react-hot-toast";
 import { Inter } from "@next/font/google";
 import type { AppProps } from "next/app";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
@@ -21,7 +22,10 @@ if (
   import("vivid-studio/style.css");
 }
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -45,6 +49,7 @@ export default function App({ Component, pageProps }: AppProps) {
           </Head>
           <main className={clsx(inter.className, "h-full text-slate-900")}>
             <Component {...pageProps} className={""} />
+            <Toaster />
           </main>
           <ReactQueryDevtools
             initialIsOpen={false}

@@ -7,43 +7,43 @@ import { USER_KEY } from "./query-keys";
 export type User = Database["public"]["Tables"]["users"]["Row"];
 
 export const useUser = () => {
-  const { user: authUser } = useAuth();
+  const { auth } = useAuth();
 
   const { data: user } = useQuery(
     USER_KEY,
     async () => {
-      if (!authUser) return null;
+      if (!auth) return null;
 
       const resp = await supabase
         .from("users")
         .select("*")
-        .eq("id", authUser.id)
+        .eq("id", auth.id)
         .single();
 
       return resp.data;
     },
-    { enabled: !!authUser }
+    { enabled: !!auth }
   );
 
   if (user) {
-    return { ...user, email: authUser?.email };
+    return { ...user, email: auth?.email };
   }
 
   return null;
 };
 
 export const useUpdateUser = () => {
-  const { user: authUser } = useAuth();
+  const { auth } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation(
     async (update: Partial<User>) => {
-      if (!authUser) return;
+      if (!auth) return;
 
       const { error } = await supabase
         .from("users")
         .update(update)
-        .eq("id", authUser.id);
+        .eq("id", auth.id);
 
       if (error) {
         console.error(error);

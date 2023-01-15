@@ -1,10 +1,36 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { ExitIcon } from "@radix-ui/react-icons";
+import { ExitIcon, GearIcon, ReaderIcon } from "@radix-ui/react-icons";
+import clsx from "clsx";
+import { useRouter } from "next/router";
+import React from "react";
 import { useAuth } from "../../lib/auth";
 import { useUser } from "../../lib/user";
 import { Avatar } from "../design-system/Avatar";
 
+function MenuItem({
+  children,
+  onClick,
+  className,
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  className?: string;
+}) {
+  return (
+    <DropdownMenu.DropdownMenuItem
+      onClick={onClick}
+      className={clsx(
+        "flex w-full cursor-pointer items-center gap-x-2 px-4 py-2 outline-none transition hover:bg-slate-50 data-[highlighted]:bg-slate-100",
+        className
+      )}
+    >
+      {children}
+    </DropdownMenu.DropdownMenuItem>
+  );
+}
+
 export default function UserProfileButton() {
+  const router = useRouter();
   const auth = useAuth();
   const user = useUser();
 
@@ -28,13 +54,19 @@ export default function UserProfileButton() {
               <p className="text-slate-500">{user?.email}</p>
             </div>
           </div>
-          <button
-            onClick={auth.signOut}
-            className="flex w-full items-center gap-x-2 px-4 py-2 text-slate-500 transition hover:bg-slate-50"
-          >
+          <MenuItem onClick={() => router.push("/settings/profile")}>
+            <GearIcon />
+            Settings
+          </MenuItem>
+          <MenuItem onClick={() => router.push("/docs")}>
+            <ReaderIcon />
+            Documentation
+          </MenuItem>
+          <div className="border-b" />
+          <MenuItem onClick={auth.signOut} className="text-slate-500">
             <ExitIcon />
             Sign out
-          </button>
+          </MenuItem>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

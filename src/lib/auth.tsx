@@ -1,15 +1,13 @@
-import { useSession, useUser } from "@supabase/auth-helpers-react";
-import type { User } from "@supabase/supabase-js";
+import { useUser } from "@supabase/auth-helpers-react";
+import type { User as Auth } from "@supabase/supabase-js";
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { supabase } from "../utils/supabase-client";
 import { USER_KEY } from "./query-keys";
 
 type AuthContextType = {
-  user: User | null;
-  isLoading: boolean;
-  isLoaded: boolean;
-  isSignedIn: boolean;
+  auth: Auth | null;
+  loading: boolean;
   signUpWithEmail: (params: {
     email: string;
     password: string;
@@ -22,28 +20,28 @@ type AuthContextType = {
 };
 
 export const useAuth = (): AuthContextType => {
-  const [isLoading, setIsLoading] = useState(true);
-  const user = useUser();
   const queryClient = useQueryClient();
+  const [loading, setLoading] = useState(true);
+  const auth = useUser();
 
   useEffect(() => {
-    setIsLoading(false);
-  }, [user]);
+    setLoading(false);
+  }, [auth]);
 
   const signUpWithEmail = useCallback(
     async ({ email, password }: { email: string; password: string }) => {
-      setIsLoading(true);
+      setLoading(true);
       await supabase.auth.signUp({ email, password });
-      setIsLoading(false);
+      setLoading(false);
     },
     []
   );
 
   const signInWithPassword = useCallback(
     async ({ email, password }: { email: string; password: string }) => {
-      setIsLoading(true);
+      setLoading(true);
       await supabase.auth.signInWithPassword({ email, password });
-      setIsLoading(false);
+      setLoading(false);
     },
     []
   );
@@ -54,10 +52,8 @@ export const useAuth = (): AuthContextType => {
   }, [queryClient]);
 
   return {
-    user,
-    isLoading,
-    isLoaded: user != undefined,
-    isSignedIn: user?.aud === "authenticated", // TODO: might be different
+    auth,
+    loading,
     signUpWithEmail,
     signInWithPassword,
     signOut,
@@ -65,10 +61,8 @@ export const useAuth = (): AuthContextType => {
 };
 
 const AuthContext = createContext<AuthContextType>({
-  user: null,
-  isLoaded: false,
-  isLoading: false,
-  isSignedIn: false,
+  auth: null,
+  loading: false,
   signUpWithEmail: async () => {
     return;
   },
