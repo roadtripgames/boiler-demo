@@ -4,13 +4,15 @@
 
 ### Emails
 
-- react-email ?
+- react-email
+  - welcome email
+  - reset password email
 
 ### Teams and organizations structure
 
 - Invite people
 - Have them be part of an organization
-- Create, assign, manage roles
+- Create, assign, manage roles, and permissions
 
 ## Jan 12
 
