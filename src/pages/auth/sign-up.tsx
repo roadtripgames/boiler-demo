@@ -10,7 +10,7 @@ import { Button } from "../../components/design-system/Button";
 import { useAuth } from "../../lib/auth";
 
 export default function SignUpPage() {
-  const { user, signUpWithEmail } = useAuth();
+  const { auth, signUpWithEmail } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,14 +26,14 @@ export default function SignUpPage() {
 
       router.push("/");
     },
-    [email, password]
+    [email, password, router, signUpWithEmail]
   );
 
   useEffect(() => {
-    if (user) {
+    if (auth) {
       router.push("/");
     }
-  }, [user]);
+  }, [auth, router]);
 
   return (
     <div className="flex h-full flex-col">

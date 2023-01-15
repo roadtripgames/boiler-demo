@@ -1,5 +1,17 @@
 # Notes
 
+## Jan 15
+
+### Emails
+
+- react-email ?
+
+### Teams and organizations structure
+
+- Invite people
+- Have them be part of an organization
+- Create, assign, manage roles
+
 ## Jan 12
 
 - include in documentation
