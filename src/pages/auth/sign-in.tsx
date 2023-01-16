@@ -7,6 +7,7 @@ import type { FormEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../../lib/auth";
+import { TextInput } from "../../components/design-system/TextInput";
 
 export default function SignInPage() {
   const { signInWithPassword } = useAuth();
@@ -54,26 +55,24 @@ export default function SignInPage() {
                   <label className="mb-2 font-medium" htmlFor="email">
                     Email
                   </label>
-                  <input
-                    className="rounded border border-slate-300 px-3 py-2"
+                  <TextInput
+                    className=""
                     type="email"
                     name="email"
-                    id="email"
                     placeholder="jane@company.com"
-                    onChange={(e) => setEmail(e.target.value)}
+                    onValueChange={setEmail}
                   />
                 </div>
                 <div className="flex flex-col">
                   <label htmlFor="password" className="mb-2 font-medium">
                     Password
                   </label>
-                  <input
-                    className="rounded border border-slate-300 px-3 py-2"
+                  <TextInput
                     type="password"
                     name="password"
                     id="password"
                     placeholder="••••••••"
-                    onChange={(e) => setPassword(e.target.value)}
+                    onValueChange={setPassword}
                   />
                 </div>
                 <div className="flex items-center justify-between">

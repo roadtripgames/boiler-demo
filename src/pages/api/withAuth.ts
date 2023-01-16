@@ -5,12 +5,10 @@ import type { Database } from "../../../databaseTypes";
 import type { AppError } from "./types";
 
 function withAuth<T>(fn: AuthenticatedHandler<T>) {
-  console.log("withAuth");
   const handler: AuthenticatedHandler<T> = async (
     req: NextApiRequest,
     res: NextApiResponse<T | AppError>
   ) => {
-    console.log("1");
     const supabase = createServerSupabaseClient<Database>({ req, res });
 
     const {
@@ -25,10 +23,9 @@ function withAuth<T>(fn: AuthenticatedHandler<T>) {
       });
     }
 
-    fn(req, res, { supabase, session });
+    return fn(req, res, { supabase, session });
   };
 
-  console.log("return handler");
   return handler;
 }
 

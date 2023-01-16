@@ -35,11 +35,19 @@ function UserProfileForm({ user, onUpdate }: UserProfileFormProps) {
         </div>
         <div>
           <p className="mb-2 font-medium">Full name</p>
-          <TextInput value={name} onValueChange={(e) => setName(e)} />
+          <TextInput
+            value={name}
+            onValueChange={(e) => setName(e)}
+            className="w-96"
+          />
         </div>
         <div>
           <p className="mb-2 font-medium">Title</p>
-          <TextInput value={title} onChange={(e) => setTitle(e.target.value)} />
+          <TextInput
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-96"
+          />
         </div>
       </div>
       <Button className="mt-8" disabled={onUpdate?.isLoading}>

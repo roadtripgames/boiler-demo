@@ -2,6 +2,8 @@
 
 ## Jan 15
 
+- abstract /auth into reusable components
+
 ### Managing stuff in the backenda
 
 - authenticating users in the backend
@@ -17,6 +19,18 @@
 - Invite people
 - Have them be part of an organization
 - Create, assign, manage roles, and permissions
+
+tables:
+
+User
+
+Organization
+
+OrgUser
+
+Role
+
+OrgRole
 
 ## Jan 12
 

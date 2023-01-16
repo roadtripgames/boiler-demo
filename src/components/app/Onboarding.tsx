@@ -7,6 +7,7 @@ import { TextInput } from "../design-system/TextInput";
 import { ButtonGroup } from "../design-system/ButtonGroup";
 import type { UserOnboardingInformation } from "../../lib/user";
 import { useFinishOnboarding } from "../../lib/user";
+import { useRouter } from "next/router";
 
 type BaseStep = {
   key: string;
@@ -75,13 +76,11 @@ export default function Onboarding() {
     interests: [],
   });
 
-  const handleChangeResponse = useCallback(
-    (key: string, value: any) => {
-      setResponse((prev) => ({ ...prev, [key]: value }));
-    },
-    [response]
-  );
+  const handleChangeResponse = useCallback((key: string, value: any) => {
+    setResponse((prev) => ({ ...prev, [key]: value }));
+  }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const step = ONBOARDING_STEPS[stepIndex]!;
 
   const finishOnboardingMutation = useFinishOnboarding();

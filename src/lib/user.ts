@@ -40,7 +40,7 @@ export const useUpdateUser = () => {
     async (update: Partial<User>) => {
       if (!auth) return;
 
-      await fetch("/api/finish-onboarding", {
+      await fetch("/api/update-user", {
         body: JSON.stringify(update),
         method: "POST",
         headers: {
@@ -61,9 +61,22 @@ export type UserOnboardingInformation = Required<
 >;
 
 export const useFinishOnboarding = () => {
-  const updateMutation = useUpdateUser();
+  const queryClient = useQueryClient();
 
-  return useMutation(async (update: UserOnboardingInformation) => {
-    await updateMutation.mutateAsync({ ...update, has_onboarded: true });
-  });
+  return useMutation(
+    async (update: UserOnboardingInformation) => {
+      await fetch("/api/finish-onboarding", {
+        body: JSON.stringify(update),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(USER_KEY);
+      },
+    }
+  );
 };

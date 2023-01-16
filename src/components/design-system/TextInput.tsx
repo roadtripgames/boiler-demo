@@ -38,18 +38,18 @@ export const TextInput: React.FC<TextInputProps & HTMLInputProps> = ({
   return (
     <input
       className={clsx(
-        "flex h-10 items-center",
+        "flex h-8 items-center",
         "disabled:select-none",
         className,
         {
-          "rounded-md border border-slate-300 bg-white px-3 outline-primary-500":
+          "rounded-md border border-slate-200 bg-white px-3 outline-primary-500 hover:border-slate-300":
             variant === "outline",
           "outline-none": variant === "flush",
         }
       )}
       value={value}
       placeholder={placeholder}
-      onChange={e => onValueChange?.(e.target.value)}
+      onChange={(e) => onValueChange?.(e.target.value)}
       {...props}
     />
   );

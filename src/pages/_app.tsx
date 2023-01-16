@@ -47,7 +47,9 @@ export default function App({ Component, pageProps }: AppProps) {
             />
             <link rel="icon" href="/favicon.ico" />
           </Head>
-          <main className={clsx(inter.className, "h-full text-slate-900")}>
+          <main
+            className={clsx(inter.className, "h-full text-sm text-slate-900")}
+          >
             <Component {...pageProps} className={""} />
             <Toaster />
           </main>

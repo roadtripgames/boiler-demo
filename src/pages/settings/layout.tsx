@@ -14,8 +14,8 @@ function Page({
 }) {
   return (
     <Link
-      className={clsx("-ml-3 w-full rounded px-3 py-2 text-left", {
-        "bg-primary-100 font-semibold text-primary-900": isSelected,
+      className={clsx("-ml-3 w-full rounded px-3 py-2 text-left font-medium", {
+        "bg-primary-100 text-primary-900": isSelected,
         "hover:bg-slate-100": !isSelected,
       })}
       href={href}
@@ -45,19 +45,7 @@ export default function SettingsLayout({
           <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
             Settings
           </p>
-          <div className="flex flex-col items-start transition">
-            {/* <Link
-              className="-ml-3 w-full rounded px-3 py-2 text-left font-medium hover:bg-slate-100"
-              href="/settings/profile"
-            >
-              Profile
-            </Link>
-            <Link
-              className="-ml-3 w-full rounded px-3 py-2 text-left font-medium hover:bg-slate-100"
-              href="/settings/team"
-            >
-              Team
-            </Link> */}
+          <div className="flex flex-col items-start gap-y-[2px] transition">
             <Page
               name="Profile"
               isSelected={pathname === "/settings/profile"}

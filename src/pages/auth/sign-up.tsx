@@ -83,7 +83,6 @@ export default function SignUpPage() {
                     Password
                   </label>
                   <TextInput
-                    className="rounded border border-slate-300 px-3 py-2"
                     type="password"
                     name="password"
                     id="password"
