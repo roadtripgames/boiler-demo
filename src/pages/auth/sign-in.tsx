@@ -46,7 +46,7 @@ export default function SignInPage() {
                 </button>
                 <div className="relative flex items-center">
                   <div className="w-full border-b" />
-                  <span className="inset z-10 mx-4 bg-white text-center text-xs font-medium text-slate-500">
+                  <span className="z-10 mx-4 bg-white text-center text-xs font-medium text-slate-500">
                     OR
                   </span>
                   <div className="w-full border-b" />

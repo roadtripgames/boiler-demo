@@ -24,7 +24,6 @@ type DropdownMenuProps = _DropdownMenuProps & {
 };
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
-  children,
   className,
   placeholder,
   values,
@@ -38,12 +37,15 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
     _value ?? defaultValue ?? undefined
   );
 
-  const handleValueChange = useCallback((v: string) => {
-    if (!disabled) {
-      setValue(v);
-      onChange?.(v);
-    }
-  }, []);
+  const handleValueChange = useCallback(
+    (v: string) => {
+      if (!disabled) {
+        setValue(v);
+        onChange?.(v);
+      }
+    },
+    [disabled, onChange]
+  );
 
   return (
     <DropdownMenuPrimitive.Root {...props}>

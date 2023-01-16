@@ -22,7 +22,7 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
         <SelectPrimitive.Trigger
           ref={forwardedRef}
           className={clsx(
-            "inline-flex items-center justify-center gap-x-2 gap-y-2 transition",
+            "inline-flex items-center justify-center gap-2 transition",
             "h-12 rounded-lg px-4 shadow",
             "bg-white text-base text-slate-900 hover:bg-slate-50"
           )}

@@ -40,8 +40,8 @@ export default function SettingsLayout({
   return (
     <section className="flex h-full min-h-screen flex-col bg-white">
       <Header />
-      <div className="mx-auto flex grid h-full w-full max-w-7xl grid-cols-4">
-        <div className="col-span-1 py-4 px-4">
+      <div className="mx-auto grid h-full w-full max-w-7xl grid-cols-4">
+        <div className="col-span-1 p-4">
           <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
             Settings
           </p>
@@ -63,7 +63,7 @@ export default function SettingsLayout({
             />
           </div>
         </div>
-        <div className="col-span-3 py-4 px-4">
+        <div className="col-span-3 p-4">
           <h1 className="text-2xl font-medium">{title}</h1>
           <p className="text-slate-500">{description}</p>
           <div className="my-8 w-full border-b border-slate-100" />

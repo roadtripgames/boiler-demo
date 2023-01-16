@@ -3,7 +3,6 @@ import type { AuthenticatedHandler } from "./withAuth";
 import withAuth from "./withAuth";
 
 const Request = z.object({
-  id: z.string(),
   full_name: z.string().optional(),
   job_title: z.string().optional(),
   interests: z.array(z.string()).optional(),
