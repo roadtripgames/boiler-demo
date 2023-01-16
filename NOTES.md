@@ -2,6 +2,10 @@
 
 ## Jan 15
 
+### Managing stuff in the backenda
+
+- authenticating users in the backend
+
 ### Emails
 
 - react-email

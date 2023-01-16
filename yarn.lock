@@ -473,6 +473,13 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
 
+"@react-email/button@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@react-email/button/-/button-0.0.5.tgz#c84d7321bf681a5e8fbde17b48a891c4d9864ec7"
+  integrity sha512-k8yDJ5b9gFriy0543qR8zI2tyOBvob7YwaPxfVorDH0ajPucocjbzymopzxyHU13LMafdYbId/kPjoANwdSr+g==
+  dependencies:
+    react "18.2.0"
+
 "@rushstack/eslint-patch@^1.1.3":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz#8be36a1f66f3265389e90b5f9c9962146758f728"
@@ -3125,3 +3132,8 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zod@^3.20.2:
+  version "3.20.2"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.20.2.tgz#068606642c8f51b3333981f91c0a8ab37dfc2807"
+  integrity sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==

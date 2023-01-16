@@ -40,14 +40,13 @@ export const useUpdateUser = () => {
     async (update: Partial<User>) => {
       if (!auth) return;
 
-      const { error } = await supabase
-        .from("users")
-        .update(update)
-        .eq("id", auth.id);
-
-      if (error) {
-        console.error(error);
-      }
+      await fetch("/api/finish-onboarding", {
+        body: JSON.stringify(update),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
     },
     {
       onSuccess: () => {
