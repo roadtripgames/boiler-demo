@@ -142,7 +142,10 @@ export default function Onboarding() {
                         values={step.options}
                       />
                     )}
-                    <Button className="mt-4">
+                    <Button
+                      className="mt-4"
+                      disabled={finishOnboardingMutation.isLoading}
+                    >
                       <span className="px-4">
                         {stepIndex === ONBOARDING_STEPS.length - 1
                           ? "Done"
