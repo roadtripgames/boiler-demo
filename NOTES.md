@@ -14,7 +14,7 @@
   - welcome email
   - reset password email
 
-### Teams and organizations structure
+### Orgs and organizations structure
 
 - Invite people
 - Have them be part of an organization

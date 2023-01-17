@@ -1,18 +1,22 @@
 import Header from "../components/app/Header";
 import Onboarding from "../components/app/Onboarding";
 import { useAuth } from "../lib/auth";
-import { useUser } from "../lib/user";
+import { api } from "../utils/api";
 
 export default function Home() {
   const { loading: isLoading } = useAuth();
-  const user = useUser();
+  const user = api.user.get.useQuery()?.data;
 
   if (isLoading) {
     return null;
   }
 
   if (user && !user.has_onboarded) {
-    return <Onboarding />;
+    return (
+      <>
+        <Onboarding />;
+      </>
+    );
   }
 
   return (

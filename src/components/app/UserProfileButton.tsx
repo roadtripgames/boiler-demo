@@ -4,7 +4,8 @@ import clsx from "clsx";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import { useAuth } from "../../lib/auth";
-import { useUser } from "../../lib/user";
+import { api } from "../../utils/api";
+// import { useUser } from "../../lib/user";
 import { Avatar } from "../design-system/Avatar";
 
 function MenuItem({
@@ -32,7 +33,7 @@ function MenuItem({
 export default function UserProfileButton() {
   const router = useRouter();
   const auth = useAuth();
-  const user = useUser();
+  const user = api.user.get.useQuery()?.data;
 
   const handleSignOut = useCallback(async () => {
     await auth.signOut();

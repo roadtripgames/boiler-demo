@@ -2,6 +2,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Header from "../../components/app/Header";
+import { api } from "../../utils/api";
 
 function Page({
   name,
@@ -14,10 +15,13 @@ function Page({
 }) {
   return (
     <Link
-      className={clsx("-ml-3 w-full rounded px-3 py-2 text-left font-medium", {
-        "bg-primary-100 text-primary-900": isSelected,
-        "hover:bg-slate-100": !isSelected,
-      })}
+      className={clsx(
+        "-ml-3 flex h-8 w-full items-center rounded px-3 text-left font-medium",
+        {
+          "bg-primary-100 font-semibold text-primary-800": isSelected,
+          "hover:bg-slate-100": !isSelected,
+        }
+      )}
       href={href}
     >
       {name}
@@ -34,13 +38,14 @@ export default function SettingsLayout({
   title: string;
   description: string;
 }) {
+  const user = api.user.get.useQuery();
   const router = useRouter();
   const { pathname } = router;
 
   return (
     <section className="flex h-full min-h-screen flex-col bg-white">
       <Header />
-      <div className="mx-auto grid h-full w-full max-w-7xl grid-cols-4">
+      <div className="mx-auto grid h-full w-full max-w-7xl grid-cols-4 px-4">
         <div className="col-span-1 p-4">
           <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
             Settings
@@ -51,11 +56,19 @@ export default function SettingsLayout({
               isSelected={pathname === "/settings/profile"}
               href="/settings/profile"
             />
-            <Page
-              name="Team"
-              isSelected={pathname === "/settings/team"}
-              href="/settings/team"
-            />
+            {user.data?.current_team === null ? (
+              <Page
+                name="Teams"
+                isSelected={pathname === "/settings/teams"}
+                href="/settings/teams"
+              />
+            ) : (
+              <Page
+                name="Members"
+                isSelected={pathname === "/settings/members"}
+                href="/settings/members"
+              />
+            )}
             <Page
               name="Billing"
               isSelected={pathname === "/settings/billing"}

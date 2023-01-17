@@ -85,7 +85,10 @@ export default function SignInPage() {
                     />
                     <label htmlFor="remember">Remember me</label>
                   </div>
-                  <Link href="/auth/reset-password" className="font-medium">
+                  <Link
+                    href="/auth/reset-password"
+                    className="font-medium text-primary-400"
+                  >
                     Forgot your password?
                   </Link>
                 </div>

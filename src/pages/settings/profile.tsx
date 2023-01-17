@@ -3,13 +3,13 @@ import { toast } from "react-hot-toast";
 import { Avatar } from "../../components/design-system/Avatar";
 import { Button } from "../../components/design-system/Button";
 import { TextInput } from "../../components/design-system/TextInput";
-import type { User } from "../../lib/user";
-import { useUser, useUpdateUser } from "../../lib/user";
+import type { RouterOutputs } from "../../utils/api";
+import { api } from "../../utils/api";
 import SettingsLayout from "./layout";
 
 type UserProfileFormProps = {
-  user: User;
-  onUpdate?: ReturnType<typeof useUpdateUser>;
+  user: RouterOutputs["user"]["get"];
+  onUpdate?: ReturnType<typeof api.user.update.useMutation>;
 };
 
 function UserProfileForm({ user, onUpdate }: UserProfileFormProps) {
@@ -58,11 +58,12 @@ function UserProfileForm({ user, onUpdate }: UserProfileFormProps) {
 }
 
 export default function Profile() {
-  const user = useUser();
-  const updateUserMutation = useUpdateUser();
+  const user = api.user.get.useQuery()?.data;
+  const updateUserMutation = api.user.update.useMutation();
 
   return (
     <SettingsLayout title="Profile" description="Manage your Selene profile">
+      {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       {user && <UserProfileForm user={user} onUpdate={updateUserMutation} />}
     </SettingsLayout>
   );

@@ -38,7 +38,7 @@ export const TextInput: React.FC<TextInputProps & HTMLInputProps> = ({
   return (
     <input
       className={clsx(
-        "flex h-8 items-center",
+        "flex h-10 items-center",
         "disabled:select-none",
         className,
         {

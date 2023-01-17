@@ -5,9 +5,7 @@ import { Button } from "../design-system/Button";
 import { DropdownMenu } from "../design-system/Dropdown";
 import { TextInput } from "../design-system/TextInput";
 import { ButtonGroup } from "../design-system/ButtonGroup";
-import type { UserOnboardingInformation } from "../../lib/user";
-import { useFinishOnboarding } from "../../lib/user";
-import { useRouter } from "next/router";
+import { api } from "../../utils/api";
 
 type BaseStep = {
   key: string;
@@ -70,20 +68,25 @@ const ONBOARDING_STEPS: Step[] = [
 
 export default function Onboarding() {
   const [stepIndex, setStepIndex] = useState(0);
-  const [response, setResponse] = useState<UserOnboardingInformation>({
+  const [response, setResponse] = useState<any>({
     full_name: "",
     job_title: "",
     interests: [],
   });
 
   const handleChangeResponse = useCallback((key: string, value: any) => {
-    setResponse((prev) => ({ ...prev, [key]: value }));
+    setResponse((prev: any) => ({ ...prev, [key]: value }));
   }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const step = ONBOARDING_STEPS[stepIndex]!;
 
-  const finishOnboardingMutation = useFinishOnboarding();
+  const utils = api.useContext();
+  const finishOnboardingMutation = api.user.finishOnboarding.useMutation({
+    onSuccess() {
+      utils.invalidate(undefined, { queryKey: ["user.get"] });
+    },
+  });
 
   return (
     <div className="flex h-full flex-col">

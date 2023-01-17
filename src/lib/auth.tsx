@@ -1,9 +1,7 @@
 import { useUser } from "@supabase/auth-helpers-react";
 import type { User as Auth } from "@supabase/supabase-js";
 import React, { createContext, useCallback, useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
 import { supabase } from "../utils/supabase-client";
-import { USER_KEY } from "./query-keys";
 
 type AuthContextType = {
   auth: Auth | null;
@@ -20,7 +18,7 @@ type AuthContextType = {
 };
 
 export const useAuth = (): AuthContextType => {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const [loading, setLoading] = useState(true);
   const auth = useUser();
 
@@ -31,7 +29,12 @@ export const useAuth = (): AuthContextType => {
   const signUpWithEmail = useCallback(
     async ({ email, password }: { email: string; password: string }) => {
       setLoading(true);
-      await supabase.auth.signUp({ email, password });
+      const { error } = await supabase.auth.signUp({ email, password });
+
+      if (error?.message === "User already registered") {
+        await supabase.auth.signInWithPassword({ email, password });
+      }
+
       setLoading(false);
     },
     []
@@ -48,8 +51,9 @@ export const useAuth = (): AuthContextType => {
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
-    queryClient.resetQueries(USER_KEY);
-  }, [queryClient]);
+    // queryClient.resetQueries(USER_KEY);
+    // }, [queryClient]);
+  }, []);
 
   return {
     auth,
