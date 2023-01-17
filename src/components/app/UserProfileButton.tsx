@@ -1,5 +1,10 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { ExitIcon, GearIcon, ReaderIcon } from "@radix-ui/react-icons";
+import {
+  ActivityLogIcon,
+  ExitIcon,
+  GearIcon,
+  ReaderIcon,
+} from "@radix-ui/react-icons";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
@@ -67,6 +72,10 @@ export default function UserProfileButton() {
           <MenuItem onClick={() => router.push("/docs")}>
             <ReaderIcon />
             Documentation
+          </MenuItem>
+          <MenuItem onClick={() => router.push("/docs")}>
+            <ActivityLogIcon />
+            Changelog
           </MenuItem>
           <div className="border-b" />
           <MenuItem onClick={handleSignOut} className="text-slate-500">

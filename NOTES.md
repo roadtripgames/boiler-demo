@@ -1,5 +1,9 @@
 # Notes
 
+## Jan 17
+
+- might not need to let people define roles, though this could be cool
+
 ## Jan 15
 
 - abstract /auth into reusable components

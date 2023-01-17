@@ -2,6 +2,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { PlusIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import React from "react";
+import { toast } from "react-hot-toast";
 import { api } from "../../utils/api";
 import { Avatar } from "../design-system/Avatar";
 
@@ -56,8 +57,12 @@ export default function TeamSelector() {
             Personal account
           </p>
           <MenuItem
-            className=""
-            onClick={() => selectTeamMutation.mutateAsync({ teamId: null })}
+            className="pr-12"
+            onClick={() => {
+              selectTeamMutation.mutateAsync({ teamId: null });
+
+              toast.success(`Switched to your personal account`);
+            }}
           >
             <Avatar size="sm" name={user.full_name} src={user.avatar_url} />
             {user.full_name}
@@ -71,9 +76,12 @@ export default function TeamSelector() {
                 return (
                   <MenuItem
                     key={t.id}
-                    onClick={() =>
-                      selectTeamMutation.mutateAsync({ teamId: t.id })
-                    }
+                    onClick={() => {
+                      if (t.id === user.current_team_id) return;
+
+                      selectTeamMutation.mutateAsync({ teamId: t.id });
+                      toast.success(`Switched to ${t.name}`);
+                    }}
                   >
                     <Avatar size="sm" name={t.name} />
                     <p className="">{t.name}</p>

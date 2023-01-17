@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { PlusIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Avatar } from "../../components/design-system/Avatar";
@@ -8,8 +10,10 @@ import { api } from "../../utils/api";
 import SettingsLayout from "./layout";
 
 export default function Team() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const teams = api.teams.get.useQuery();
+  const user = api.user.get.useQuery();
   const utils = api.useContext();
   const createTeamMutation = api.teams.create.useMutation({
     onSuccess: () => {
@@ -21,6 +25,12 @@ export default function Team() {
       utils.invalidate(undefined, { queryKey: ["teams.get"] });
     },
   });
+
+  useEffect(() => {
+    if (user.data && user.data.current_team != null) {
+      router.push("/settings/members");
+    }
+  }, [router, user]);
 
   return (
     <SettingsLayout

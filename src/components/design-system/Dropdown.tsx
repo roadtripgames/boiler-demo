@@ -15,6 +15,7 @@ import clsx from "clsx";
 
 type DropdownMenuProps = _DropdownMenuProps & {
   className?: string;
+  contentClassName?: string;
   placeholder?: string;
   values: string[];
   value?: string;
@@ -25,6 +26,7 @@ type DropdownMenuProps = _DropdownMenuProps & {
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   className,
+  contentClassName,
   placeholder,
   values,
   value: _value,
@@ -49,7 +51,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
   return (
     <DropdownMenuPrimitive.Root {...props}>
-      <DropdownMenuContent className={className}>
+      <DropdownMenuContent className={contentClassName}>
         {values.map((v) => (
           <DropdownMenuItem key={v} onSelect={() => handleValueChange(v)}>
             {v}
@@ -59,9 +61,14 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
       <DropdownMenuTrigger
         disabled={disabled}
         asChild
-        className="h-10 rounded-md border border-slate-300 bg-white px-4 outline-2 outline-primary-500 data-[state=open]:outline data-[state=open]:outline-primary-500"
+        className="h-10 rounded-md border border-slate-300 bg-white px-4 outline-2 outline-primary-500 hover:border-slate-400 data-[state=open]:outline data-[state=open]:outline-primary-500"
       >
-        <button className="flex select-none items-center justify-between gap-x-2 text-base">
+        <button
+          className={clsx(
+            "flex select-none items-center justify-between gap-x-2",
+            className
+          )}
+        >
           {!value && placeholder && (
             <span className="text-slate-500">{placeholder}</span>
           )}
@@ -108,7 +115,7 @@ export const DropdownMenuItem = React.forwardRef<
       {...props}
       ref={forwardedRef}
       className={clsx(
-        "relative flex h-10 cursor-pointer items-center pl-4 pr-12 text-base outline-none",
+        "relative flex h-10 cursor-pointer items-center pl-4 pr-12 outline-none",
         "text-slate-800 data-[highlighted]:bg-primary-100"
       )}
     >
