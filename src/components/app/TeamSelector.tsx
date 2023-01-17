@@ -36,7 +36,7 @@ export default function TeamSelector() {
     onSuccess: () => context.invalidate(undefined, { queryKey: ["user"] }),
   });
 
-  if (!user) return;
+  if (!user) return null;
 
   return (
     <DropdownMenu.Root>
