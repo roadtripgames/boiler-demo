@@ -17,13 +17,13 @@
  *
  */
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { type Session } from "next-auth";
 
-import type { Session, SupabaseClient } from "@supabase/supabase-js";
-import { supabase as supabaseServerClient } from "../db";
+import { getServerAuthSession } from "../auth";
+import { prisma } from "../db";
 
 type CreateContextOptions = {
   session: Session | null;
-  supabaseUserClient: SupabaseClient<Database>;
 };
 
 /**
@@ -38,8 +38,7 @@ type CreateContextOptions = {
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     session: opts.session,
-    supabase: supabaseServerClient,
-    supabaseUserClient: opts.supabaseUserClient,
+    prisma,
   };
 };
 
@@ -51,15 +50,11 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const { req, res } = opts;
 
-  const supabase = createServerSupabaseClient<Database>({ req, res });
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  // Get the session from the server using the unstable_getServerSession wrapper function
+  const session = await getServerAuthSession({ req, res });
 
   return createInnerTRPCContext({
     session,
-    supabaseUserClient: supabase,
   });
 };
 
@@ -71,8 +66,6 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import type { Database } from "../../../databaseTypes";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -111,7 +104,6 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
-
   return next({
     ctx: {
       // infers the `session` as non-nullable

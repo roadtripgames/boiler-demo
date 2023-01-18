@@ -13,15 +13,15 @@ type UserProfileFormProps = {
 };
 
 function UserProfileForm({ user, onUpdate }: UserProfileFormProps) {
-  const [name, setName] = useState(user.full_name ?? "");
-  const [title, setTitle] = useState(user.job_title ?? "");
+  const [name, setName] = useState(user.name ?? "");
+  const [title, setTitle] = useState(user.jobtitle ?? "");
 
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault();
         try {
-          await onUpdate?.mutateAsync({ full_name: name, job_title: title });
+          await onUpdate?.mutateAsync({ name: name, jobtitle: title });
           toast.success("Profile updated.");
         } catch (e) {
           toast.error(`Issue updating profile.`);
@@ -31,7 +31,7 @@ function UserProfileForm({ user, onUpdate }: UserProfileFormProps) {
       <div className="flex flex-col gap-y-5">
         <div>
           <p className="mb-2 font-medium">Profile picture</p>
-          <Avatar src={user.avatar_url} name={name} size="lg" />
+          <Avatar src={user.image} name={name} size="lg" />
         </div>
         <div>
           <p className="mb-2 font-medium">Full name</p>

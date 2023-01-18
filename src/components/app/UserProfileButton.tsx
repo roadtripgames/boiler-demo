@@ -8,7 +8,6 @@ import {
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
-import { useAuth } from "../../lib/auth";
 import { api } from "../../utils/api";
 // import { useUser } from "../../lib/user";
 import { Avatar } from "../design-system/Avatar";
@@ -37,19 +36,22 @@ function MenuItem({
 
 export default function UserProfileButton() {
   const router = useRouter();
-  const auth = useAuth();
+  // const auth = useAuth();
   const user = api.user.get.useQuery()?.data;
 
   const handleSignOut = useCallback(async () => {
-    await auth.signOut();
-    router.push("/auth/sign-in");
-  }, [auth, router]);
+    //
+  }, []);
+  // const handleSignOut = useCallback(async () => {
+  //   await auth.signOut();
+  //   router.push("/auth/sign-in");
+  // }, [auth, router]);
 
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button>
-          <Avatar name={user?.full_name} src={user?.avatar_url} />
+          <Avatar name={user?.name} src={user?.image} />
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
@@ -59,9 +61,9 @@ export default function UserProfileButton() {
           sideOffset={4}
         >
           <div className="flex items-center gap-x-2 border-b p-4">
-            <Avatar name={user?.full_name} src={user?.avatar_url} />
+            <Avatar name={user?.name} src={user?.image} />
             <div className="">
-              <p className="font-medium">{user?.full_name}</p>
+              <p className="font-medium">{user?.name}</p>
               <p className="text-slate-500">{user?.email}</p>
             </div>
           </div>

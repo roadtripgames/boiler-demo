@@ -12,7 +12,7 @@ export const exampleRouter = createTRPCRouter({
     }),
 
   getAll: publicProcedure.query(async ({ ctx }) => {
-    const { data } = await ctx.supabase.from("users").select("*");
+    const { data } = await ctx.prisma.user.count();
     return data;
   }),
 

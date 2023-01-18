@@ -7,33 +7,28 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { TextInput } from "../../components/design-system/TextInput";
 import { Button } from "../../components/design-system/Button";
-import { useAuth } from "../../lib/auth";
 
 export default function SignUpPage() {
-  const { auth, signUpWithEmail } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignUp = useCallback(
-    async (e: FormEvent) => {
-      e.preventDefault();
+  const handleSignUp = useCallback(async (e: FormEvent) => {
+    e.preventDefault();
 
-      await signUpWithEmail({
-        email,
-        password,
-      });
+    // await signUpWithEmail({
+    //   email,
+    //   password,
+    // });
 
-      router.push("/");
-    },
-    [email, password, router, signUpWithEmail]
-  );
+    // router.push("/");
+  }, []);
 
-  useEffect(() => {
-    if (auth) {
-      router.push("/");
-    }
-  }, [auth, router]);
+  // useEffect(() => {
+  //   if (auth) {
+  //     router.push("/");
+  //   }
+  // }, [auth, router]);
 
   return (
     <div className="flex h-full flex-col">

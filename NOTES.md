@@ -1,8 +1,20 @@
 # Notes
 
+## Jan 18
+
+- move to prisma
+- fix members invite
+
+- show how to differentiate more on business logic
+  - clean, easy to use function and hook to gate things behind a paywall
+  - basic feature flagging framework
+- high quality react-email
+- instructions on how to strip out frontend
+
 ## Jan 17
 
 - might not need to let people define roles, though this could be cool
+- added teams management, broken members invite
 
 ## Jan 15
 

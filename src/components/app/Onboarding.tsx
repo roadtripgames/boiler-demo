@@ -36,14 +36,14 @@ type Step = TextInputStep | SelectStep | ButtonGroupStep;
 
 const ONBOARDING_STEPS: Step[] = [
   {
-    key: "full_name",
+    key: "name",
     title: "How should we greet you?",
     fieldType: "text",
     placeholder: "Jane Doe",
     result: "",
   },
   {
-    key: "job_title",
+    key: "jobtitle",
     title: "What is your job title?",
     fieldType: "button-group",
     selectMultiple: false,
@@ -60,7 +60,7 @@ const ONBOARDING_STEPS: Step[] = [
     key: "interests",
     title: "What tools are you interested in?",
     fieldType: "button-group",
-    selectMultiple: true,
+    selectMultiple: false,
     options: ["React", "TypeScript", "Planetscale", "Vercel", "Supabase"],
     result: [],
   },
@@ -69,8 +69,8 @@ const ONBOARDING_STEPS: Step[] = [
 export default function Onboarding() {
   const [stepIndex, setStepIndex] = useState(0);
   const [response, setResponse] = useState<any>({
-    full_name: "",
-    job_title: "",
+    name: "",
+    jobtitle: "",
     interests: [],
   });
 

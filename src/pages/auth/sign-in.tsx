@@ -1,33 +1,58 @@
 import Link from "next/link";
 import Image from "next/image";
+import {
+  getCsrfToken,
+  getProviders,
+  signIn,
+  useSession,
+} from "next-auth/react";
 
 import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useAuth } from "../../lib/auth";
 import { TextInput } from "../../components/design-system/TextInput";
+import { Button } from "../../components/design-system/Button";
+import type { InferGetServerSidePropsType } from "next";
+import type { GetServerSideProps } from "next";
 
-export default function SignInPage() {
-  const { signInWithPassword } = useAuth();
+type Providers = Awaited<ReturnType<typeof getProviders>>;
+type CSRFToken = Awaited<ReturnType<typeof getCsrfToken>>;
+
+export const getServerSideProps: GetServerSideProps<{
+  providers: Providers;
+  csrfToken: CSRFToken;
+}> = async (context) => {
+  const providers = await getProviders();
+  const csrfToken = await getCsrfToken(context);
+  return {
+    props: { providers, csrfToken },
+  };
+};
+
+export default function SignInPage({
+  providers,
+  csrfToken,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { data: session } = useSession();
+  const signInWithPassword = () => {
+    //
+  };
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  const handleSignInWithPassword = useCallback(
-    async (e: FormEvent) => {
-      e.preventDefault();
+  const handleSignInWithPassword = useCallback(async (e: FormEvent) => {
+    e.preventDefault();
 
-      await signInWithPassword({ email, password });
+    // await signInWithPassword({ email, password });
 
-      router.push("/");
-    },
-    [email, password, router, signInWithPassword]
-  );
+    // router.push("/");
+  }, []);
 
   return (
     <div className="flex h-full flex-col">
+      session: {JSON.stringify(session, null, 2)}
       <div className="flex flex-auto overflow-y-auto">
         <div className="flex flex-1 flex-col overflow-y-auto">
           <div className="ml-8 mt-8">
@@ -36,66 +61,16 @@ export default function SignInPage() {
           <div className="my-8 flex flex-auto items-center">
             <div className="mx-auto w-full max-w-sm">
               <h1 className="text-3xl font-semibold">Sign in</h1>
-              <form
-                className="my-4 flex flex-col gap-y-6"
-                onSubmit={handleSignInWithPassword}
-              >
-                <button className="flex w-full items-center justify-center gap-x-2 rounded-lg border bg-white py-2">
+              <div className="mt-4 flex flex-col gap-y-6">
+                <Button
+                  variant="outline"
+                  className="flex w-full items-center justify-center gap-x-2 rounded-lg py-2"
+                  onClick={() => signIn(providers?.google.id)}
+                >
                   <Image priority src={googleIcon} alt={"google icon"} />
                   <span>Sign in with Google</span>
-                </button>
-                <div className="relative flex items-center">
-                  <div className="w-full border-b" />
-                  <span className="z-10 mx-4 bg-white text-center text-xs font-medium text-slate-500">
-                    OR
-                  </span>
-                  <div className="w-full border-b" />
-                </div>
-                <div className="flex flex-col">
-                  <label className="mb-2 font-medium" htmlFor="email">
-                    Email
-                  </label>
-                  <TextInput
-                    className=""
-                    type="email"
-                    name="email"
-                    placeholder="jane@company.com"
-                    onValueChange={setEmail}
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label htmlFor="password" className="mb-2 font-medium">
-                    Password
-                  </label>
-                  <TextInput
-                    type="password"
-                    name="password"
-                    id="password"
-                    placeholder="••••••••"
-                    onValueChange={setPassword}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-x-2">
-                    <input
-                      className="h-4 w-4 appearance-none rounded border border-slate-300 bg-[length:130%_130%] bg-[45%_34%] text-white outline-offset-1 outline-primary-500 checked:border-primary-600 checked:bg-primary-500 checked:bg-check"
-                      type="checkbox"
-                      name="remember"
-                      id="remember"
-                    />
-                    <label htmlFor="remember">Remember me</label>
-                  </div>
-                  <Link
-                    href="/auth/reset-password"
-                    className="font-medium text-primary-400"
-                  >
-                    Forgot your password?
-                  </Link>
-                </div>
-                <button className="w-full rounded-lg bg-primary-600 py-2 text-white">
-                  Sign in
-                </button>
-              </form>
+                </Button>
+              </div>
               <p className="my-2 text-center text-slate-500">
                 Don&apos;t have an account?{" "}
                 <Link href="/auth/sign-up" className="text-primary-500">

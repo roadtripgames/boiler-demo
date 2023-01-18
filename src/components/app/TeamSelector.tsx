@@ -29,9 +29,11 @@ function MenuItem({
 }
 
 export default function TeamSelector() {
-  const user = api.user.get.useQuery()?.data;
+  const user = api.user.get.useQuery();
   const teams = api.teams.get.useQuery();
-  const currentTeam = teams.data?.find((t) => t.id === user?.current_team_id);
+  const currentTeam = teams.data?.find(
+    (t) => t.id === user.data?.currentTeamId
+  );
   const context = api.useContext();
   const selectTeamMutation = api.user.selectTeam.useMutation({
     onSuccess: () => context.invalidate(undefined, { queryKey: ["user"] }),
@@ -43,8 +45,8 @@ export default function TeamSelector() {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button className="flex select-none items-center gap-x-2 py-1">
-          <Avatar size="sm" name={currentTeam?.name ?? user.full_name} />
-          <p className="font-medium">{currentTeam?.name ?? user.full_name}</p>
+          <Avatar size="sm" name={currentTeam?.name ?? user.data?.name} />
+          <p className="font-medium">{currentTeam?.name ?? user.data?.name}</p>
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
@@ -64,8 +66,8 @@ export default function TeamSelector() {
               toast.success(`Switched to your personal account`);
             }}
           >
-            <Avatar size="sm" name={user.full_name} src={user.avatar_url} />
-            {user.full_name}
+            <Avatar size="sm" name={user.data?.name} src={user.data?.image} />
+            {user.data?.name}
           </MenuItem>
           {(teams.data?.length ?? 0) > 0 && (
             <div className="flex flex-col">
@@ -77,7 +79,7 @@ export default function TeamSelector() {
                   <MenuItem
                     key={t.id}
                     onClick={() => {
-                      if (t.id === user.current_team_id) return;
+                      if (t.id === user.data?.currentTeamId) return;
 
                       selectTeamMutation.mutateAsync({ teamId: t.id });
                       toast.success(`Switched to ${t.name}`);

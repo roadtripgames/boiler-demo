@@ -29,7 +29,8 @@ export const Avatar: React.FC<AvatarProps> = ({
       )}
     >
       {src ? (
-        <Image src={src} alt={"user profile picture"} />
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={src} alt={"user profile picture"} className="rounded-full" />
       ) : (
         <span className="font-semibold">{letter}</span>
       )}

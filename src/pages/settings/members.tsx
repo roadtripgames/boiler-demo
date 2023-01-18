@@ -180,10 +180,10 @@ export default function Team() {
                 key={m.id}
               >
                 <div className="flex items-center gap-x-2">
-                  <Avatar name={m.full_name ?? m.email} />
+                  <Avatar name={m.name ?? m.email} />
                   <div className="flex flex-col">
                     <p className="font-medium">
-                      {m.full_name ?? m.email ?? "Unknown"}
+                      {m.name ?? m.email ?? "Unknown"}
                     </p>
                     <p className="font-medium text-slate-500">{m.role}</p>
                   </div>
