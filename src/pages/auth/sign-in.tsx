@@ -52,7 +52,6 @@ export default function SignInPage({
 
   return (
     <div className="flex h-full flex-col">
-      session: {JSON.stringify(session, null, 2)}
       <div className="flex flex-auto overflow-y-auto">
         <div className="flex flex-1 flex-col overflow-y-auto">
           <div className="ml-8 mt-8">

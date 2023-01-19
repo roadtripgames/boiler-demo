@@ -39,7 +39,7 @@ type Invite = { email: string; role: Role };
 
 type InviteSectionProps = {
   teamId: string;
-  inviteMutation: ReturnType<typeof api.members.invite.useMutation>;
+  inviteMutation: ReturnType<typeof api.teams.inviteMembers.useMutation>;
 };
 
 const InviteSection: React.FC<InviteSectionProps> = ({
@@ -144,7 +144,7 @@ const InviteSection: React.FC<InviteSectionProps> = ({
 export default function Team() {
   const router = useRouter();
   const user = api.user.get.useQuery();
-  const members = api.members.get.useQuery(
+  const members = api.teams.getMembers.useQuery(
     {
       teamId: user.data?.currentTeam?.id ?? "",
     },
@@ -162,7 +162,7 @@ export default function Team() {
   }, [router, user]);
 
   const utils = api.useContext();
-  const inviteMutation = api.members.invite.useMutation({
+  const inviteMutation = api.teams.inviteMembers.useMutation({
     onSuccess() {
       utils.invalidate(undefined, { queryKey: ["members.get"] });
     },
