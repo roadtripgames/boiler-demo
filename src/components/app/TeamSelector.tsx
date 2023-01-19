@@ -5,6 +5,7 @@ import React from "react";
 import { toast } from "react-hot-toast";
 import { api } from "../../utils/api";
 import { Avatar } from "../design-system/Avatar";
+import Spinner from "../design-system/Spinner";
 
 function MenuItem({
   children,
@@ -41,13 +42,22 @@ export default function TeamSelector() {
 
   if (!user) return null;
 
+  const loading =
+    teams.isLoading || user.isLoading || selectTeamMutation.isLoading;
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className="flex select-none items-center gap-x-2 py-1">
-          <Avatar size="sm" name={currentTeam?.name ?? user.data?.name} />
-          <p className="font-medium">{currentTeam?.name ?? user.data?.name}</p>
-        </button>
+        {loading ? (
+          <Spinner size="small" />
+        ) : (
+          <button className="flex select-none items-center gap-x-2 py-1">
+            <Avatar size="sm" name={currentTeam?.name ?? user.data?.name} />
+            <p className="font-medium">
+              {currentTeam?.name ?? user.data?.name}
+            </p>
+          </button>
+        )}
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
@@ -60,8 +70,8 @@ export default function TeamSelector() {
           </p>
           <MenuItem
             className="pr-12"
-            onClick={() => {
-              selectTeamMutation.mutateAsync({ teamId: null });
+            onClick={async () => {
+              await selectTeamMutation.mutateAsync({ teamId: null });
 
               toast.success(`Switched to your personal account`);
             }}
@@ -78,10 +88,10 @@ export default function TeamSelector() {
                 return (
                   <MenuItem
                     key={t.id}
-                    onClick={() => {
+                    onClick={async () => {
                       if (t.id === user.data?.currentTeamId) return;
 
-                      selectTeamMutation.mutateAsync({ teamId: t.id });
+                      await selectTeamMutation.mutateAsync({ teamId: t.id });
                       toast.success(`Switched to ${t.name}`);
                     }}
                   >

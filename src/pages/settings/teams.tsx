@@ -27,7 +27,7 @@ export default function Team() {
   });
 
   useEffect(() => {
-    // if (user.data && user.data.current_team != null) {
+    // if (user.data && user.data.currentTeam != null) {
     //   router.push("/settings/members");
     // }
   }, [router, user]);

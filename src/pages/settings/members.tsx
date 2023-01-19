@@ -4,13 +4,12 @@ import {
   PlusIcon,
 } from "@radix-ui/react-icons";
 import clsx from "clsx";
-import _ from "lodash";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
 import { Avatar } from "../../components/design-system/Avatar";
 import { Button } from "../../components/design-system/Button";
 import { DropdownMenu } from "../../components/design-system/Dropdown";
+import { TabbedContainer } from "../../components/design-system/TabbedContainer";
 import { TextInput } from "../../components/design-system/TextInput";
 import type { Role } from "../../lib/roles";
 import { ROLE_MEMBER, ROLES } from "../../lib/roles";
@@ -24,7 +23,7 @@ const Section: React.FC<{
   children: React.ReactNode;
 }> = ({ className, title, description, children }) => {
   return (
-    <div className={clsx("rounded-lg border p-6", className)}>
+    <div className={clsx("rounded-lg border bg-white p-6", className)}>
       <div className="mb-2">
         <h3 className="text-xl font-medium">{title}</h3>
         {description && (
@@ -39,7 +38,7 @@ const Section: React.FC<{
 type Invite = { email: string; role: Role };
 
 type InviteSectionProps = {
-  teamId: number;
+  teamId: string;
   inviteMutation: ReturnType<typeof api.members.invite.useMutation>;
 };
 
@@ -48,7 +47,6 @@ const InviteSection: React.FC<InviteSectionProps> = ({
   inviteMutation,
 }) => {
   const [invites, setInvites] = useState<Invite[]>([
-    { email: "", role: ROLE_MEMBER },
     { email: "", role: ROLE_MEMBER },
     { email: "", role: ROLE_MEMBER },
   ]);
@@ -81,12 +79,16 @@ const InviteSection: React.FC<InviteSectionProps> = ({
 
   const handleSendInvites = useCallback(async () => {
     const validInvites = invites.filter((invite) => invite.email);
-    inviteMutation.mutateAsync({ teamId, invites: validInvites });
+    await inviteMutation.mutateAsync({ teamId, invites: validInvites });
+    setInvites([
+      { email: "", role: ROLE_MEMBER },
+      { email: "", role: ROLE_MEMBER },
+    ]);
   }, [inviteMutation, invites, teamId]);
 
   return (
     <Section
-      title="Invite members"
+      title="Invite"
       description="You can invite up to 25 members on the Pro plan"
     >
       <div className="mt-4 flex flex-col gap-y-2">
@@ -142,12 +144,19 @@ const InviteSection: React.FC<InviteSectionProps> = ({
 export default function Team() {
   const router = useRouter();
   const user = api.user.get.useQuery();
-  const members = api.members.get.useQuery({
-    teamId: user.data?.current_team?.id,
-  });
+  const members = api.members.get.useQuery(
+    {
+      teamId: user.data?.currentTeam?.id ?? "",
+    },
+    { enabled: !!user.data?.currentTeam?.id }
+  );
+  const invites = api.teams.invites.useQuery(
+    { teamId: user.data?.currentTeam?.id ?? "" },
+    { enabled: !!user.data?.currentTeam?.id }
+  );
 
   useEffect(() => {
-    if (user.data && user.data.current_team == null) {
+    if (user.data && user.data.currentTeam == null) {
       router.push("/settings/teams");
     }
   }, [router, user]);
@@ -159,7 +168,7 @@ export default function Team() {
     },
   });
 
-  if (!user.data?.current_team) return null;
+  if (!user.data?.currentTeam) return null;
 
   return (
     <SettingsLayout
@@ -169,31 +178,67 @@ export default function Team() {
       {/* {<pre>{JSON.stringify(members.data, null, 2)}</pre>} */}
       <div className="flex flex-col gap-y-8">
         <InviteSection
-          teamId={user.data.current_team.id}
+          teamId={user.data.currentTeam.id}
           inviteMutation={inviteMutation}
         />
-        <div className="flex flex-col rounded-lg border">
-          {members?.data?.map((m) => {
-            return (
-              <div
-                className="flex justify-between border-b px-4 py-3 last-of-type:border-none"
-                key={m.id}
-              >
-                <div className="flex items-center gap-x-2">
-                  <Avatar name={m.name ?? m.email} />
+        <div className="flex flex-col rounded-lg">
+          <TabbedContainer
+            tabs={[
+              {
+                title: "Members",
+                content: members?.data?.map((m) => {
+                  return (
+                    <div
+                      className="flex justify-between border-b py-3 px-4 last-of-type:border-none"
+                      key={m.id}
+                    >
+                      <div className="flex items-center gap-x-2">
+                        <Avatar name={m.name ?? m.email} />
+                        <div className="flex flex-col">
+                          <p className="font-medium">
+                            {m.name ?? m.email ?? "Unknown"}
+                          </p>
+                          <p className="font-medium text-slate-500">
+                            {m.roles[0]?.name}
+                          </p>
+                        </div>
+                      </div>
+                      <Button variant="link">
+                        <DotsHorizontalIcon />
+                      </Button>
+                    </div>
+                  );
+                }),
+              },
+              {
+                title: "Pending invites",
+                content: (
                   <div className="flex flex-col">
-                    <p className="font-medium">
-                      {m.name ?? m.email ?? "Unknown"}
-                    </p>
-                    <p className="font-medium text-slate-500">{m.role}</p>
+                    {invites.data?.map((i) => {
+                      return (
+                        <div
+                          className="flex justify-between border-b py-3 px-4 last-of-type:border-none"
+                          key={i.id}
+                        >
+                          <div className="flex items-center gap-x-2">
+                            <div className="flex flex-col gap-y-1">
+                              <p className="font-medium">{i.email}</p>
+                              <p className="font-medium text-slate-500">
+                                {i.role}
+                              </p>
+                            </div>
+                          </div>
+                          <Button variant="link">
+                            <DotsHorizontalIcon />
+                          </Button>
+                        </div>
+                      );
+                    })}
                   </div>
-                </div>
-                <Button variant="outline">
-                  <DotsHorizontalIcon />
-                </Button>
-              </div>
-            );
-          })}
+                ),
+              },
+            ]}
+          />
         </div>
       </div>
     </SettingsLayout>

@@ -19,11 +19,12 @@ export const Avatar: React.FC<AvatarProps> = ({
   return (
     <div
       className={clsx(
-        "flex select-none items-center justify-center rounded-full border bg-slate-50",
+        "flex select-none items-center justify-center rounded-full bg-slate-50",
         {
           "h-8 w-8 text-sm": size === "sm",
           "h-10 w-10 text-lg": size === "md",
           "h-24 w-24 text-3xl": size === "lg",
+          border: !src,
         },
         className
       )}

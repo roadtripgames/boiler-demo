@@ -1,31 +1,35 @@
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { getTeamOrThrow } from "../utils";
 
 const userRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },
+      include: {
+        currentTeam: true,
+      },
     });
 
     return user;
 
-    // const current_team = Array.isArray(data?.current_team)
-    //   ? data?.current_team[0]
-    //   : data?.current_team;
+    // const currentTeam = Array.isArray(data?.currentTeam)
+    //   ? data?.currentTeam[0]
+    //   : data?.currentTeam;
 
     // return {
     //   ...data,
     //   email: ctx.session.user.email,
     //   session: ctx.session.user.id,
-    //   current_team,
+    //   currentTeam,
     // };
   }),
   update: protectedProcedure
     .input(
       z.object({
         name: z.string().optional(),
-        jobtitle: z.string().optional(),
+        jobTitle: z.string().optional(),
         interests: z.array(z.string()).optional(),
         image: z.string().optional(),
         billing_address: z.string().optional(),
@@ -43,15 +47,18 @@ const userRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        jobtitle: z.string(),
-        interests: z.array(z.string()),
+        jobTitle: z.string(),
+        interest: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // await ctx.supabase
-      //   .from("users")
-      //   .update({ ...input, has_onboarded: true })
-      //   .eq("id", ctx.session.user.id);
+      await ctx.prisma.user.update({
+        where: { id: ctx.session.user.id },
+        data: {
+          ...input,
+          hasOnboarded: true,
+        },
+      });
     }),
   selectTeam: protectedProcedure
     .input(
@@ -60,10 +67,22 @@ const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      if (!input.teamId) {
+        await ctx.prisma.user.update({
+          where: { id: ctx.session.user.id },
+          data: { currentTeamId: null },
+        });
+        return;
+      }
+
+      const team = await getTeamOrThrow(ctx, input.teamId);
+
       await ctx.prisma.user.update({
-        where: { id: ctx.session.user.id },
+        where: {
+          id: ctx.session.user.id,
+        },
         data: {
-          currentTeamId: input.teamId,
+          currentTeamId: team.id,
         },
       });
     }),

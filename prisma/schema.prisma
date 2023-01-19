@@ -28,6 +28,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index(userId)
 }
 
 model Session {
@@ -36,24 +37,27 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index(userId)
 }
 
 model User {
-  id            String    @id @default(cuid())
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now()) @updatedAt
+  id            String         @id @default(cuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now()) @updatedAt
   name          String?
-  email         String?   @unique
+  email         String?        @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  hasOnboarded  Boolean   @default(false)
-  interest      String?   @db.Text
+  hasOnboarded  Boolean        @default(false)
+  interest      String?        @db.Text
   jobTitle      String?
-  currentTeam   Team?     @relation("CurrentTeam", fields: [currentTeamId], references: [id])
-  teams         Team[]    @relation("Teams")
+  currentTeam   Team?          @relation("CurrentTeam", fields: [currentTeamId], references: [id])
+  teams         Team[]         @relation("Teams")
   currentTeamId String?
+  roles         UserTeamRole[]
 
   @@index([currentTeamId])
 }
@@ -67,10 +71,37 @@ model VerificationToken {
 }
 
 model Team {
-  id               String   @id @default(cuid())
+  id               String         @id @default(cuid())
   name             String
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @default(now()) @updatedAt
-  users            User[]   @relation("Teams")
-  currentTeamUsers User[]   @relation("CurrentTeam")
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @default(now()) @updatedAt
+  users            User[]         @relation("Teams")
+  currentTeamUsers User[]         @relation("CurrentTeam")
+  roles            UserTeamRole[]
+  userInvites      UserInvite[]
+}
+
+model UserTeamRole {
+  name   String
+  user   User   @relation(fields: [userId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id])
+  userId String
+  teamId String
+
+  @@id([userId, teamId])
+  @@index([teamId])
+  @@index([userId])
+}
+
+model UserInvite {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  email     String
+  team      Team     @relation(fields: [teamId], references: [id])
+  role      String
+  teamId    String
+
+  @@unique([teamId, email])
+  @@index([teamId])
 }

@@ -7,7 +7,7 @@ import UserProfileButton from "./UserProfileButton";
 
 export default function Header() {
   return (
-    <header className="border-b">
+    <header className="border-b bg-white">
       <nav className="mx-auto max-w-7xl">
         <div className="flex items-center justify-between px-4 py-2">
           <div className="flex items-center gap-x-2">

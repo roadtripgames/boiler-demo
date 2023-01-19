@@ -43,7 +43,7 @@ export default function SettingsLayout({
   const { pathname } = router;
 
   return (
-    <section className="flex h-full min-h-screen flex-col bg-white">
+    <section className="flex h-full min-h-screen flex-col">
       <Header />
       <div className="mx-auto grid h-full w-full max-w-7xl grid-cols-4 px-4">
         <div className="col-span-1 p-4">
@@ -56,7 +56,7 @@ export default function SettingsLayout({
               isSelected={pathname === "/settings/profile"}
               href="/settings/profile"
             />
-            {user.data?.current_team === null ? (
+            {user.data?.currentTeam == null ? (
               <Page
                 name="Teams"
                 isSelected={pathname === "/settings/teams"}

@@ -8,20 +8,20 @@ import { api } from "../../utils/api";
 import SettingsLayout from "./layout";
 
 type UserProfileFormProps = {
-  user: RouterOutputs["user"]["get"];
+  user: NonNullable<RouterOutputs["user"]["get"]>;
   onUpdate?: ReturnType<typeof api.user.update.useMutation>;
 };
 
 function UserProfileForm({ user, onUpdate }: UserProfileFormProps) {
   const [name, setName] = useState(user.name ?? "");
-  const [title, setTitle] = useState(user.jobtitle ?? "");
+  const [title, setTitle] = useState(user.jobTitle ?? "");
 
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault();
         try {
-          await onUpdate?.mutateAsync({ name: name, jobtitle: title });
+          await onUpdate?.mutateAsync({ name: name, jobTitle: title });
           toast.success("Profile updated.");
         } catch (e) {
           toast.error(`Issue updating profile.`);

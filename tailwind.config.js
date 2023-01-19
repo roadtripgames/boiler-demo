@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       colors: {
         primary: colors.indigo,
+        slate: { ...colors.slate, 900: "#121827" },
       },
       backgroundImage: {
         check: "url('../../public/check.svg')",

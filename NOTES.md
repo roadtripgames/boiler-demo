@@ -2,7 +2,9 @@
 
 ## Jan 18
 
-- move to prisma
+- always make a team for each user
+
+- move to prisma (done)
 - fix members invite
 
 - show how to differentiate more on business logic
