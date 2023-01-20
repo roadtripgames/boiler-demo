@@ -6,6 +6,7 @@ import {
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { Avatar } from "../../components/design-system/Avatar";
 import { Button } from "../../components/design-system/Button";
 import { DropdownMenu } from "../../components/design-system/Dropdown";
@@ -144,20 +145,20 @@ const InviteSection: React.FC<InviteSectionProps> = ({
 
 export default function Team() {
   const router = useRouter();
-  const user = api.user.get.useQuery();
+  const { data: user } = api.user.get.useQuery();
   const members = api.teams.getMembers.useQuery(
     {
-      teamId: user.data?.currentTeam?.id ?? "",
+      teamId: user?.currentTeam?.id ?? "",
     },
-    { enabled: !!user.data?.currentTeam?.id }
+    { enabled: !!user?.currentTeam?.id }
   );
-  const invites = api.teams.invites.useQuery(
-    { teamId: user.data?.currentTeam?.id ?? "" },
-    { enabled: !!user.data?.currentTeam?.id }
+  const { data: invites } = api.teams.invites.useQuery(
+    { teamId: user?.currentTeam?.id ?? "" },
+    { enabled: !!user?.currentTeam?.id }
   );
 
   useEffect(() => {
-    if (user.data && user.data.currentTeam == null) {
+    if (user && user.currentTeam == null) {
       router.push("/settings/teams");
     }
   }, [router, user]);
@@ -168,18 +169,25 @@ export default function Team() {
       utils.invalidate(undefined, { queryKey: ["members.get"] });
     },
   });
+  const updateRoleMutation = api.teams.updateRole.useMutation({
+    onSuccess() {
+      utils.invalidate(undefined, { queryKey: ["members.get"] });
+    },
+  });
 
-  if (!user.data?.currentTeam) return null;
+  if (!user) return null;
+  if (!user.currentTeam) return null;
+
+  const team = user.currentTeam;
 
   return (
     <SettingsLayout
       title="Members"
       description={`Manage and invite team members`}
     >
-      {/* {<pre>{JSON.stringify(members.data, null, 2)}</pre>} */}
       <div className="flex flex-col gap-y-8">
         <InviteSection
-          teamId={user.data.currentTeam.id}
+          teamId={user.currentTeam.id}
           inviteMutation={inviteMutation}
         />
         <div className="flex flex-col rounded-lg">
@@ -188,25 +196,50 @@ export default function Team() {
               {
                 title: "Members",
                 content: members?.data?.map((m) => {
+                  const role = m.roles[0]?.name ?? "Member";
                   return (
                     <div
                       className="flex justify-between border-b py-3 px-4 last-of-type:border-none"
                       key={m.id}
                     >
                       <div className="flex items-center gap-x-2">
-                        <Avatar name={m.name ?? m.email} />
+                        <Avatar name={m.name ?? m.email} src={m.image} />
                         <div className="flex flex-col">
                           <p className="font-medium">
                             {m.name ?? m.email ?? "Unknown"}
                           </p>
                           <p className="font-medium text-slate-500">
-                            {m.roles[0]?.name}
+                            {m.email}
                           </p>
                         </div>
                       </div>
-                      <Button variant="link">
-                        <DotsHorizontalIcon />
-                      </Button>
+                      <div className="flex items-center gap-x-6">
+                        <p className="">
+                          {user.id === m.id ? (
+                            <span className="text-slate-500">{role}</span>
+                          ) : (
+                            <DropdownMenu
+                              values={ROLES}
+                              value={role}
+                              disabled={updateRoleMutation.isLoading}
+                              onChange={async (v) => {
+                                await updateRoleMutation.mutateAsync({
+                                  teamId: team.id,
+                                  userId: m.id,
+                                  role: v,
+                                });
+
+                                toast.success(`${m.name} set to ${v}`);
+                              }}
+                            >
+                              {role}
+                            </DropdownMenu>
+                          )}
+                        </p>
+                        <Button variant="link">
+                          <DotsHorizontalIcon />
+                        </Button>
+                      </div>
                     </div>
                   );
                 }),
@@ -215,7 +248,7 @@ export default function Team() {
                 title: "Pending invites",
                 content: (
                   <div className="flex flex-col">
-                    {invites.data?.map((i) => {
+                    {invites?.map((i) => {
                       return (
                         <div
                           className="flex justify-between border-b py-3 px-4 last-of-type:border-none"

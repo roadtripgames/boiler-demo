@@ -83,8 +83,8 @@ model Team {
 
 model UserTeamRole {
   name   String
-  user   User   @relation(fields: [userId], references: [id])
-  team   Team   @relation(fields: [teamId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
   userId String
   teamId String
 
@@ -98,7 +98,7 @@ model UserInvite {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   email     String
-  team      Team     @relation(fields: [teamId], references: [id])
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   role      String
   teamId    String
 

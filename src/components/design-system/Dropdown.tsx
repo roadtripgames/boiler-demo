@@ -12,6 +12,7 @@ import type {
   DropdownMenuProps as _DropdownMenuProps,
 } from "@radix-ui/react-dropdown-menu";
 import clsx from "clsx";
+import Spinner from "./Spinner";
 
 type DropdownMenuProps = _DropdownMenuProps & {
   className?: string;
@@ -22,6 +23,7 @@ type DropdownMenuProps = _DropdownMenuProps & {
   defaultValue?: string;
   onChange?: (value: string) => void;
   disabled?: boolean;
+  loading?: boolean;
 };
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -33,6 +35,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   defaultValue,
   onChange,
   disabled,
+  loading,
   ...props
 }) => {
   const [value, setValue] = useState<string | undefined>(
@@ -61,7 +64,13 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
       <DropdownMenuTrigger
         disabled={disabled}
         asChild
-        className="h-10 rounded-md border border-slate-300 bg-white px-4 outline-2 outline-primary-500 hover:border-slate-400 data-[state=open]:outline data-[state=open]:outline-primary-500"
+        className={clsx(
+          "h-10 rounded-md border border-slate-300 bg-white px-4 outline-2 outline-primary-500 data-[state=open]:outline data-[state=open]:outline-primary-500",
+          {
+            "hover:border-slate-400": !disabled,
+            "bg-slate-50": disabled,
+          }
+        )}
       >
         <button
           className={clsx(
@@ -72,7 +81,11 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
           {!value && placeholder && (
             <span className="text-slate-500">{placeholder}</span>
           )}
-          {value && <span className="">{value}</span>}
+          {loading ? (
+            <Spinner size="small" />
+          ) : (
+            <span className="">{value}</span>
+          )}
           <ChevronDownIcon />
         </button>
       </DropdownMenuTrigger>

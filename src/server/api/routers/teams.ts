@@ -18,11 +18,22 @@ const teamsRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.team.deleteMany({
-        where: {
-          users: { some: { id: ctx.session.user.id } },
-          id: input.id,
-        },
+      // TODO: check that the user owns this team
+
+      // cannot do implicit many-to-many on delete cascade, so we manually disconnect
+      await ctx.prisma.$transaction(async (tx) => {
+        await tx.team.update({
+          where: { id: input.id },
+          data: {
+            users: { set: [] },
+          },
+        });
+
+        await tx.team.deleteMany({
+          where: {
+            id: input.id,
+          },
+        });
       });
     }),
   create: protectedProcedure
@@ -115,6 +126,24 @@ const teamsRouter = createTRPCRouter({
       });
 
       return invites;
+    }),
+  updateRole: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        teamId: z.string(),
+        role: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // TODO: check that the user owns this team
+
+      await ctx.prisma.userTeamRole.update({
+        where: {
+          userId_teamId: { userId: input.userId, teamId: input.teamId },
+        },
+        data: { name: input.role },
+      });
     }),
 });
 
