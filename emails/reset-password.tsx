@@ -22,8 +22,17 @@ export default function Email({
     : "";
 
   const toName = toEmail.split("@")[0];
-
-  return <Html>Reset your password .. click on this link</Html>;
+  return (
+    <Html>
+      <Head />
+      <Preview>{`Reset your password`}</Preview>
+      <Section style={main}>
+        <Container style={container}>
+          Reset your password .. click on this link
+        </Container>
+      </Section>
+    </Html>
+  );
 }
 
 const main = {

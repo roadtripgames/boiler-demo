@@ -56,11 +56,11 @@ export default function UserProfileButton() {
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="animate-slideDownAndFade rounded-md border bg-white text-sm shadow-lg transition"
+          className="animate-slideDownAndFadeIn rounded-md border bg-white text-sm shadow-lg transition"
           align="end"
           sideOffset={4}
         >
-          <div className="flex items-center gap-x-2 border-b p-4">
+          <div className="flex items-center gap-x-2 rounded-t border-b bg-slate-50 p-4">
             <Avatar name={user?.name} src={user?.image} />
             <div className="">
               <p className="font-medium">{user?.name}</p>

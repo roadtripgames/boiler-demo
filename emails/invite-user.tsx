@@ -25,7 +25,7 @@ export default function InviteUserEmail({
 }: InviteUserEmailProps) {
   const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
-    : "";
+    : "https://localhost:3000";
 
   const toName = toEmail.split("@")[0];
 
@@ -36,13 +36,13 @@ export default function InviteUserEmail({
       <Section style={main}>
         <Container style={container}>
           <Section style={{ marginTop: "32px" }}>
-            <Img
+            {/* <Img
               src={`${baseUrl}/static/logo.svg`}
               width="40"
               height="37"
               alt="Vercel"
               style={logo}
-            />
+            /> */}
           </Section>
           <Text style={h1}>
             Join <strong>{teamName}</strong> on <strong>Selene</strong>
@@ -64,20 +64,20 @@ export default function InviteUserEmail({
           >
             <tr>
               <td style={center} align="left" valign="middle">
-                <Img
+                {/* <Img
                   style={avatar}
                   src={`${baseUrl}/static/vercel-user.png`}
                   width="64"
                   height="64"
-                />
+                /> */}
               </td>
               <td style={center} align="left" valign="middle">
-                <Img
+                {/* <Img
                   src={`${baseUrl}/static/vercel-arrow.png`}
                   width="12"
                   height="9"
                   alt="invited you to"
-                />
+                /> */}
               </td>
               <td style={center} align="left" valign="middle">
                 <Img

@@ -1,5 +1,23 @@
 # Notes
 
+## Jan 20
+
+- [x] modal
+- [x] create team in a modal
+- [x] create team from user profile modal
+- role management if you're an admin
+- responsiveness prototype
+- billing page
+- waitlist
+- more pixel perfect components
+- more react emails
+- phone number, phone number confirm (letterloop)
+- change to "email sign in link" screen
+- add more auth providers
+- don't expose radix-ui if you can afford it?
+- team profile section in settings
+- different routes for teams like vercel
+
 ## Jan 18
 
 - always make a team for each user

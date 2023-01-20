@@ -1,37 +1,61 @@
 import clsx from "clsx";
+import React from "react";
+import Spinner from "./Spinner";
 
 export type ButtonProps = {
   className?: string;
   variant?: "primary" | "outline" | "link";
-};
+  loading?: boolean;
+  loadingText?: string;
+} & React.ComponentPropsWithoutRef<"button">;
 
-export const Button: React.FC<
-  ButtonProps & React.ComponentPropsWithoutRef<"button">
-> = ({ className, children, variant = "primary", ...props }) => {
-  return (
-    <button
-      className={clsx(
-        "h-9 rounded-md border border-transparent font-medium outline-primary-500 transition",
-        {
-          "px-3": variant !== "link",
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className,
+      loading = false,
+      loadingText = "",
+      // loading = true,
+      // loadingText = "Loading",
+      children,
+      variant = "primary",
+      ...props
+    },
+    forwardedRef
+  ) => {
+    const unclickable = props.disabled || loading;
 
-          "bg-primary-600 text-white": variant === "primary",
-          "hover:bg-primary-500": variant === "primary" && !props.disabled,
+    return (
+      <button
+        ref={forwardedRef}
+        className={clsx(
+          "h-9 rounded-md border border-transparent outline-primary-500 transition",
+          {
+            "px-3": variant !== "link",
 
-          "border border-slate-200 bg-white": variant === "outline",
-          "hover:border-slate-300 hover:bg-slate-50":
-            variant === "outline" && !props.disabled,
+            "bg-primary-600 text-white": variant === "primary",
+            "hover:bg-primary-500": variant === "primary" && !unclickable,
+            "bg-primary-200": variant === "primary" && unclickable,
 
-          "font-semibold hover:text-primary-600":
-            variant === "link" && !props.disabled,
+            "border border-slate-200 bg-white": variant === "outline",
+            "hover:border-slate-300 hover:bg-slate-50":
+              variant === "outline" && !unclickable,
 
-          "cursor-not-allowed bg-primary-200": props.disabled,
-        },
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
+            "font-semibold hover:text-primary-600":
+              variant === "link" && !unclickable,
+
+            "cursor-not-allowed": unclickable,
+            "flex items-center gap-x-2": loading && loadingText,
+          },
+          className
+        )}
+        {...props}
+      >
+        {loading && loadingText && loadingText}
+        {loading ? <Spinner size="small" /> : children}
+      </button>
+    );
+  }
+);
+
+Button.displayName = "Button";

@@ -129,7 +129,8 @@ const InviteSection: React.FC<InviteSectionProps> = ({
           <PlusIcon /> Add another
         </Button>
         <Button
-          disabled={inviteMutation.isLoading}
+          loading={inviteMutation.isLoading}
+          loadingText="Sending invites"
           className="flex items-center gap-x-2"
           onClick={handleSendInvites}
         >

@@ -92,7 +92,7 @@ export const DropdownMenuContent = React.forwardRef<
         {...props}
         ref={forwardedRef}
         className={clsx(
-          "animate-slideDownAndFade rounded-md bg-white py-1 shadow-lg transition"
+          "animate-slideDownAndFadeIn rounded-md bg-white py-1 shadow-lg transition"
         )}
         align="start"
         sideOffset={5}

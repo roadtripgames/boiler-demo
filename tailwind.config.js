@@ -7,25 +7,36 @@ module.exports = {
     extend: {
       colors: {
         primary: colors.indigo,
+        // primary: colors.slate,
         slate: { ...colors.slate, 900: "#121827" },
       },
       backgroundImage: {
         check: "url('../../public/check.svg')",
       },
       keyframes: {
-        slideDownAndFade: {
+        slideDownAndFadeIn: {
           "0%": {
             opacity: 0,
             transform: "translateY(-2px)",
           },
           "100%": {
             opacity: 1,
-            transform: "translateY(0)",
+          },
+        },
+        modalSlideDownAndFadeIn: {
+          "0%": {
+            opacity: 0,
+            transform: "translate(-50%, -55%)",
+          },
+          "100%": {
+            opacity: 1,
+            transform: "translate(-50%, -50%)",
           },
         },
       },
       animation: {
-        slideDownAndFade: "slideDownAndFade 0.2s ease-in-out",
+        slideDownAndFadeIn: "slideDownAndFadeIn 0.2s ease",
+        modalSlideDownAndFadeIn: "modalSlideDownAndFadeIn 0.2s ease",
       },
     },
   },

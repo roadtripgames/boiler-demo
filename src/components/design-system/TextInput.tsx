@@ -38,7 +38,7 @@ export const TextInput: React.FC<TextInputProps & HTMLInputProps> = ({
 
   return (
     <>
-      <i className="absolute mt-3 ml-3">{iconLeft}</i>
+      {iconLeft && <i className="absolute mt-3 ml-3">{iconLeft}</i>}
       <input
         className={clsx(
           "flex h-10 items-center",

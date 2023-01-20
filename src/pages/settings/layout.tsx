@@ -76,7 +76,7 @@ export default function SettingsLayout({
             />
           </div>
         </div>
-        <div className="col-span-3 p-4">
+        <div className="col-span-3 py-4">
           <h1 className="text-2xl font-medium">{title}</h1>
           <p className="text-slate-500">{description}</p>
           <div className="my-8 w-full border-b border-slate-100" />
