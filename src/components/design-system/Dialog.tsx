@@ -12,7 +12,7 @@ export const DialogContent = React.forwardRef<
   DialogContentProps
 >(({ children, ...props }, forwardedRef) => (
   <DialogPrimitive.Portal>
-    <DialogPrimitive.Overlay className="fixed inset-0 bg-slate-900 opacity-20" />
+    <DialogPrimitive.Overlay className="fixed inset-0 animate-fadeIn bg-slate-900 opacity-20" />
     <DialogPrimitive.Content
       {...props}
       ref={forwardedRef}
@@ -22,7 +22,7 @@ export const DialogContent = React.forwardRef<
         "rounded-lg bg-white shadow-xl",
         "fixed will-change-transform",
         "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-        "animate-modalSlideDownAndFadeIn"
+        "animate-modalFadeIn"
       )}
     >
       {children}

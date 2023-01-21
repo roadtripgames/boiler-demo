@@ -18,19 +18,29 @@ module.exports = {
         check: "url('../../public/check.svg')",
       },
       keyframes: {
+        fadeIn: {
+          "0%": {
+            opacity: 0,
+          },
+          "100%": {
+            // empty on purpose; use the opacity of the component
+          },
+        },
         slideDownAndFadeIn: {
           "0%": {
             opacity: 0,
-            transform: "translateY(-2px)",
+            transform: "translateY(-2px) scale(0.9)",
+            // transformOrigin: "top right",
           },
           "100%": {
             opacity: 1,
+            // transformOrigin: "top right",
           },
         },
-        modalSlideDownAndFadeIn: {
+        modalFadeIn: {
           "0%": {
             opacity: 0,
-            transform: "translate(-50%, -55%)",
+            transform: "translate(-50%, -55%) scale(0.9)",
           },
           "100%": {
             opacity: 1,
@@ -39,8 +49,9 @@ module.exports = {
         },
       },
       animation: {
+        fadeIn: "fadeIn 0.2s ease",
         slideDownAndFadeIn: "slideDownAndFadeIn 0.2s ease",
-        modalSlideDownAndFadeIn: "modalSlideDownAndFadeIn 0.2s ease",
+        modalFadeIn: "modalFadeIn 0.2s ease",
       },
     },
   },

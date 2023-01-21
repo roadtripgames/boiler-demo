@@ -110,7 +110,7 @@ export default function TeamSelector() {
               </div>
             )}
             <MenuItem
-              className="rounded-b text-slate-500"
+              className="rounded-b border-t text-slate-500"
               onClick={() => {
                 setCreateModalOpen(true);
               }}

@@ -60,7 +60,7 @@ export default function Team() {
               </div>
               <Button
                 variant="outline"
-                onClick={() => deleteTeamMutation.mutateAsync({ id: t.id })}
+                onClick={() => deleteTeamMutation.mutateAsync({ teamId: t.id })}
               >
                 Delete
               </Button>
