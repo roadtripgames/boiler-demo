@@ -16,7 +16,7 @@ function Page({
   return (
     <Link
       className={clsx(
-        "-ml-3 flex h-9 w-full items-center rounded px-3 text-left font-medium",
+        "-ml-3 flex h-9 w-full items-center rounded px-3 text-left",
         {
           "bg-primary-100 font-semibold text-primary-800": isSelected,
           "hover:bg-slate-100": !isSelected,

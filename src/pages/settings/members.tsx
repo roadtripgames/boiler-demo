@@ -208,9 +208,7 @@ export default function Team() {
                           <p className="font-medium">
                             {m.name ?? m.email ?? "Unknown"}
                           </p>
-                          <p className="font-medium text-slate-500">
-                            {m.email}
-                          </p>
+                          <p className="text-slate-500">{m.email}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-x-6">
@@ -256,7 +254,7 @@ export default function Team() {
                         >
                           <div className="flex items-center gap-x-2">
                             <div className="flex flex-col gap-y-1">
-                              <p className="font-medium">{i.email}</p>
+                              <p className="">{i.email}</p>
                               <p className="font-medium text-slate-500">
                                 {i.role}
                               </p>

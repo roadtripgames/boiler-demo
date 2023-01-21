@@ -5,7 +5,8 @@
 - [x] modal
 - [x] create team in a modal
 - [x] create team from user profile modal
-- role management if you're an admin
+- [x] create team for all users
+- [x] role management if you're an admin
 - responsiveness prototype
 - billing page
 - waitlist

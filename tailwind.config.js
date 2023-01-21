@@ -1,10 +1,14 @@
 const colors = require("tailwindcss/colors");
+const { fontFamily } = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        primary: ["var(--inter-font)", ...fontFamily.sans],
+      },
       colors: {
         primary: colors.indigo,
         // primary: colors.slate,

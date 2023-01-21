@@ -18,12 +18,13 @@
  */
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { type Session } from "next-auth";
-
 import { getServerAuthSession } from "../auth";
 import { prisma } from "../db";
+import { z } from "zod";
 
 type CreateContextOptions = {
   session: Session | null;
+  team: Team | null;
 };
 
 /**
@@ -55,6 +56,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
 
   return createInnerTRPCContext({
     session,
+    team: null,
   });
 };
 
@@ -66,6 +68,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
+import type { Team } from "@prisma/client";
 
 export type ServerContext = Awaited<ReturnType<typeof createTRPCContext>>;
 
@@ -124,3 +127,58 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+
+const TeamInput = z.object({
+  teamId: z.string(),
+});
+
+export const adminProcedure = protectedProcedure
+  .input(TeamInput)
+  .use(async ({ next, ctx, input, ...rest }) => {
+    const { teamId } = input;
+    const user = ctx.session.user;
+    const team = await prisma.team.findFirst({
+      where: {
+        id: teamId,
+        users: { some: { id: user.id } },
+        roles: { some: { name: "ADMIN", user: { id: user.id } } },
+      },
+    });
+
+    if (!team) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You must be an admin to do this",
+      });
+    }
+
+    return next({
+      ...rest,
+      ctx: { ...ctx, team },
+    });
+  });
+
+export const memberProcedure = protectedProcedure
+  .input(TeamInput)
+  .use(async ({ next, ctx, input, ...rest }) => {
+    const { teamId } = input;
+    const user = ctx.session.user;
+    const team = await prisma.team.findFirst({
+      where: {
+        id: teamId,
+        users: { some: { id: user.id } },
+      },
+    });
+
+    if (!team) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You're not in this team",
+      });
+    }
+
+    return next({
+      ...rest,
+      ctx: { ...ctx, team },
+    });
+  });
