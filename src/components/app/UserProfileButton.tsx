@@ -6,6 +6,7 @@ import {
   ReaderIcon,
 } from "@radix-ui/react-icons";
 import clsx from "clsx";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import { api } from "../../utils/api";
@@ -36,16 +37,11 @@ function MenuItem({
 
 export default function UserProfileButton() {
   const router = useRouter();
-  // const auth = useAuth();
   const user = api.user.get.useQuery()?.data;
 
   const handleSignOut = useCallback(async () => {
-    //
+    signOut({ callbackUrl: "/" });
   }, []);
-  // const handleSignOut = useCallback(async () => {
-  //   await auth.signOut();
-  //   router.push("/auth/sign-in");
-  // }, [auth, router]);
 
   return (
     <DropdownMenu.Root>

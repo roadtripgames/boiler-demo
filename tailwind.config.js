@@ -11,7 +11,6 @@ module.exports = {
       },
       colors: {
         primary: colors.indigo,
-        // primary: colors.slate,
         slate: { ...colors.slate, 900: "#121827" },
       },
       backgroundImage: {
@@ -30,11 +29,9 @@ module.exports = {
           "0%": {
             opacity: 0,
             transform: "translateY(-2px) scale(0.9)",
-            // transformOrigin: "top right",
           },
           "100%": {
             opacity: 1,
-            // transformOrigin: "top right",
           },
         },
         modalFadeIn: {

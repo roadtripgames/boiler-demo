@@ -1,8 +1,9 @@
+import type { Team } from "@prisma/client";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { PlusIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
-import React from "react";
-import { toast } from "react-hot-toast";
+import { useRouter } from "next/router";
+import React, { useCallback, useState } from "react";
 import { api } from "../../utils/api";
 import { Avatar } from "../design-system/Avatar";
 import Spinner from "../design-system/Spinner";
@@ -30,22 +31,28 @@ const MenuItem = React.forwardRef<
 MenuItem.displayName = "MenuItem";
 
 export default function TeamSelector() {
+  const router = useRouter();
   const user = api.user.get.useQuery();
-  const teams = api.teams.get.useQuery();
-  const currentTeam = teams.data?.find(
-    (t) => t.id === user.data?.currentTeamId
-  );
-  const context = api.useContext();
-  const selectTeamMutation = api.user.selectTeam.useMutation({
-    onSuccess: () => context.invalidate(undefined, { queryKey: ["user"] }),
-  });
+  const teams = api.teams.getAllTeams.useQuery();
 
-  const [createModalOpen, setCreateModalOpen] = React.useState(false);
+  const handleSelectPersonalAccount = useCallback(() => {
+    router.push(`/`);
+  }, [router]);
+
+  const handleSelectTeam = useCallback(
+    (team: Team) => {
+      router.push(`/${team.slug}`);
+    },
+    [router]
+  );
+
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const currentTeamSlug = router.query.team as string | undefined;
+  const currentTeam = teams.data?.find((t) => t.slug === currentTeamSlug);
 
   if (!user) return null;
 
-  const loading =
-    teams.isLoading || user.isLoading || selectTeamMutation.isLoading;
+  const loading = teams.isLoading || user.isLoading;
 
   return (
     <>
@@ -78,9 +85,9 @@ export default function TeamSelector() {
             <MenuItem
               className="pr-12"
               onClick={async () => {
-                await selectTeamMutation.mutateAsync({ teamId: null });
+                handleSelectPersonalAccount();
 
-                toast.success(`Switched to your personal account`);
+                // toast.success(`Switched to your personal account`);
               }}
             >
               <Avatar size="sm" name={user.data?.name} src={user.data?.image} />
@@ -96,10 +103,11 @@ export default function TeamSelector() {
                     <MenuItem
                       key={t.id}
                       onClick={async () => {
-                        if (t.id === user.data?.currentTeamId) return;
+                        if (!t.id || t.slug === currentTeamSlug) return;
 
-                        await selectTeamMutation.mutateAsync({ teamId: t.id });
-                        toast.success(`Switched to ${t.name}`);
+                        handleSelectTeam(t);
+
+                        // toast.success(`Switched to ${t.name}`);
                       }}
                     >
                       <Avatar size="sm" name={t.name} />

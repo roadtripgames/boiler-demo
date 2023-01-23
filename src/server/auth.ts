@@ -3,6 +3,11 @@ import { unstable_getServerSession } from "next-auth";
 
 import { authOptions } from "../pages/api/auth/[...nextauth]";
 
+export type ServerSessionOptions = {
+  req: GetServerSidePropsContext["req"];
+  res: GetServerSidePropsContext["res"];
+};
+
 /**
  * Wrapper for unstable_getServerSession, used in trpc createContext and the
  * restricted API route
@@ -13,9 +18,6 @@ import { authOptions } from "../pages/api/auth/[...nextauth]";
  * @see https://next-auth.js.org/configuration/nextjs
  */
 
-export const getServerAuthSession = async (ctx: {
-  req: GetServerSidePropsContext["req"];
-  res: GetServerSidePropsContext["res"];
-}) => {
+export const getServerAuthSession = async (ctx: ServerSessionOptions) => {
   return await unstable_getServerSession(ctx.req, ctx.res, authOptions);
 };

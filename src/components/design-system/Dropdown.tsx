@@ -54,7 +54,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
   return (
     <DropdownMenuPrimitive.Root {...props}>
-      <DropdownMenuContent className={contentClassName}>
+      <DropdownMenuContent className={clsx("", contentClassName)}>
         {values.map((v) => (
           <DropdownMenuItem key={v} onSelect={() => handleValueChange(v)}>
             {v}
@@ -65,7 +65,11 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
         disabled={disabled}
         asChild
         className={clsx(
-          "h-10 rounded-md border border-slate-300 bg-white px-4 outline-2 outline-primary-500 data-[state=open]:outline data-[state=open]:outline-primary-500",
+          "rounded-md border border-slate-300 bg-white shadow-sm",
+          "h-10 px-4",
+          "ring-green-500",
+          // "outline-2 outline-primary-500 data-[state=open]:outline data-[state=open]:outline-primary-500",
+          // "data-[state=open]:outline-primary-500",
           {
             "hover:border-slate-400": !disabled,
             "bg-slate-50": disabled,
@@ -128,7 +132,7 @@ export const DropdownMenuItem = React.forwardRef<
       {...props}
       ref={forwardedRef}
       className={clsx(
-        "relative flex h-10 cursor-pointer items-center pl-4 pr-12 outline-none",
+        "relative flex h-9 cursor-pointer items-center pl-4 pr-12 outline-none",
         "text-slate-800 data-[highlighted]:bg-primary-100"
       )}
     >

@@ -1,5 +1,13 @@
 # Notes
 
+## Jan 23
+
+- 2pm EST / 11am PST
+- evaluate using the repository
+- using it with kitchbook/letterloop
+- need: basic instructions on cloning, using the repo
+- need: some documentation on how to use it
+
 ## Jan 20
 
 - [x] modal

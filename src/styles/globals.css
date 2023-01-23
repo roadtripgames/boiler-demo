@@ -19,3 +19,5 @@ body,
 #__next {
   height: 100%;
 }
+
+/* TODO: customize focus colors based on this https://github.com/tailwindlabs/tailwindcss-forms/issues/52#issuecomment-884735470 */

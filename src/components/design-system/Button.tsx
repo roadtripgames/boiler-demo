@@ -31,7 +31,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={clsx(
           "h-9 rounded-md border border-transparent outline-primary-500 transition",
           {
-            "px-3": variant !== "link",
+            "px-3 shadow-sm": variant !== "link",
 
             "bg-primary-600 text-white": variant === "primary",
             "hover:bg-primary-500": variant === "primary" && !unclickable,

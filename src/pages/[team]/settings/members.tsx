@@ -7,14 +7,14 @@ import clsx from "clsx";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { Avatar } from "../../components/design-system/Avatar";
-import { Button } from "../../components/design-system/Button";
-import { DropdownMenu } from "../../components/design-system/Dropdown";
-import { TabbedContainer } from "../../components/design-system/TabbedContainer";
-import { TextInput } from "../../components/design-system/TextInput";
-import type { Role } from "../../lib/roles";
-import { ROLE_MEMBER, ROLES } from "../../lib/roles";
-import { api } from "../../utils/api";
+import { Avatar } from "../../../components/design-system/Avatar";
+import { Button } from "../../../components/design-system/Button";
+import { DropdownMenu } from "../../../components/design-system/Dropdown";
+import { TabbedContainer } from "../../../components/design-system/TabbedContainer";
+import { TextInput } from "../../../components/design-system/TextInput";
+import type { Role } from "../../../lib/roles";
+import { ROLE_MEMBER, ROLES } from "../../../lib/roles";
+import { api } from "../../../utils/api";
 import SettingsLayout from "./layout";
 
 const Section: React.FC<{
@@ -146,22 +146,19 @@ const InviteSection: React.FC<InviteSectionProps> = ({
 export default function Team() {
   const router = useRouter();
   const { data: user } = api.user.get.useQuery();
+  const { data: team } = api.teams.getBySlug.useQuery({
+    slug: router.query.team as string,
+  });
   const members = api.teams.getMembers.useQuery(
     {
-      teamId: user?.currentTeam?.id ?? "",
+      teamId: team?.id ?? "",
     },
-    { enabled: !!user?.currentTeam?.id }
+    { enabled: !!team?.id }
   );
   const { data: invites } = api.teams.invites.useQuery(
-    { teamId: user?.currentTeam?.id ?? "" },
-    { enabled: !!user?.currentTeam?.id }
+    { teamId: team?.id ?? "" },
+    { enabled: !!team?.id }
   );
-
-  useEffect(() => {
-    if (user && user.currentTeam == null) {
-      router.push("/settings/teams");
-    }
-  }, [router, user]);
 
   const utils = api.useContext();
   const inviteMutation = api.teams.inviteMembers.useMutation({
@@ -176,9 +173,7 @@ export default function Team() {
   });
 
   if (!user) return null;
-  if (!user.currentTeam) return null;
-
-  const team = user.currentTeam;
+  if (!team) return null;
 
   return (
     <SettingsLayout
@@ -186,10 +181,7 @@ export default function Team() {
       description={`Manage and invite team members`}
     >
       <div className="flex flex-col gap-y-8">
-        <InviteSection
-          teamId={user.currentTeam.id}
-          inviteMutation={inviteMutation}
-        />
+        <InviteSection teamId={team.id} inviteMutation={inviteMutation} />
         <div className="flex flex-col rounded-lg">
           <TabbedContainer
             tabs={[

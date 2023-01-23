@@ -63,7 +63,6 @@ export default function Profile() {
 
   return (
     <SettingsLayout title="Profile" description="Manage your Selene profile">
-      {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       {user && <UserProfileForm user={user} onUpdate={updateUserMutation} />}
     </SettingsLayout>
   );

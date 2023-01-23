@@ -1,57 +1,39 @@
-import Link from "next/link";
 import Image from "next/image";
-import {
-  getCsrfToken,
-  getProviders,
-  signIn,
-  useSession,
-} from "next-auth/react";
+import { getProviders, signIn } from "next-auth/react";
 
 import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";
-import type { FormEvent } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { TextInput } from "../../components/design-system/TextInput";
 import { Button } from "../../components/design-system/Button";
 import type { InferGetServerSidePropsType } from "next";
 import type { GetServerSideProps } from "next";
+import BoilerAlert from "../../components/design-system/BoilerAlert";
 
 type Providers = Awaited<ReturnType<typeof getProviders>>;
-type CSRFToken = Awaited<ReturnType<typeof getCsrfToken>>;
 
 export const getServerSideProps: GetServerSideProps<{
   providers: Providers;
-  csrfToken: CSRFToken;
-}> = async (context) => {
+}> = async () => {
   const providers = await getProviders();
-  const csrfToken = await getCsrfToken(context);
   return {
-    props: { providers, csrfToken },
+    props: { providers },
   };
 };
 
 export default function SignInPage({
   providers,
-  csrfToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { data: session } = useSession();
-  const signInWithPassword = () => {
-    //
-  };
   const router = useRouter();
   const [email, setEmail] = useState("");
-
-  const handleSignInWithPassword = useCallback(async (e: FormEvent) => {
-    e.preventDefault();
-
-    // await signInWithPassword({ email, password });
-
-    // router.push("/");
-  }, []);
+  const [password, setPassword] = useState("");
 
   return (
     <div className="flex h-full flex-col">
+      <BoilerAlert className="absolute bottom-4 right-4">
+        Only Google sign in has been implemented
+      </BoilerAlert>
       <div className="flex flex-auto overflow-y-auto">
         <div className="flex flex-1 flex-col overflow-y-auto">
           <div className="ml-8 mt-8">
@@ -60,23 +42,65 @@ export default function SignInPage({
           <div className="my-8 flex flex-auto items-center">
             <div className="mx-auto w-full max-w-sm">
               <h1 className="text-3xl font-semibold">Sign in</h1>
+              <p className="my-2 text-slate-500">
+                Don&apos;t have an account? We&apos;ll make one for you when you
+                sign in.
+              </p>
               <div className="mt-4 flex flex-col gap-y-6">
                 <Button
                   variant="outline"
                   className="flex w-full items-center justify-center gap-x-2 rounded-lg py-2"
-                  onClick={() => signIn(providers?.google.id)}
+                  onClick={async () => {
+                    await signIn(providers?.google.id, { callbackUrl: "/" });
+                    router.push("/");
+                  }}
                 >
                   <Image priority src={googleIcon} alt={"google icon"} />
                   <span>Sign in with Google</span>
                 </Button>
               </div>
-              <p className="my-2 text-center text-slate-500">
-                Don&apos;t have an account?{" "}
-                <Link href="/auth/sign-up" className="text-primary-500">
-                  Sign up
-                </Link>{" "}
-                instead
-              </p>
+
+              <div className="relative my-4 flex items-center">
+                <div className="w-full border-b" />
+                <span className="z-10 mx-4 bg-white text-center text-xs font-medium text-slate-500">
+                  OR
+                </span>
+                <div className="w-full border-b" />
+              </div>
+              <form
+                className="flex flex-col gap-y-6"
+                onSubmit={(e) => e.preventDefault()}
+              >
+                <div className="flex flex-col">
+                  <label className="mb-2 font-medium" htmlFor="email">
+                    Email
+                  </label>
+                  <TextInput
+                    className=""
+                    autoComplete="username"
+                    type="email"
+                    name="email"
+                    placeholder="jane@company.com"
+                    onValueChange={setEmail}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label htmlFor="password" className="mb-2 font-medium">
+                    Password
+                  </label>
+                  <TextInput
+                    autoComplete="current-password"
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="••••••••"
+                    onValueChange={setPassword}
+                  />
+                </div>
+                <Button variant="primary" className="w-full">
+                  Sign in
+                </Button>
+              </form>
             </div>
           </div>
         </div>

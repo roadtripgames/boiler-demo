@@ -97,7 +97,7 @@ export default function Onboarding() {
           </div>
           <div className="my-8 flex flex-auto py-24">
             <div className="ml-24 w-full max-w-lg">
-              <div className="rounded-md bg-white">
+              <div className="">
                 <p className="mb-4 text-sm text-slate-400">
                   {stepIndex + 1} of {ONBOARDING_STEPS.length}
                 </p>

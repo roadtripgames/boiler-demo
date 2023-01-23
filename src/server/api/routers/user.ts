@@ -7,23 +7,9 @@ const userRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },
-      include: {
-        currentTeam: true,
-      },
     });
 
     return user;
-
-    // const currentTeam = Array.isArray(data?.currentTeam)
-    //   ? data?.currentTeam[0]
-    //   : data?.currentTeam;
-
-    // return {
-    //   ...data,
-    //   email: ctx.session.user.email,
-    //   session: ctx.session.user.id,
-    //   currentTeam,
-    // };
   }),
   update: protectedProcedure
     .input(
@@ -38,10 +24,10 @@ const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // await ctx.supabase
-      //   .from("users")
-      //   .update(input)
-      //   .eq("id", ctx.session.user.id);
+      await ctx.prisma.user.update({
+        data: input,
+        where: { id: ctx.session.user.id },
+      });
     }),
   finishOnboarding: protectedProcedure
     .input(
@@ -57,32 +43,6 @@ const userRouter = createTRPCRouter({
         data: {
           ...input,
           hasOnboarded: true,
-        },
-      });
-    }),
-  selectTeam: protectedProcedure
-    .input(
-      z.object({
-        teamId: z.string().or(z.null()),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      if (!input.teamId) {
-        await ctx.prisma.user.update({
-          where: { id: ctx.session.user.id },
-          data: { currentTeamId: null },
-        });
-        return;
-      }
-
-      const team = await getTeamOrThrow(ctx, input.teamId);
-
-      await ctx.prisma.user.update({
-        where: {
-          id: ctx.session.user.id,
-        },
-        data: {
-          currentTeamId: team.id,
         },
       });
     }),

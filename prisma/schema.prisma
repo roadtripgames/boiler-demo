@@ -54,12 +54,8 @@ model User {
   hasOnboarded  Boolean        @default(false)
   interest      String?        @db.Text
   jobTitle      String?
-  currentTeam   Team?          @relation("CurrentTeam", fields: [currentTeamId], references: [id])
   teams         Team[]         @relation("Teams")
-  currentTeamId String?
   roles         UserTeamRole[]
-
-  @@index([currentTeamId])
 }
 
 model VerificationToken {
@@ -71,14 +67,16 @@ model VerificationToken {
 }
 
 model Team {
-  id               String         @id @default(cuid())
-  name             String
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @default(now()) @updatedAt
-  users            User[]         @relation("Teams")
-  currentTeamUsers User[]         @relation("CurrentTeam")
-  roles            UserTeamRole[]
-  userInvites      UserInvite[]
+  id          String         @id @default(cuid())
+  name        String         @default("")
+  slug        String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @default(now()) @updatedAt
+  users       User[]         @relation("Teams")
+  roles       UserTeamRole[]
+  userInvites UserInvite[]
+
+  @@unique([slug])
 }
 
 model UserTeamRole {

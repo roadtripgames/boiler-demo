@@ -1,3 +1,5 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { ROLE_ADMIN, ROLE_MEMBER } from "../../../lib/roles";
 import { send } from "../email";
@@ -10,7 +12,53 @@ import {
 } from "../trpc";
 
 const teamsRouter = createTRPCRouter({
-  get: protectedProcedure.query(async ({ ctx }) => {
+  get: memberProcedure.query(async ({ ctx }) => {
+    const team = ctx.team;
+
+    return team;
+  }),
+  update: adminProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        slug: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.team.update({
+          where: { id: ctx.team.id },
+          data: {
+            name: input.name,
+            slug: input.slug,
+          },
+        });
+      } catch (e) {
+        if (e instanceof PrismaClientKnownRequestError) {
+          if (e.code === "P2002") {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: `URL unavailable. Please try another.`,
+              cause: e,
+            });
+          }
+        }
+      }
+    }),
+  getBySlug: protectedProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ ctx, input }) => {
+      console.log(input);
+      const team = await ctx.prisma.team.findFirst({
+        where: {
+          slug: input.slug,
+          users: { some: { id: ctx.session.user.id } },
+        },
+      });
+
+      return team;
+    }),
+  getAllTeams: protectedProcedure.query(async ({ ctx }) => {
     const teams = await ctx.prisma.team.findMany({
       where: {
         users: { some: { id: ctx.session.user.id } },
@@ -42,6 +90,7 @@ const teamsRouter = createTRPCRouter({
       await ctx.prisma.team.create({
         data: {
           name: input.name,
+          slug: input.name.replaceAll(" ", "-").toLowerCase(),
           users: {
             connect: { id: ctx.session.user.id },
           },
@@ -50,9 +99,6 @@ const teamsRouter = createTRPCRouter({
               name: ROLE_ADMIN,
               user: { connect: { id: ctx.session.user.id } },
             },
-          },
-          currentTeamUsers: {
-            connect: { id: ctx.session.user.id },
           },
         },
       });
@@ -133,8 +179,6 @@ const teamsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // TODO: check that the user owns this team
-
       await ctx.prisma.userTeamRole.update({
         where: {
           userId_teamId: { userId: input.userId, teamId: input.teamId },

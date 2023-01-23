@@ -27,6 +27,7 @@ export default function CreateTeamModal({
   const createMutation = api.teams.create.useMutation({
     onSuccess: () => {
       utils.invalidate(undefined, { queryKey: ["teams.get"] });
+      setName("");
     },
   });
 

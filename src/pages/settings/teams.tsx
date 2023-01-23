@@ -1,29 +1,23 @@
-import { useEffect } from "react";
-import { CubeIcon, PlusIcon } from "@radix-ui/react-icons";
-import { useRouter } from "next/router";
+import { CubeIcon } from "@radix-ui/react-icons";
+import type { Team } from "@prisma/client";
 import { Avatar } from "../../components/design-system/Avatar";
 import { Button } from "../../components/design-system/Button";
 import { api } from "../../utils/api";
 import SettingsLayout from "./layout";
 import CreateTeamModal from "../../components/app/CreateTeamModal";
+import { useRouter } from "next/router";
+import { useCallback } from "react";
 
 export default function Team() {
   const router = useRouter();
-  const teams = api.teams.get.useQuery();
-  const user = api.user.get.useQuery();
-  const utils = api.useContext();
+  const teams = api.teams.getAllTeams.useQuery();
 
-  const deleteTeamMutation = api.teams.delete.useMutation({
-    onSuccess: () => {
-      utils.invalidate(undefined, { queryKey: ["teams.get"] });
+  const handleManageTeam = useCallback(
+    (team: Team) => {
+      router.push(`/${team.slug}/settings/general`);
     },
-  });
-
-  useEffect(() => {
-    if (user.data && user.data.currentTeam != null) {
-      router.push("/settings/members");
-    }
-  }, [router, user]);
+    [router]
+  );
 
   return (
     <SettingsLayout
@@ -40,12 +34,8 @@ export default function Team() {
       </div>
       <div className="flex flex-col rounded-lg border">
         {teams?.data?.length === 0 && (
-          <div className="flex flex-col items-center justify-center gap-y-4 bg-slate-50 px-4 py-24 text-slate-500">
+          <div className="flex flex-col items-center justify-center gap-y-4 rounded-lg bg-slate-50 px-4 py-24 text-slate-500">
             <p>You do not currently belong to any teams.</p>
-            <Button className="flex items-center gap-x-1">
-              <PlusIcon />
-              Create team
-            </Button>
           </div>
         )}
         {teams?.data?.map((t) => {
@@ -58,11 +48,8 @@ export default function Team() {
                 <Avatar name={t.name} />
                 <p className="font-medium">{t.name}</p>
               </div>
-              <Button
-                variant="outline"
-                onClick={() => deleteTeamMutation.mutateAsync({ teamId: t.id })}
-              >
-                Delete
+              <Button variant="outline" onClick={() => handleManageTeam(t)}>
+                Manage
               </Button>
             </div>
           );
