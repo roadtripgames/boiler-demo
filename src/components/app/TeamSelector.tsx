@@ -1,29 +1,42 @@
-import type { Team } from "@prisma/client";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { PlusIcon } from "@radix-ui/react-icons";
+import type { DropdownMenuItemProps } from "@radix-ui/react-dropdown-menu";
+import { PlusIcon, CheckIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
+import { useTeam } from "../../lib/useTeam";
 import { api } from "../../utils/api";
 import { Avatar } from "../design-system/Avatar";
 import Spinner from "../design-system/Spinner";
 import CreateTeamModal from "./CreateTeamModal";
+import type { Team } from "@prisma/client";
 
 const MenuItem = React.forwardRef<
   HTMLDivElement,
-  { children: React.ReactNode; onClick?: () => void; className?: string }
->(({ children, onClick, className, ...props }, forwardedRef) => {
+  {
+    children: React.ReactNode;
+    onClick?: () => void;
+    className?: string;
+    selected?: boolean;
+  } & DropdownMenuItemProps
+>(({ children, selected, onClick, className, ...props }, forwardedRef) => {
   return (
     <DropdownMenu.Item
       {...props}
       ref={forwardedRef}
       onClick={onClick}
       className={clsx(
-        "flex w-full cursor-pointer items-center gap-x-2 px-3 py-2 outline-none transition hover:bg-slate-50 data-[highlighted]:bg-slate-100",
-        className
+        "flex w-full items-center gap-x-2 px-3 py-2",
+        "cursor-pointer outline-none transition data-[disabled]:cursor-default data-[highlighted]:bg-slate-100",
+        className,
+        {
+          "hover:bg-slate-50": !selected,
+          "bg-slate-100": selected,
+        }
       )}
     >
       {children}
+      {selected && <CheckIcon />}
     </DropdownMenu.Item>
   );
 });
@@ -47,8 +60,7 @@ export default function TeamSelector() {
   );
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const currentTeamSlug = router.query.team as string | undefined;
-  const currentTeam = teams.data?.find((t) => t.slug === currentTeamSlug);
+  const { data: team, slug } = useTeam();
 
   if (!user) return null;
 
@@ -66,10 +78,8 @@ export default function TeamSelector() {
         ) : (
           <DropdownMenu.Trigger asChild>
             <button className="flex select-none items-center gap-x-2 py-1">
-              <Avatar size="sm" name={currentTeam?.name ?? user.data?.name} />
-              <p className="font-medium">
-                {currentTeam?.name ?? user.data?.name}
-              </p>
+              <Avatar size="sm" name={team?.name ?? user.data?.name} />
+              <p className="font-medium">{team?.name ?? user.data?.name}</p>
             </button>
           </DropdownMenu.Trigger>
         )}
@@ -83,6 +93,7 @@ export default function TeamSelector() {
               Personal account
             </p>
             <MenuItem
+              selected={slug === ""}
               className="pr-12"
               onClick={async () => {
                 handleSelectPersonalAccount();
@@ -101,9 +112,10 @@ export default function TeamSelector() {
                 {teams.data?.map((t) => {
                   return (
                     <MenuItem
+                      selected={t.slug === slug}
                       key={t.id}
                       onClick={async () => {
-                        if (!t.id || t.slug === currentTeamSlug) return;
+                        if (!t.id || t.slug === slug) return;
 
                         handleSelectTeam(t);
 

@@ -1,6 +1,20 @@
 # Notes
 
+## General TODO
+
+- responsiveness prototype
+- billing page
+- waitlist
+- more pixel perfect components
+- more react emails
+- phone number, phone number confirm (letterloop)
+- change to "email sign in link" screen
+- add more auth providers
+
 ## Jan 23
+
+- [x] team profile section in settings
+- [x] different routes for teams like vercel
 
 - 2pm EST / 11am PST
 - evaluate using the repository
@@ -15,17 +29,6 @@
 - [x] create team from user profile modal
 - [x] create team for all users
 - [x] role management if you're an admin
-- responsiveness prototype
-- billing page
-- waitlist
-- more pixel perfect components
-- more react emails
-- phone number, phone number confirm (letterloop)
-- change to "email sign in link" screen
-- add more auth providers
-- don't expose radix-ui if you can afford it?
-- team profile section in settings
-- different routes for teams like vercel
 
 ## Jan 18
 

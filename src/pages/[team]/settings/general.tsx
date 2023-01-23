@@ -4,15 +4,15 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Button } from "../../../components/design-system/Button";
 import { TextInput } from "../../../components/design-system/TextInput";
+import { useTeam } from "../../../lib/useTeam";
 import { api } from "../../../utils/api";
 import SettingsLayout from "./layout";
 
 export default function General() {
   const router = useRouter();
   const utils = api.useContext();
-  const { data: team } = api.teams.getBySlug.useQuery({
-    slug: router.query.team as string,
-  });
+
+  const { data: team } = useTeam();
   const updateMutation = api.teams.update.useMutation({
     onSuccess() {
       utils.invalidate(undefined, { queryKey: ["teams.getBySlug"] });

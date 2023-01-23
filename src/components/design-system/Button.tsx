@@ -15,8 +15,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       loading = false,
       loadingText = "",
-      // loading = true,
-      // loadingText = "Loading",
       children,
       variant = "primary",
       ...props

@@ -14,6 +14,7 @@ import { TabbedContainer } from "../../../components/design-system/TabbedContain
 import { TextInput } from "../../../components/design-system/TextInput";
 import type { Role } from "../../../lib/roles";
 import { ROLE_MEMBER, ROLES } from "../../../lib/roles";
+import { useTeam } from "../../../lib/useTeam";
 import { api } from "../../../utils/api";
 import SettingsLayout from "./layout";
 
@@ -144,11 +145,9 @@ const InviteSection: React.FC<InviteSectionProps> = ({
 };
 
 export default function Team() {
-  const router = useRouter();
   const { data: user } = api.user.get.useQuery();
-  const { data: team } = api.teams.getBySlug.useQuery({
-    slug: router.query.team as string,
-  });
+  const { data: team } = useTeam();
+
   const members = api.teams.getMembers.useQuery(
     {
       teamId: team?.id ?? "",

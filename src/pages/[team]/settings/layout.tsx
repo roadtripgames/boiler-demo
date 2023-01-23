@@ -1,5 +1,5 @@
-import { useRouter } from "next/router";
 import NavigationSidebar from "../../../components/app/NavigationSidebar";
+import { useTeam } from "../../../lib/useTeam";
 
 export default function SettingsLayout({
   children,
@@ -10,8 +10,7 @@ export default function SettingsLayout({
   title: string;
   description: string;
 }) {
-  const router = useRouter();
-  const team = router.query.team as string;
+  const { slug } = useTeam();
 
   return (
     <NavigationSidebar
@@ -20,15 +19,15 @@ export default function SettingsLayout({
       pages={[
         {
           name: "General",
-          href: { pathname: `/[team]/settings/general`, query: { team } },
+          href: { pathname: `/[team]/settings/general`, query: { team: slug } },
         },
         {
           name: "Members",
-          href: { pathname: `/[team]/settings/members`, query: { team } },
+          href: { pathname: `/[team]/settings/members`, query: { team: slug } },
         },
         {
           name: "Billing",
-          href: { pathname: `/[team]/settings/billing`, query: { team } },
+          href: { pathname: `/[team]/settings/billing`, query: { team: slug } },
         },
       ]}
     >
