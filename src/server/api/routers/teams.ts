@@ -87,7 +87,7 @@ const teamsRouter = createTRPCRouter({
   create: protectedProcedure
     .input(z.object({ name: z.string().min(1).max(24) }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.team.create({
+      return await ctx.prisma.team.create({
         data: {
           name: input.name,
           slug: input.name.replaceAll(" ", "-").toLowerCase(),

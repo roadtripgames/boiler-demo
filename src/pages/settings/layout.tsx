@@ -16,7 +16,6 @@ export default function SettingsLayout({
       pages={[
         { name: "Profile", href: "/settings/profile" },
         { name: "Teams", href: "/settings/teams" },
-        { name: "Billing", href: "/settings/billing" },
       ]}
     >
       {children}

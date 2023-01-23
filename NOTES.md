@@ -2,8 +2,9 @@
 
 ## General TODO
 
+- leave team
 - responsiveness prototype
-- billing page
+- stripe implementation
 - waitlist
 - more pixel perfect components
 - more react emails

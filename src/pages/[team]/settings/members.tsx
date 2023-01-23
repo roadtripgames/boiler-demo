@@ -4,8 +4,7 @@ import {
   PlusIcon,
 } from "@radix-ui/react-icons";
 import clsx from "clsx";
-import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Avatar } from "../../../components/design-system/Avatar";
 import { Button } from "../../../components/design-system/Button";

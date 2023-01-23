@@ -1,5 +1,7 @@
 import { CubeIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { api } from "../../utils/api";
 import { Button } from "../design-system/Button";
 import {
@@ -21,13 +23,16 @@ export default function CreateTeamModal({
   open: _open,
   onOpenChange,
 }: CreateTeamModalProps) {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [open, setOpen] = useState(_open);
   const utils = api.useContext();
   const createMutation = api.teams.create.useMutation({
-    onSuccess: () => {
+    onSuccess: (team) => {
       utils.invalidate(undefined, { queryKey: ["teams.get"] });
       setName("");
+      router.push(`/${team.slug}`);
+      toast.success(`Created ${team.name}!`);
     },
   });
 
