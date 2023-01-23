@@ -103,6 +103,10 @@ vercel login
 vercel link
 vercel env pull .env.local
 
+# app, db
+yarn
+yarn prisma db push
+
 ```
 
 ## General development
@@ -115,6 +119,7 @@ yarn dev
 
 ```
 pscale connect your-db-name your-db-branch-name --port 3309
+# ex: pscale connect kitchbook-db main --port 3309
 ```
 
 When you change the schema in `schema.prisma`, you'll need to run `yarn prisma db push`. This will push your changes to your planetscale db.
@@ -151,4 +156,6 @@ This is a basic example of how you can use Prisma to get values from your Planet
   }),
 ```
 
-See [this](https://create.t3.gg/en/folder-structure) for details on all the files (NOTE: we'll replace this with our own docs page)
+See [this](https://create.t3.gg/en/folder-structure) for details on all the files (NOTE: we'll replace this with our own docs page).
+
+DB schema: `schema.prisma`
