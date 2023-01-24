@@ -49,17 +49,15 @@ export default function SignInPage({
           <div className="my-8 flex flex-auto items-center">
             <div className="mx-auto w-full max-w-sm">
               <h1 className="text-3xl font-semibold">Sign in</h1>
-              <p className="my-2 text-slate-500">
-                Don&apos;t have an account? We&apos;ll make one for you when you
-                sign in.
-              </p>
               <div className="mt-4 flex flex-col gap-y-6">
                 <Button
                   variant="outline"
                   className="flex w-full items-center justify-center gap-x-2 rounded-lg py-2"
                   onClick={async () => {
-                    await signIn(providers?.google.id, { callbackUrl: "/" });
-                    router.push("/");
+                    await signIn(providers?.google.id, {
+                      redirect: false,
+                      callbackUrl: "/",
+                    });
                   }}
                 >
                   <Image priority src={googleIcon} alt={"google icon"} />

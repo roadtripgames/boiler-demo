@@ -110,7 +110,7 @@ export default function SignUpPage({
                     onValueChange={setPassword}
                   />
                 </div>
-                <div className="flex items-center gap-x-2">
+                {/* <div className="flex items-center gap-x-2">
                   <input
                     className="h-4 w-4 appearance-none rounded border border-slate-300 bg-[length:130%_130%] bg-[45%_34%] text-white outline-offset-1 outline-primary-500 checked:border-primary-600 checked:bg-primary-500 checked:bg-check"
                     type="checkbox"
@@ -118,7 +118,7 @@ export default function SignUpPage({
                     id="remember"
                   />
                   <label htmlFor="remember">Remember me</label>
-                </div>
+                </div> */}
                 <Button variant="primary" className="w-full">
                   Sign up
                 </Button>

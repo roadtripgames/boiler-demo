@@ -4,6 +4,7 @@ import {
   PlusIcon,
 } from "@radix-ui/react-icons";
 import clsx from "clsx";
+import type { GetServerSideProps } from "next";
 import React, { useCallback, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Avatar } from "../../../components/design-system/Avatar";
@@ -13,9 +14,26 @@ import { TabbedContainer } from "../../../components/design-system/TabbedContain
 import { TextInput } from "../../../components/design-system/TextInput";
 import type { Role } from "../../../lib/roles";
 import { ROLE_MEMBER, ROLES } from "../../../lib/roles";
-import { useTeam } from "../../../lib/useTeam";
+import { TeamRouteQueryType, useTeam } from "../../../lib/useTeam";
 import { api } from "../../../utils/api";
+import { createSSG } from "../../../utils/ssg";
 import SettingsLayout from "./layout";
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { req, res } = context;
+
+  const ssg = await createSSG({ req, res });
+  const slug = TeamRouteQueryType.parse(context.query).team;
+
+  await ssg.teams.get.prefetch({ slug });
+  await ssg.teams.getMembers.prefetch({ slug });
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+  };
+};
 
 const Section: React.FC<{
   className?: string;
@@ -145,17 +163,17 @@ const InviteSection: React.FC<InviteSectionProps> = ({
 
 export default function Team() {
   const { data: user } = api.user.get.useQuery();
-  const { data: team } = useTeam();
+  const { data: team, slug } = useTeam();
 
   const members = api.teams.getMembers.useQuery(
     {
-      teamId: team?.id ?? "",
+      slug,
     },
-    { enabled: !!team?.id }
+    { enabled: !!slug }
   );
   const { data: invites } = api.teams.invites.useQuery(
-    { teamId: team?.id ?? "" },
-    { enabled: !!team?.id }
+    { slug },
+    { enabled: !!slug }
   );
 
   const utils = api.useContext();

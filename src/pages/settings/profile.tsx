@@ -59,7 +59,12 @@ function UserProfileForm({ user, onUpdate }: UserProfileFormProps) {
 
 export default function Profile() {
   const user = api.user.get.useQuery()?.data;
-  const updateUserMutation = api.user.update.useMutation();
+  const utils = api.useContext();
+  const updateUserMutation = api.user.update.useMutation({
+    onSuccess() {
+      utils.invalidate(undefined, { queryKey: ["user.get"] });
+    },
+  });
 
   return (
     <SettingsLayout title="Profile" description="Manage your Selene profile">

@@ -128,18 +128,34 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 
-const TeamInput = z.object({
-  teamId: z.string(),
-});
+// const TeamInput = z.object({
+
+//   teamId: z.string(),
+// });
+const TeamInput = z
+  .object({
+    teamId: z.string(),
+    slug: z.string(),
+  })
+  .partial()
+  .refine(({ teamId, slug }) => {
+    if (!teamId && !slug) {
+      throw new Error("You must provide either teamId or slug");
+    }
+
+    return true;
+  });
 
 export const adminProcedure = protectedProcedure
   .input(TeamInput)
   .use(async ({ next, ctx, input, ...rest }) => {
-    const { teamId } = input;
+    const idObj =
+      "teamId" in input ? { id: input.teamId } : { slug: input.slug };
+
     const user = ctx.session.user;
     const team = await prisma.team.findFirst({
       where: {
-        id: teamId,
+        ...idObj,
         users: { some: { id: user.id } },
         roles: { some: { name: "ADMIN", user: { id: user.id } } },
       },
@@ -161,11 +177,12 @@ export const adminProcedure = protectedProcedure
 export const memberProcedure = protectedProcedure
   .input(TeamInput)
   .use(async ({ next, ctx, input, ...rest }) => {
-    const { teamId } = input;
+    const idObj =
+      "teamId" in input ? { id: input.teamId } : { slug: input.slug };
     const user = ctx.session.user;
     const team = await prisma.team.findFirst({
       where: {
-        id: teamId,
+        ...idObj,
         users: { some: { id: user.id } },
       },
     });

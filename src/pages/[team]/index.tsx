@@ -1,27 +1,18 @@
 import type { GetServerSideProps } from "next/types";
 import Header from "../../components/app/Header";
 import BoilerAlert from "../../components/design-system/BoilerAlert";
-import { api } from "../../utils/api";
 
-import { createProxySSGHelpers } from "@trpc/react-query/ssg";
-import { createTRPCContext } from "../../server/api/trpc";
-import { appRouter } from "../../server/api/root";
-import superjson from "superjson";
-import { useRouter } from "next/router";
 import { Button } from "../../components/design-system/Button";
 import Link from "next/link";
 import { useTeam } from "../../lib/useTeam";
+import { createSSG } from "../../utils/ssg";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { req, res } = context;
 
-  const ssg = createProxySSGHelpers({
-    router: appRouter,
-    ctx: await createTRPCContext({ req, res }),
-    transformer: superjson,
-  });
+  const ssg = await createSSG({ req, res });
 
-  await ssg.teams.getBySlug.prefetch({
+  await ssg.teams.get.prefetch({
     slug: context.query.team as string,
   });
 

@@ -78,6 +78,7 @@ model Team {
   userInvites UserInvite[]
 
   @@unique([slug])
+  @@index([slug])
 }
 
 model UserTeamRole {

@@ -2,13 +2,15 @@
 
 ## General TODO
 
-- fix email design (images)
 - leave team
 - stripe implementation
 - more pixel perfect components
-- phone number, phone number confirm (letterloop)
 - responsiveness prototype
 - magic link auth
+- implement reset password functionality
+- implement email invite functionality
+- implement loading screens for some components
+- use get serverside props for many things
 
 ## scrapped
 
@@ -18,6 +20,7 @@
 
 ## Jan 24
 
+- [x] fix email design (images)
 - [x] implement email/password auth
 
 ## Jan 23

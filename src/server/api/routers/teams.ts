@@ -45,19 +45,6 @@ const teamsRouter = createTRPCRouter({
         }
       }
     }),
-  getBySlug: protectedProcedure
-    .input(z.object({ slug: z.string() }))
-    .query(async ({ ctx, input }) => {
-      console.log(input);
-      const team = await ctx.prisma.team.findFirst({
-        where: {
-          slug: input.slug,
-          users: { some: { id: ctx.session.user.id } },
-        },
-      });
-
-      return team;
-    }),
   getAllTeams: protectedProcedure.query(async ({ ctx }) => {
     const teams = await ctx.prisma.team.findMany({
       where: {
@@ -71,7 +58,7 @@ const teamsRouter = createTRPCRouter({
     // cannot do implicit many-to-many on delete cascade, so we manually disconnect
     await ctx.prisma.$transaction(async (tx) => {
       await tx.team.update({
-        where: { id: input.teamId },
+        where: { id: ctx.team.id },
         data: {
           users: { set: [] },
         },
@@ -79,7 +66,7 @@ const teamsRouter = createTRPCRouter({
 
       await tx.team.deleteMany({
         where: {
-          id: input.teamId,
+          id: ctx.team.id,
         },
       });
     });
@@ -103,12 +90,14 @@ const teamsRouter = createTRPCRouter({
         },
       });
     }),
-  getMembers: memberProcedure.query(async ({ ctx, input }) => {
+  getMembers: memberProcedure.query(async ({ ctx }) => {
     const members = await ctx.prisma.user.findMany({
-      where: { teams: { some: { id: input.teamId } } },
+      where: {
+        teams: { some: { id: ctx.team.id } },
+      },
       include: {
         roles: {
-          where: { teamId: input.teamId },
+          where: { teamId: ctx.team.id },
           take: 1,
           select: { name: true },
         },
@@ -120,7 +109,6 @@ const teamsRouter = createTRPCRouter({
   inviteMembers: adminProcedure
     .input(
       z.object({
-        teamId: z.string(),
         invites: z.array(
           z.object({
             email: z.string().email(),
@@ -161,18 +149,16 @@ const teamsRouter = createTRPCRouter({
         )
       );
     }),
-  invites: protectedProcedure
-    .input(z.object({ teamId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const invites = await ctx.prisma.userInvite.findMany({
-        where: {
-          teamId: input.teamId,
-          team: { users: { some: { id: ctx.session.user.id } } },
-        },
-      });
+  invites: adminProcedure.query(async ({ ctx }) => {
+    const invites = await ctx.prisma.userInvite.findMany({
+      where: {
+        teamId: ctx.team.id,
+        team: { users: { some: { id: ctx.session.user.id } } },
+      },
+    });
 
-      return invites;
-    }),
+    return invites;
+  }),
   updateRole: adminProcedure
     .input(
       z.object({
@@ -183,7 +169,7 @@ const teamsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.userTeamRole.update({
         where: {
-          userId_teamId: { userId: input.userId, teamId: input.teamId },
+          userId_teamId: { userId: input.userId, teamId: ctx.team.id },
         },
         data: { name: input.role },
       });
