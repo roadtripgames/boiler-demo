@@ -74,10 +74,17 @@ const teamsRouter = createTRPCRouter({
   create: protectedProcedure
     .input(z.object({ name: z.string().min(1).max(24) }))
     .mutation(async ({ ctx, input }) => {
+      let slug = input.name.replaceAll(" ", "-").toLowerCase();
+
+      const slugExists = await ctx.prisma.team.findFirst({ where: { slug } });
+      if (slugExists) {
+        slug += "-" + Math.floor(Math.random() * 100000000);
+      }
+
       return await ctx.prisma.team.create({
         data: {
           name: input.name,
-          slug: input.name.replaceAll(" ", "-").toLowerCase(),
+          slug,
           users: {
             connect: { id: ctx.session.user.id },
           },
