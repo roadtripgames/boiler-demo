@@ -149,9 +149,11 @@ const teamsRouter = createTRPCRouter({
             {
               type: "invite-user",
               props: {
-                teamName: team.name,
-                fromEmail: ctx.session.user.email,
-                fromName: ctx.session.user.name,
+                team,
+                from: {
+                  name: ctx.session.user.name ?? team.name,
+                  email: ctx.session.user.email ?? "",
+                },
                 toEmail: invite.email,
               },
             }

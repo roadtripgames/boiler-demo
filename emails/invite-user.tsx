@@ -1,3 +1,4 @@
+import type { Team, User } from "@prisma/client";
 import { Button } from "@react-email/button";
 import { Container } from "@react-email/container";
 import { Head } from "@react-email/head";
@@ -12,48 +13,46 @@ import * as React from "react";
 
 type InviteUserEmailProps = {
   toEmail: string;
-  fromEmail: string | null | undefined;
-  fromName: string | null | undefined;
-  teamName: string;
+  from: { name: string; email?: string };
+  team: { name: string; image?: string };
 };
 
 export default function InviteUserEmail({
-  toEmail = "hckilaru@gmail.com",
-  fromEmail = "yogi94@gmail.com",
-  fromName = "Yogi Seetharaman",
-  teamName = "Roadtrip Games",
+  toEmail = "jane@company.com",
+  from = { name: "Jack Nicholson", email: "jack@company.com" },
+  team = { name: "Shining Cast" },
 }: InviteUserEmailProps) {
   const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
-    : "https://localhost:3000";
+    : "http://localhost:3000";
 
   const toName = toEmail.split("@")[0];
 
   return (
     <Html>
       <Head />
-      <Preview>{`Join ${fromName} on Selene`}</Preview>
+      <Preview>{`Join ${team.name} on Selene`}</Preview>
       <Section style={main}>
         <Container style={container}>
           <Section style={{ marginTop: "32px" }}>
-            {/* <Img
-              src={`${baseUrl}/static/logo.svg`}
+            <Img
+              src={`${baseUrl}/logo.svg`}
               width="40"
               height="37"
               alt="Vercel"
               style={logo}
-            /> */}
+            />
           </Section>
           <Text style={h1}>
-            Join <strong>{teamName}</strong> on <strong>Selene</strong>
+            Join <strong>{team.name}</strong> on <strong>Selene</strong>
           </Text>
           <Text style={text}>Hello {toName},</Text>
           <Text style={text}>
-            <strong>{fromName}</strong> (
-            <Link href="mailto:bukinoshita@example.com" style={link}>
-              {fromEmail}
+            <strong>{from.name}</strong> (
+            <Link href={`mailto:${from.email}`} style={link}>
+              {from.email}
             </Link>
-            ) has invited you to the <strong>{teamName}</strong> team.
+            ) has invited you to the <strong>{team.name}</strong> team.
           </Text>
           <table
             style={spacing}
@@ -63,26 +62,12 @@ export default function InviteUserEmail({
             align="center"
           >
             <tr>
-              <td style={center} align="left" valign="middle">
-                {/* <Img
-                  style={avatar}
-                  src={`${baseUrl}/static/vercel-user.png`}
-                  width="64"
-                  height="64"
-                /> */}
-              </td>
-              <td style={center} align="left" valign="middle">
-                {/* <Img
-                  src={`${baseUrl}/static/vercel-arrow.png`}
-                  width="12"
-                  height="9"
-                  alt="invited you to"
-                /> */}
-              </td>
-              <td style={center} align="left" valign="middle">
+              <td style={center} align="center" valign="middle">
                 <Img
                   style={avatar}
-                  src={`${baseUrl}/static/vercel-team.png`}
+                  src={
+                    "https://lh3.googleusercontent.com/a/AEdFTp50ugZP5FzNVhO1H5rNPLus5906A39PZH7MDak2=s96-c"
+                  }
                   width="64"
                   height="64"
                 />

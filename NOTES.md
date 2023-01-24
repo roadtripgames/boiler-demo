@@ -2,13 +2,13 @@
 
 ## General TODO
 
-- magic link auth
 - fix email design (images)
 - leave team
 - stripe implementation
 - more pixel perfect components
 - phone number, phone number confirm (letterloop)
 - responsiveness prototype
+- magic link auth
 
 ## scrapped
 

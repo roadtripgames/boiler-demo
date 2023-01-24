@@ -35,7 +35,6 @@ const userRouter = createTRPCRouter({
     const user = await ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },
     });
-    console.log("user_get", ctx.session, user);
 
     return user;
   }),
