@@ -12,7 +12,7 @@ export function useTeam() {
   const query = TeamRouteQueryType.safeParse(router.query);
   const slug = query.success ? query.data.team : "";
 
-  const data = api.teams.get.useQuery({ slug });
+  const data = api.teams.get.useQuery({ slug }, { enabled: !!slug });
 
   return {
     ...data,

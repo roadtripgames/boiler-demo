@@ -128,10 +128,6 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 
-// const TeamInput = z.object({
-
-//   teamId: z.string(),
-// });
 const TeamInput = z
   .object({
     teamId: z.string(),
