@@ -12,25 +12,26 @@ import type {
 import clsx from "clsx";
 
 type SelectProps = _SelectProps & {
-  placeholder?: string;
+  placeholder?: React.ReactNode;
+  variant?: "default" | "flush";
 };
 
 export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
-  ({ children, ...props }, forwardedRef) => {
+  ({ children, placeholder, variant = "default", ...props }, forwardedRef) => {
     return (
       <SelectPrimitive.Root {...props}>
         <SelectPrimitive.Trigger
           ref={forwardedRef}
           className={clsx(
             "inline-flex items-center justify-center gap-2 transition",
-            "h-12 rounded-lg px-4 shadow",
-            "bg-white text-base text-slate-900 hover:bg-slate-50"
+            "h-9",
+            "bg-white text-base text-slate-900 hover:bg-slate-50",
+            {
+              "rounded-lg bg-white px-4 shadow": variant === "default",
+            }
           )}
         >
-          <SelectPrimitive.Value placeholder={props.placeholder} />
-          <SelectPrimitive.Icon>
-            <ChevronDownIcon />
-          </SelectPrimitive.Icon>
+          <SelectPrimitive.Value>{placeholder}</SelectPrimitive.Value>
         </SelectPrimitive.Trigger>
         <SelectPrimitive.Portal>
           <SelectPrimitive.Content className="overflow-hidden rounded bg-white shadow-lg">
@@ -52,21 +53,19 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
 
 Select.displayName = "Select";
 
-export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
-  ({ children, ...props }, forwardedRef) => {
-    return (
-      <SelectPrimitive.Item
-        {...props}
-        ref={forwardedRef}
-        className="flex h-12 items-center rounded px-8"
-      >
-        <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
-        <SelectPrimitive.ItemIndicator>
-          <CheckIcon />
-        </SelectPrimitive.ItemIndicator>
-      </SelectPrimitive.Item>
-    );
-  }
-);
+export const SelectItem = React.forwardRef<
+  HTMLDivElement,
+  SelectItemProps & { className?: string }
+>(({ className, children, ...props }, forwardedRef) => {
+  return (
+    <SelectPrimitive.Item
+      {...props}
+      ref={forwardedRef}
+      className={clsx("flex h-12 items-center rounded px-8", className)}
+    >
+      <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+    </SelectPrimitive.Item>
+  );
+});
 
 SelectItem.displayName = "SelectItem";

@@ -10,7 +10,9 @@
 - implement reset password functionality
 - implement email invite functionality
 - implement loading screens for some components
-- use get serverside props for many things
+- use get serverside props for everything
+- delete confirm modal
+- make logo png because svgs aren't correctly cached by google image server
 
 ## scrapped
 
@@ -22,6 +24,9 @@
 
 - [x] fix email design (images)
 - [x] implement email/password auth
+- [x] ssg for members page
+- [x] dedupe if conflicting team slugs
+- [x] resend invite email
 
 ## Jan 23
 

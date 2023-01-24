@@ -21,7 +21,7 @@ type DropdownMenuProps = _DropdownMenuProps & {
   values: string[];
   value?: string;
   defaultValue?: string;
-  onChange?: (value: string) => void;
+  onSelect?: (value: string) => void;
   disabled?: boolean;
   loading?: boolean;
 };
@@ -33,7 +33,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   values,
   value: _value,
   defaultValue,
-  onChange,
+  onSelect,
   disabled,
   loading,
   ...props
@@ -42,21 +42,21 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
     _value ?? defaultValue ?? undefined
   );
 
-  const handleValueChange = useCallback(
+  const handleSelect = useCallback(
     (v: string) => {
       if (!disabled) {
         setValue(v);
-        onChange?.(v);
+        onSelect?.(v);
       }
     },
-    [disabled, onChange]
+    [disabled, onSelect]
   );
 
   return (
     <DropdownMenuPrimitive.Root {...props}>
       <DropdownMenuContent className={clsx("", contentClassName)}>
         {values.map((v) => (
-          <DropdownMenuItem key={v} onSelect={() => handleValueChange(v)}>
+          <DropdownMenuItem key={v} onSelect={() => handleSelect(v)}>
             {v}
           </DropdownMenuItem>
         ))}
@@ -67,9 +67,6 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
         className={clsx(
           "rounded-md border border-slate-300 bg-white shadow-sm",
           "h-10 px-4",
-          "ring-green-500",
-          // "outline-2 outline-primary-500 data-[state=open]:outline data-[state=open]:outline-primary-500",
-          // "data-[state=open]:outline-primary-500",
           {
             "hover:border-slate-400": !disabled,
             "bg-slate-50": disabled,

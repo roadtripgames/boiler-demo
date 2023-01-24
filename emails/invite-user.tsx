@@ -22,10 +22,11 @@ export default function InviteUserEmail({
   from = { name: "Jack Nicholson", email: "jack@company.com" },
   team = { name: "Shining Cast" },
 }: InviteUserEmailProps) {
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "http://localhost:3000";
+  // const baseUrl = process.env.VERCEL_URL
+  //   ? `https://${process.env.VERCEL_URL}`
+  //   : "http://localhost:3000";
 
+  const baseUrl = "https://boiler-omega.vercel.app";
   const toName = toEmail.split("@")[0];
 
   return (

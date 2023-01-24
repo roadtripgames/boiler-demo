@@ -10,6 +10,11 @@ import { toast } from "react-hot-toast";
 import { Avatar } from "../../../components/design-system/Avatar";
 import { Button } from "../../../components/design-system/Button";
 import { DropdownMenu } from "../../../components/design-system/Dropdown";
+import {
+  DropdownSimple,
+  DropdownSimpleItem,
+} from "../../../components/design-system/DropdownSimple";
+import { Select, SelectItem } from "../../../components/design-system/Select";
 import { TabbedContainer } from "../../../components/design-system/TabbedContainer";
 import { TextInput } from "../../../components/design-system/TextInput";
 import type { Role } from "../../../lib/roles";
@@ -131,7 +136,7 @@ const InviteSection: React.FC<InviteSectionProps> = ({
                 <DropdownMenu
                   value={role}
                   values={ROLES}
-                  onChange={(value) => handleChangeRole(i, value as Role)}
+                  onSelect={(value) => handleChangeRole(i, value as Role)}
                   className="w-full"
                 />
               </div>
@@ -187,6 +192,7 @@ export default function Team() {
       utils.invalidate(undefined, { queryKey: ["members.get"] });
     },
   });
+  const resendInviteEmailMutation = api.teams.resendInviteEmail.useMutation();
 
   if (!user) return null;
   if (!team) return null;
@@ -228,7 +234,7 @@ export default function Team() {
                               values={ROLES}
                               value={role}
                               disabled={updateRoleMutation.isLoading}
-                              onChange={async (v) => {
+                              onSelect={async (v) => {
                                 await updateRoleMutation.mutateAsync({
                                   teamId: team.id,
                                   userId: m.id,
@@ -257,7 +263,7 @@ export default function Team() {
                     {invites?.map((i) => {
                       return (
                         <div
-                          className="flex justify-between border-b py-3 px-4 last-of-type:border-none"
+                          className="flex justify-between border-b py-3 last-of-type:border-none"
                           key={i.id}
                         >
                           <div className="flex items-center gap-x-2">
@@ -268,9 +274,27 @@ export default function Team() {
                               </p>
                             </div>
                           </div>
-                          <Button variant="link">
-                            <DotsHorizontalIcon />
-                          </Button>
+                          <DropdownSimple
+                            align="end"
+                            trigger={
+                              <DotsHorizontalIcon className="h-8 w-8 px-2" />
+                            }
+                          >
+                            <DropdownSimpleItem
+                              onSelect={async () => {
+                                await resendInviteEmailMutation.mutateAsync({
+                                  teamId: team.id,
+                                  inviteId: i.id,
+                                });
+                                toast.success(`Invite resent to ${i.email}`);
+                              }}
+                            >
+                              Resend invite
+                            </DropdownSimpleItem>
+                            <DropdownSimpleItem className="text-red-500">
+                              Delete invite
+                            </DropdownSimpleItem>
+                          </DropdownSimple>
                         </div>
                       );
                     })}

@@ -166,6 +166,36 @@ const teamsRouter = createTRPCRouter({
 
     return invites;
   }),
+  resendInviteEmail: adminProcedure
+    .input(z.object({ inviteId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const invite = await ctx.prisma.userInvite.findFirst({
+        where: { id: input.inviteId },
+      });
+
+      if (!invite) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Invite not found`,
+        });
+      }
+
+      send(
+        invite.email,
+        `${ctx.session.user.name} has invited you to join ${ctx.team.name} on Selene`,
+        {
+          type: "invite-user",
+          props: {
+            team: ctx.team,
+            from: {
+              name: ctx.session.user.name ?? ctx.team.name,
+              email: ctx.session.user.email ?? "",
+            },
+            toEmail: invite.email,
+          },
+        }
+      );
+    }),
   updateRole: adminProcedure
     .input(
       z.object({
