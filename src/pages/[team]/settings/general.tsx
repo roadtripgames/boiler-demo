@@ -23,6 +23,12 @@ export default function General() {
       router.push("/");
     },
   });
+  const leaveMutation = api.teams.leave.useMutation({
+    onSuccess() {
+      router.push("/");
+    },
+  });
+
   const [name, setName] = useState(team?.name ?? "");
   const [slug, setSlug] = useState(team?.slug ?? "");
 
@@ -83,7 +89,7 @@ export default function General() {
           </form>
 
           <div className="mt-4 flex flex-col items-start justify-end gap-y-2 rounded border bg-white px-4 py-3">
-            <div className="text-xl font-medium">Delete {team?.name}</div>
+            <div className="text-xl font-medium">Delete Team</div>
             <p className="">
               Permanently delete your team and all of its contents from the
               Selene platform. This action is not reversible, so please continue
@@ -95,6 +101,28 @@ export default function General() {
               loading={deleteMutation.isLoading}
             >
               Delete team
+            </Button>
+          </div>
+          <div className="mt-4 flex flex-col items-start justify-end gap-y-2 rounded border bg-white px-4 py-3">
+            <div className="text-xl font-medium">Leave Team</div>
+            <p className="">
+              Revoke your access to this Team. Any resources you&apos;ve added
+              to this team will remain.
+            </p>
+            <Button
+              className="self-end"
+              onClick={async () => {
+                try {
+                  await leaveMutation.mutateAsync({ teamId: team.id });
+                } catch (e) {
+                  if (e instanceof TRPCClientError) {
+                    toast.error(e.message);
+                  }
+                }
+              }}
+              loading={leaveMutation.isLoading}
+            >
+              Leave team
             </Button>
           </div>
         </>

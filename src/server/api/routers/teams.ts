@@ -54,7 +54,7 @@ const teamsRouter = createTRPCRouter({
 
     return teams;
   }),
-  delete: adminProcedure.mutation(async ({ ctx, input }) => {
+  delete: adminProcedure.mutation(async ({ ctx }) => {
     // cannot do implicit many-to-many on delete cascade, so we manually disconnect
     await ctx.prisma.$transaction(async (tx) => {
       await tx.team.update({
@@ -69,6 +69,21 @@ const teamsRouter = createTRPCRouter({
           id: ctx.team.id,
         },
       });
+    });
+  }),
+  leave: memberProcedure.mutation(async ({ ctx }) => {
+    if (ctx.team.roles.length === 1) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: `You are the last member of this team. Please transfer ownership before leaving.`,
+      });
+    }
+
+    await ctx.prisma.team.update({
+      where: { id: ctx.team.id },
+      data: {
+        users: { disconnect: { id: ctx.session.user.id } },
+      },
     });
   }),
   create: protectedProcedure

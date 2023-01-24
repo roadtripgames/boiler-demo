@@ -2,7 +2,6 @@
 
 ## General TODO
 
-- leave team
 - stripe implementation
 - more pixel perfect components
 - responsiveness prototype
@@ -27,6 +26,7 @@
 - [x] ssg for members page
 - [x] dedupe if conflicting team slugs
 - [x] resend invite email
+- [x] leave team
 
 ## Jan 23
 

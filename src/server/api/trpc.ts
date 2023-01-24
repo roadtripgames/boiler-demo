@@ -181,6 +181,9 @@ export const memberProcedure = protectedProcedure
         ...idObj,
         users: { some: { id: user.id } },
       },
+      include: {
+        roles: true,
+      },
     });
 
     if (!team) {
