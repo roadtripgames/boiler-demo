@@ -1,4 +1,4 @@
-import NavigationSidebar from "../../../components/app/NavigationSidebar";
+import NavigationSidebarWrapper from "../../../components/app/NavigationSidebarWrapper";
 import { useTeam } from "../../../lib/useTeam";
 
 export default function SettingsLayout({
@@ -13,7 +13,7 @@ export default function SettingsLayout({
   const { slug } = useTeam();
 
   return (
-    <NavigationSidebar
+    <NavigationSidebarWrapper
       title={title}
       description={description}
       pages={[
@@ -32,6 +32,6 @@ export default function SettingsLayout({
       ]}
     >
       {children}
-    </NavigationSidebar>
+    </NavigationSidebarWrapper>
   );
 }

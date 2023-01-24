@@ -2,15 +2,23 @@
 
 ## General TODO
 
+- magic link auth
+- fix email design (images)
 - leave team
-- responsiveness prototype
 - stripe implementation
-- waitlist
 - more pixel perfect components
-- more react emails
 - phone number, phone number confirm (letterloop)
-- change to "email sign in link" screen
+- responsiveness prototype
+
+## scrapped
+
+- phone number, phone number confirm (letterloop)
 - add more auth providers
+- waitlist
+
+## Jan 24
+
+- [x] implement email/password auth
 
 ## Jan 23
 

@@ -38,7 +38,7 @@ export default function TeamHome() {
   return (
     <div className="flex h-full min-h-screen flex-col">
       <Header />
-      <div className="mx-auto flex h-full w-full max-w-7xl flex-col p-4">
+      <div className="mx-auto flex h-full w-full max-w-7xl animate-fadeIn flex-col p-4">
         {team && (
           <>
             <div className="text-xl font-medium">{team.name} workspace</div>

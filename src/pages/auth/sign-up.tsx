@@ -3,32 +3,56 @@ import Image from "next/image";
 import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";
 import type { FormEvent } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import { TextInput } from "../../components/design-system/TextInput";
 import { Button } from "../../components/design-system/Button";
+import { api } from "../../utils/api";
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { getCsrfToken, getProviders, signIn } from "next-auth/react";
 
-export default function SignUpPage() {
+type Providers = Awaited<ReturnType<typeof getProviders>>;
+
+export const getServerSideProps: GetServerSideProps<{
+  providers: Providers;
+  csrfToken: string | undefined;
+}> = async () => {
+  const providers = await getProviders();
+  const csrfToken = await getCsrfToken();
+  return {
+    props: { providers, csrfToken },
+  };
+};
+
+export default function SignUpPage({
+  providers,
+  csrfToken,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignUp = useCallback(async (e: FormEvent) => {
-    e.preventDefault();
+  const registerMutation = api.user.registerWithEmailAndPassword.useMutation();
 
-    // await signUpWithEmail({
-    //   email,
-    //   password,
-    // });
+  const handleSignUp = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
 
-    // router.push("/");
-  }, []);
+      await registerMutation.mutateAsync({ email, password });
 
-  // useEffect(() => {
-  //   if (auth) {
-  //     router.push("/");
-  //   }
-  // }, [auth, router]);
+      const signInResp = await signIn(providers?.credentials.id, {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: "/",
+      });
+
+      if (signInResp?.ok) {
+        router.push("/");
+      }
+    },
+    [email, password, providers, registerMutation, router]
+  );
 
   return (
     <div className="flex h-full flex-col">
@@ -47,6 +71,7 @@ export default function SignUpPage() {
                 className="my-4 flex flex-col gap-y-6"
                 onSubmit={handleSignUp}
               >
+                <input type="hidden" name="csrfToken" value={csrfToken} />
                 <Button
                   variant="outline"
                   className="flex w-full items-center justify-center gap-x-2 rounded-lg py-2"

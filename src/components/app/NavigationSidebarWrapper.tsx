@@ -29,7 +29,7 @@ function Page({
   );
 }
 
-export default function NavigationSidebar({
+export default function NavigationSidebarWrapper({
   children,
   title,
   description,

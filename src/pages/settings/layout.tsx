@@ -1,4 +1,4 @@
-import NavigationSidebar from "../../components/app/NavigationSidebar";
+import NavigationSidebarWrapper from "../../components/app/NavigationSidebarWrapper";
 
 export default function SettingsLayout({
   children,
@@ -10,7 +10,7 @@ export default function SettingsLayout({
   description: string;
 }) {
   return (
-    <NavigationSidebar
+    <NavigationSidebarWrapper
       title={title}
       description={description}
       pages={[
@@ -19,6 +19,6 @@ export default function SettingsLayout({
       ]}
     >
       {children}
-    </NavigationSidebar>
+    </NavigationSidebarWrapper>
   );
 }

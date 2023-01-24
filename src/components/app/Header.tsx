@@ -18,7 +18,7 @@ export default function Header() {
             <Link href={logoLink}>
               <Image src={companyLogo} alt={"company logo"} />
             </Link>
-            <SlashIcon />
+            <SlashIcon className="text-slate-300" />
             <TeamSelector />
           </div>
           <UserProfileButton />

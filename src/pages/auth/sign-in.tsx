@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getProviders, signIn } from "next-auth/react";
+import { getCsrfToken, getProviders, signIn } from "next-auth/react";
 
 import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";
@@ -10,24 +10,31 @@ import { Button } from "../../components/design-system/Button";
 import type { InferGetServerSidePropsType } from "next";
 import type { GetServerSideProps } from "next";
 import BoilerAlert from "../../components/design-system/BoilerAlert";
+import Link from "next/link";
+import { toast } from "react-hot-toast";
 
 type Providers = Awaited<ReturnType<typeof getProviders>>;
 
 export const getServerSideProps: GetServerSideProps<{
   providers: Providers;
+  csrfToken: string | undefined;
 }> = async () => {
   const providers = await getProviders();
+  const csrfToken = await getCsrfToken();
   return {
-    props: { providers },
+    props: { providers, csrfToken },
   };
 };
 
 export default function SignInPage({
   providers,
+  csrfToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  console.log(providers?.credentials);
 
   return (
     <div className="flex h-full flex-col">
@@ -69,7 +76,24 @@ export default function SignInPage({
               </div>
               <form
                 className="flex flex-col gap-y-6"
-                onSubmit={(e) => e.preventDefault()}
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  const resp = await signIn(providers?.credentials.id, {
+                    email,
+                    password,
+                    callbackUrl: `/`,
+                    redirect: false,
+                  });
+
+                  if (resp?.ok) {
+                    router.push("/");
+                  } else {
+                    toast.error("Invalid email or password", {
+                      duration: 1000,
+                    });
+                    setPassword("");
+                  }
+                }}
               >
                 <div className="flex flex-col">
                   <label className="mb-2 font-medium" htmlFor="email">
@@ -77,8 +101,8 @@ export default function SignInPage({
                   </label>
                   <TextInput
                     className=""
-                    autoComplete="username"
-                    type="email"
+                    autoComplete="email"
+                    type="text"
                     name="email"
                     placeholder="jane@company.com"
                     onValueChange={setEmail}
@@ -94,6 +118,7 @@ export default function SignInPage({
                     name="password"
                     id="password"
                     placeholder="••••••••"
+                    value={password}
                     onValueChange={setPassword}
                   />
                 </div>
@@ -101,6 +126,13 @@ export default function SignInPage({
                   Sign in
                 </Button>
               </form>
+              <p className="my-2 text-center text-slate-500">
+                Don&apos;t have an account?{" "}
+                <Link href="/auth/sign-up" className="text-primary-500">
+                  Sign up
+                </Link>{" "}
+                instead
+              </p>
             </div>
           </div>
         </div>
