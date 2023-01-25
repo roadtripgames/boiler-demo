@@ -14,7 +14,6 @@ import {
   DropdownSimple,
   DropdownSimpleItem,
 } from "../../../components/design-system/DropdownSimple";
-import { Select, SelectItem } from "../../../components/design-system/Select";
 import { TabbedContainer } from "../../../components/design-system/TabbedContainer";
 import { TextInput } from "../../../components/design-system/TextInput";
 import type { Role } from "../../../lib/roles";

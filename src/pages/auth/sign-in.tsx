@@ -17,18 +17,18 @@ type Providers = Awaited<ReturnType<typeof getProviders>>;
 
 export const getServerSideProps: GetServerSideProps<{
   providers: Providers;
-  csrfToken: string | undefined;
 }> = async () => {
   const providers = await getProviders();
-  const csrfToken = await getCsrfToken();
+
   return {
-    props: { providers, csrfToken },
+    props: {
+      providers,
+    },
   };
 };
 
 export default function SignInPage({
   providers,
-  csrfToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const [email, setEmail] = useState("");

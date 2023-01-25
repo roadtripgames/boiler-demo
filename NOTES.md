@@ -12,12 +12,14 @@
 - use get serverside props for everything
 - delete confirm modal
 - make logo png because svgs aren't correctly cached by google image server
+- analytics
+- waitlist
+- nice ui components
 
 ## scrapped
 
 - phone number, phone number confirm (letterloop)
 - add more auth providers
-- waitlist
 
 ## Jan 24
 
