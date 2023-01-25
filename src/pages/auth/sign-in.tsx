@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getCsrfToken, getProviders, signIn } from "next-auth/react";
+import { getProviders, signIn } from "next-auth/react";
 
 import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";

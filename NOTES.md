@@ -2,7 +2,7 @@
 
 ## General TODO
 
-- stripe implementation
+- tackle quantity in pricing page
 - more pixel perfect components
 - responsiveness prototype
 - magic link auth
@@ -15,11 +15,18 @@
 - analytics
 - waitlist
 - nice ui components
+- stripe sync function
+- cancel subscription
 
 ## scrapped
 
 - phone number, phone number confirm (letterloop)
 - add more auth providers
+
+## Jan 25
+
+- [x] stripe webhooks
+- [x] high fidelity billing page
 
 ## Jan 24
 

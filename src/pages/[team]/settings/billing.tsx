@@ -1,118 +1,185 @@
-import { CheckIcon } from "@radix-ui/react-icons";
-import clsx from "clsx";
-import Link from "next/link";
+import type { Price, Team } from "@prisma/client";
+import { PricingPlanInterval } from "@prisma/client";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import Header from "../../../components/app/Header";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "../../../components/design-system/Button";
+import Spinner from "../../../components/design-system/Spinner";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+} from "../../../components/design-system/TabSelector";
+import cn from "../../../lib/cn";
 import getStripe from "../../../lib/stripe-client";
 import { useTeam } from "../../../lib/useTeam";
+import type { RouterOutputs } from "../../../utils/api";
 import { api } from "../../../utils/api";
 import SettingsLayout from "./layout";
 
-type Plan = {
-  name: string;
-  price: string;
-  targetCustomer: string;
-  featureHighlights: string[];
-};
-
-const PLANS: Plan[] = [
-  {
-    name: "Plus",
-    price: "$29.00",
-    targetCustomer: "For growing teams",
-    featureHighlights: [
-      "Enhanced email sending",
-      "Permission settings",
-      "Upgraded contact analysis",
-    ],
-  },
-  {
-    name: "Pro",
-    price: "$59.00",
-    targetCustomer: "For scaling businesses",
-    featureHighlights: [
-      "Full access permissions",
-      "Advanced data enrichment",
-      "Priority support",
-    ],
-  },
-  {
-    name: "Enterprise",
-    price: "$119.00",
-    targetCustomer: "For large organizations",
-    featureHighlights: [
-      "Unlimited reporting",
-      "SAML and SSO",
-      "Custom billing",
-    ],
-  },
-];
-
-export function Plan({ name, price, targetCustomer, featureHighlights }: Plan) {
+export function Product({
+  name,
+  description,
+  image,
+  prices,
+  selectedInterval,
+  team,
+  currentPrice,
+}: RouterOutputs["billing"]["products"][0] & {
+  selectedInterval: PricingPlanInterval;
+  team: Team;
+  currentPrice: Price | undefined;
+}) {
+  const router = useRouter();
+  const createPortalLinkMutation = api.stripe.createPortalLink.useMutation();
   const createSessionMutation = api.stripe.createCheckoutSession.useMutation();
+  const price = prices.find((p) => p.interval === selectedInterval);
+
+  const handleManageSubscription = useCallback(async () => {
+    if (!team) return;
+
+    const { portalUrl } = await createPortalLinkMutation.mutateAsync({
+      slug: team.slug,
+    });
+    router.push(portalUrl);
+  }, [createPortalLinkMutation, router, team]);
+
+  const handleCreateSubscription = useCallback(async () => {
+    if (!price || !team) return;
+
+    const { sessionId } = await createSessionMutation.mutateAsync({
+      slug: team.slug,
+      priceId: price.id,
+    });
+
+    const stripe = await getStripe();
+    stripe?.redirectToCheckout({ sessionId });
+  }, [createSessionMutation, price, team]);
+
+  if (!price) return null;
+
+  const isCurrentPlan = price.id === currentPrice?.id;
 
   return (
-    <div className="flex flex-1 flex-col rounded-md border bg-white px-6 py-4">
-      <h4 className="mb-2 text-lg font-medium">{name}</h4>
-      <h5 className="text-3xl font-semibold">{price}</h5>
-      <p className="mb-4 text-slate-500">per user, per month, billed monthly</p>
-      <Button
-        className="self-center"
-        onClick={async () => {
-          const { sessionId } = await createSessionMutation.mutateAsync({
-            slug: "test",
-            priceId: `price_1MUCrKFAIsJhnRXbT9BJ0MeV`,
-          });
+    <div
+      className={cn(
+        "flex flex-1 flex-col rounded-md border bg-white px-4 pb-8 text-center",
+        {
+          "border-primary-600": isCurrentPlan,
+        }
+      )}
+    >
+      <h4 className="mt-4 self-center text-lg font-medium">{name}</h4>
+      {image && (
+        <Image
+          src={image}
+          alt={name}
+          width={64}
+          height={64}
+          className="self-center rounded-md"
+        />
+      )}
+      <h4 className="text-3xl font-semibold">
+        {new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: price.currency,
+          minimumFractionDigits: 0,
+        }).format((price.unitAmount || 0) / 100)}
+      </h4>
+      <p className="mb-4 text-slate-500">per user, per month</p>
+      <h4 className="mb-2 h-12 text-sm text-slate-500">{description}</h4>
 
-          const stripe = await getStripe();
-          stripe?.redirectToCheckout({ sessionId });
+      <Button
+        className="self-center px-5"
+        loading={
+          createSessionMutation.isLoading || createPortalLinkMutation.isLoading
+        }
+        onClick={() => {
+          if (isCurrentPlan) {
+            handleManageSubscription();
+          } else {
+            handleCreateSubscription();
+          }
         }}
       >
-        Upgrade to {name}
+        {isCurrentPlan ? "Manage" : "Upgrade"}
       </Button>
-      <div className="mt-4 flex flex-col gap-y-1 text-slate-500">
-        <p className="mb-2 font-medium">{targetCustomer}</p>
-        {featureHighlights.map((f, i) => (
-          <div key={i} className="flex items-center gap-x-1">
-            <CheckIcon />
-            <span className="">{f}</span>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
 
-export default function General() {
-  const { slug } = useTeam();
-  const router = useRouter();
-  const createStripePortalLinkMutation =
-    api.stripe.createPortalLink.useMutation();
+export default function Billing() {
+  const { data: team } = useTeam();
+  const [interval, setInterval] = useState<PricingPlanInterval>("month");
+
+  // const syncPricesMutation = api.stripe.syncPrices.useMutation();
+  const { data: products } = api.billing.products.useQuery();
+
+  useEffect(() => {
+    if (team?.subscription[0]?.price.interval) {
+      setInterval(team.subscription[0].price.interval);
+    }
+  }, [team?.subscription]);
+
+  if (!team) return;
+
+  const currentPrice = team.subscription[0]?.price;
+  const currentProduct = currentPrice?.product;
 
   return (
     <SettingsLayout
       title="Billing"
       description="View and manage your plans and invoices"
     >
-      <h3 className="mb-4 text-xl font-medium">Plans</h3>
-      <Button
-        className="mb-4"
-        onClick={async () => {
-          const { portalUrl } =
-            await createStripePortalLinkMutation.mutateAsync({
-              slug,
-            });
-          router.push(portalUrl);
-        }}
-      >
-        manage your billing with stripe
-      </Button>
-      <div className="flex justify-between gap-x-2">
-        {PLANS.map((p) => (
-          <Plan key={p.name} {...p} />
-        ))}
-      </div>
+      {products ? (
+        <>
+          <div className="mb-4">
+            <h2 className="mb-2 text-xl font-medium">Current plan</h2>
+            <div>
+              You&apos;re currently on the{" "}
+              {currentProduct ? `${currentPrice.interval}ly` : ""}{" "}
+              <span className="rounded bg-primary-100 px-2 py-1 text-primary-900">
+                {currentProduct?.name || "Free"}
+              </span>{" "}
+              plan
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-xl font-medium">Plans</h3>
+              <Tabs
+                onValueChange={(v) => setInterval(v as PricingPlanInterval)}
+                value={interval}
+                className="self-end"
+              >
+                <TabsList>
+                  <TabsTrigger value={PricingPlanInterval["month"]}>
+                    Monthly
+                  </TabsTrigger>
+                  <TabsTrigger value={PricingPlanInterval["year"]}>
+                    Yearly
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+            <div className="flex justify-between gap-x-2">
+              {products?.map((p) => (
+                <Product
+                  key={p.id}
+                  team={team}
+                  selectedInterval={interval}
+                  currentPrice={currentPrice}
+                  {...p}
+                />
+              ))}
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="flex items-center justify-center">
+          <Spinner />
+        </div>
+      )}
     </SettingsLayout>
   );
 }

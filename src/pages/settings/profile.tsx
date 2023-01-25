@@ -62,7 +62,7 @@ export default function Profile() {
   const utils = api.useContext();
   const updateUserMutation = api.user.update.useMutation({
     onSuccess() {
-      utils.invalidate(undefined, { queryKey: ["user.get"] });
+      utils.invalidate(undefined, { queryKey: [api.user.get.getQueryKey()] });
     },
   });
 

@@ -29,7 +29,9 @@ export default function General() {
   const { data: team } = useTeam();
   const updateMutation = api.teams.update.useMutation({
     onSuccess() {
-      utils.invalidate(undefined, { queryKey: ["teams.get"] });
+      utils.invalidate(undefined, {
+        queryKey: [api.teams.get.getQueryKey({ slug: team?.slug ?? "" })],
+      });
     },
   });
   const deleteMutation = api.teams.delete.useMutation();

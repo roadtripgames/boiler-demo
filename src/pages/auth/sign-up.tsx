@@ -9,24 +9,21 @@ import { TextInput } from "../../components/design-system/TextInput";
 import { Button } from "../../components/design-system/Button";
 import { api } from "../../utils/api";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { getCsrfToken, getProviders, signIn } from "next-auth/react";
+import { getProviders, signIn } from "next-auth/react";
 
 type Providers = Awaited<ReturnType<typeof getProviders>>;
 
 export const getServerSideProps: GetServerSideProps<{
   providers: Providers;
-  csrfToken: string | undefined;
 }> = async () => {
   const providers = await getProviders();
-  const csrfToken = await getCsrfToken();
   return {
-    props: { providers, csrfToken },
+    props: { providers },
   };
 };
 
 export default function SignUpPage({
   providers,
-  csrfToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -71,7 +68,6 @@ export default function SignUpPage({
                 className="my-4 flex flex-col gap-y-6"
                 onSubmit={handleSignUp}
               >
-                <input type="hidden" name="csrfToken" value={csrfToken} />
                 <Button
                   variant="outline"
                   className="flex w-full items-center justify-center gap-x-2 rounded-lg py-2"

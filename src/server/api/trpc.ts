@@ -155,6 +155,10 @@ export const adminProcedure = protectedProcedure
         users: { some: { id: user.id } },
         roles: { some: { name: "ADMIN", user: { id: user.id } } },
       },
+      include: {
+        roles: true,
+        subscription: { include: { price: { include: { product: true } } } },
+      },
     });
 
     if (!team) {
@@ -183,6 +187,7 @@ export const memberProcedure = protectedProcedure
       },
       include: {
         roles: true,
+        subscription: { include: { price: { include: { product: true } } } },
       },
     });
 

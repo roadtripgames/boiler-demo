@@ -6,6 +6,9 @@ const nextConfig = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    remotePatterns: [{ hostname: "files.stripe.com" }],
+  },
 };
 
 module.exports = nextConfig;

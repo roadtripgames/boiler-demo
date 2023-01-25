@@ -84,7 +84,7 @@ export default function Onboarding() {
   const utils = api.useContext();
   const finishOnboardingMutation = api.user.finishOnboarding.useMutation({
     onSuccess() {
-      utils.invalidate(undefined, { queryKey: ["user.get"] });
+      utils.invalidate(undefined, { queryKey: [api.user.get.getQueryKey()] });
     },
   });
 

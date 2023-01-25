@@ -14,7 +14,7 @@ const stripeRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       let customer = await ctx.prisma.customer.findUnique({
-        where: { userId: ctx.session.user.id },
+        where: { teamId: ctx.team.id },
       });
 
       // Create customer if not found
@@ -25,17 +25,18 @@ const stripeRouter = createTRPCRouter({
         });
 
         customer = await ctx.prisma.customer.create({
-          data: { id: stripeCustomer.id, userId: ctx.session.user.id },
+          data: { id: stripeCustomer.id, teamId: ctx.team.id },
         });
       }
 
       const billingUrl = `${getBaseUrl()}/${ctx.team.slug}/settings/billing`;
+      const quantity = ctx.team.roles.length || 1; // number of teammates
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         billing_address_collection: "required",
         customer: customer.id,
-        line_items: [{ price: input.priceId, quantity: 1 }],
+        line_items: [{ price: input.priceId, quantity }],
         mode: "subscription",
         subscription_data: { trial_from_plan: true },
         success_url: billingUrl,
@@ -47,7 +48,7 @@ const stripeRouter = createTRPCRouter({
 
   createPortalLink: adminProcedure.mutation(async ({ ctx }) => {
     const customer = await ctx.prisma.customer.findUnique({
-      where: { userId: ctx.session.user.id },
+      where: { teamId: ctx.team.id },
     });
 
     if (!customer) {
@@ -90,7 +91,7 @@ const stripeRouter = createTRPCRouter({
         currency: price.currency,
         description: price.nickname ?? undefined,
         type: price.type,
-        unitAmount: price.unit_amount ?? undefined,
+        unitAmount: price.unit_amount ?? 0,
         interval: price.recurring?.interval ?? undefined,
         intervalCount: price.recurring?.interval_count ?? undefined,
         trialPeriodDays: price.recurring?.trial_period_days ?? undefined,
@@ -130,10 +131,10 @@ const stripeRouter = createTRPCRouter({
         throw new Error(`Price not found for subscription: ${subscription.id}`);
       }
 
-      const subscriptionData: Prisma.SubscriptionCreateManyInput = {
+      const subscriptionData: Prisma.SubscriptionCreateInput = {
         id: subscription.id,
-        userId: customer.userId,
-        priceId,
+        team: { connect: { id: customer.teamId } },
+        price: { connect: { id: priceId } },
         metadata: subscription.metadata,
         status: subscription.status,
         quantity: subscription.items.data[0]?.quantity ?? undefined,
@@ -158,11 +159,45 @@ const stripeRouter = createTRPCRouter({
           : undefined,
       };
 
-      await ctx.prisma.subscription.createMany({
-        data: [subscriptionData],
-        skipDuplicates: true,
+      await ctx.prisma.subscription.upsert({
+        where: { id: subscription.id },
+        update: subscriptionData,
+        create: subscriptionData,
       });
     }),
+  syncPrices: publicProcedure.mutation(async ({ ctx }) => {
+    // get all products from prisma,
+    // for each product, get the prices from stripe
+    // upsert each price to the db
+    const products = await ctx.prisma.product.findMany();
+    for (const p of products) {
+      const prices = await stripe.prices.list({ product: p.id });
+      console.log(prices);
+      for (const price of prices.data) {
+        const productId =
+          typeof price.product === "string" ? price.product : "";
+        const data: Prisma.PriceCreateInput = {
+          id: price.id,
+          product: { connect: { id: productId } },
+          active: price.active,
+          currency: price.currency,
+          description: price.nickname ?? undefined,
+          type: price.type,
+          unitAmount: price.unit_amount ?? 0,
+          interval: price.recurring?.interval ?? undefined,
+          intervalCount: price.recurring?.interval_count ?? undefined,
+          trialPeriodDays: price.recurring?.trial_period_days ?? undefined,
+          metadata: price.metadata,
+        };
+
+        await ctx.prisma.price.upsert({
+          where: { id: price.id },
+          update: data,
+          create: data,
+        });
+      }
+    }
+  }),
 });
 
 export default stripeRouter;

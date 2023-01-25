@@ -183,12 +183,16 @@ export default function Team() {
   const utils = api.useContext();
   const inviteMutation = api.teams.inviteMembers.useMutation({
     onSuccess() {
-      utils.invalidate(undefined, { queryKey: ["members.get"] });
+      utils.invalidate(undefined, {
+        queryKey: [api.teams.getMembers.getQueryKey({ slug })],
+      });
     },
   });
   const updateRoleMutation = api.teams.updateRole.useMutation({
     onSuccess() {
-      utils.invalidate(undefined, { queryKey: ["members.get"] });
+      utils.invalidate(undefined, {
+        queryKey: [api.teams.getMembers.getQueryKey({ slug })],
+      });
     },
   });
   const resendInviteEmailMutation = api.teams.resendInviteEmail.useMutation();

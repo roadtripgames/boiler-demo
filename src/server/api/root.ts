@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "./trpc";
 import userRouter from "./routers/user";
 import teamsRouter from "./routers/teams";
+import billingRouter from "./routers/billing";
 import stripeRouter from "./routers/stripe";
 
 /**
@@ -11,6 +12,7 @@ import stripeRouter from "./routers/stripe";
 export const appRouter = createTRPCRouter({
   user: userRouter,
   teams: teamsRouter,
+  billing: billingRouter,
   stripe: stripeRouter,
 });
 
