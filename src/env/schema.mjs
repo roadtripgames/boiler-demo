@@ -15,10 +15,7 @@ export const serverSchema = z.object({
   // Auth
   NEXTAUTH_SECRET:
     process.env.NODE_ENV === "production"
-      ? z
-          .string()
-          .min(1)
-          .default((Math.random() * 10000).toString())
+      ? z.string().min(1).default("default")
       : z.string().min(1).optional().default("default"),
 
   NEXTAUTH_URL:
