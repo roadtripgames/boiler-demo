@@ -111,8 +111,8 @@ export default function Home() {
                 />
               </div>
             </div>
-            <Link href="/auth/sign-in">
-              <Button className="w-fit">Sign in</Button>
+            <Link href="/auth/sign-up">
+              <Button className="w-fit">Sign up</Button>
             </Link>
             <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Froadtripgames%2Fboiler-template&project-name=boiler&repository-name=boiler">
               <img src="https://vercel.com/button" alt="Deploy with Vercel" />
