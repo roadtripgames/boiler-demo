@@ -10,7 +10,7 @@ export const serverSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]),
 
   // Storage
-  DATABASE_URL: z.string().url(),
+  DATABASE_URL: z.string().url().optional(),
 
   // Auth
   NEXTAUTH_SECRET:
@@ -18,18 +18,20 @@ export const serverSchema = z.object({
       ? z.string().min(1)
       : z.string().min(1).optional(),
 
-  NEXTAUTH_URL: z.preprocess(
-    // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
-    // Since NextAuth.js automatically uses the VERCEL_URL if present.
-    (str) => process.env.VERCEL_URL ?? str,
-    // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-    process.env.VERCEL ? z.string() : z.string().url()
-  ),
-  GOOGLE_CLIENT_ID: z.string(),
-  GOOGLE_CLIENT_SECRET: z.string(),
-  SENDGRID_API_KEY: z.string(),
-  STRIPE_SECRET_KEY: z.string(),
-  STRIPE_WEBHOOK_SECRET: z.string(),
+  NEXTAUTH_URL: z
+    .preprocess(
+      // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
+      // Since NextAuth.js automatically uses the VERCEL_URL if present.
+      (str) => process.env.VERCEL_URL ?? str,
+      // VERCEL_URL doesn't include `https` so it cant be validated as a URL
+      process.env.VERCEL ? z.string() : z.string().url()
+    )
+    .optional(),
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
+  SENDGRID_API_KEY: z.string().optional(),
+  STRIPE_SECRET_KEY: z.string().optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
 });
 
 /**
@@ -55,8 +57,7 @@ export const serverEnv = {
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-  // NEXT_PUBLIC_CLIENTVAR: z.string(),
-  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string(),
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
 });
 
 /**

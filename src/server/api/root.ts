@@ -1,4 +1,5 @@
 import { createTRPCRouter } from "./trpc";
+import setupRouter from "./routers/setup";
 import userRouter from "./routers/user";
 import teamsRouter from "./routers/teams";
 import billingRouter from "./routers/billing";
@@ -10,6 +11,7 @@ import stripeRouter from "./routers/stripe";
  * All routers added in /api/routers should be manually added here
  */
 export const appRouter = createTRPCRouter({
+  setup: setupRouter,
   user: userRouter,
   teams: teamsRouter,
   billing: billingRouter,
