@@ -211,6 +211,13 @@ const teamsRouter = createTRPCRouter({
         }
       );
     }),
+  deleteInvite: adminProcedure
+    .input(z.object({ inviteId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.userInvite.delete({
+        where: { id: input.inviteId },
+      });
+    }),
   updateRole: adminProcedure
     .input(
       z.object({

@@ -169,6 +169,7 @@ export default function Team() {
   const { data: user } = api.user.get.useQuery();
   const { data: team, slug } = useTeam();
 
+  const utils = api.useContext();
   const members = api.teams.getMembers.useQuery(
     {
       slug,
@@ -179,8 +180,6 @@ export default function Team() {
     { slug },
     { enabled: !!slug }
   );
-
-  const utils = api.useContext();
   const inviteMutation = api.teams.inviteMembers.useMutation({
     onSuccess() {
       utils.invalidate(undefined, {
@@ -196,6 +195,13 @@ export default function Team() {
     },
   });
   const resendInviteEmailMutation = api.teams.resendInviteEmail.useMutation();
+  const deleteInviteMutation = api.teams.deleteInvite.useMutation({
+    onSuccess() {
+      utils.invalidate(undefined, {
+        queryKey: [api.teams.invites.getQueryKey({ slug })],
+      });
+    },
+  });
 
   if (!user) return null;
   if (!team) return null;
@@ -294,7 +300,16 @@ export default function Team() {
                             >
                               Resend invite
                             </DropdownSimpleItem>
-                            <DropdownSimpleItem className="text-red-500">
+                            <DropdownSimpleItem
+                              className="text-red-500"
+                              onSelect={async () => {
+                                await deleteInviteMutation.mutateAsync({
+                                  slug,
+                                  inviteId: i.id,
+                                });
+                                toast.success(`Invite to ${i.email} deleted`);
+                              }}
+                            >
                               Delete invite
                             </DropdownSimpleItem>
                           </DropdownSimple>
