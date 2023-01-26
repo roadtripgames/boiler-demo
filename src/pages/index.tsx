@@ -9,6 +9,7 @@ import Link from "next/link";
 import { env as clientEnv } from "../env/client.mjs";
 import clsx from "clsx";
 import _ from "lodash";
+import { DEFAULT_VALUE_DO_NOT_USE_IN_PRODUCTION } from "../env/schema.mjs";
 
 const filterMap = (obj: Record<string, string | undefined>, keys: string[]) =>
   Object.fromEntries(Object.entries(obj).filter(([key]) => keys.includes(key)));
@@ -18,7 +19,7 @@ function Setup() {
   const env = {
     ...backendVars.data,
     ..._.mapValues(clientEnv, (x) =>
-      x === "" || x === "default" ? undefined : x
+      x === "" || x === DEFAULT_VALUE_DO_NOT_USE_IN_PRODUCTION ? undefined : x
     ),
   };
   const optionalVars = [

@@ -1,6 +1,8 @@
 // @ts-check
 import { z } from "zod";
 
+export const DEFAULT_VALUE_DO_NOT_USE_IN_PRODUCTION = "__default__";
+
 /**
  * Specify your server-side environment variables schema here.
  * This way you can ensure the app isn't built with invalid env vars.
@@ -15,8 +17,12 @@ export const serverSchema = z.object({
   // Auth
   NEXTAUTH_SECRET:
     process.env.NODE_ENV === "production"
-      ? z.string().min(1).default("default")
-      : z.string().min(1).optional().default("default"),
+      ? z.string().min(1).default(DEFAULT_VALUE_DO_NOT_USE_IN_PRODUCTION)
+      : z
+          .string()
+          .min(1)
+          .optional()
+          .default(DEFAULT_VALUE_DO_NOT_USE_IN_PRODUCTION),
 
   NEXTAUTH_URL:
     process.env.NODE_ENV === "development"
