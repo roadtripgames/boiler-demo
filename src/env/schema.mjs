@@ -15,19 +15,22 @@ export const serverSchema = z.object({
   // Auth
   NEXTAUTH_SECRET:
     process.env.NODE_ENV === "production"
-      ? z.string().min(1).default("")
-      : z.string().min(1).optional().default(""),
+      ? z.string().min(1)
+      : z.string().min(1).optional().default("default"),
 
-  NEXTAUTH_URL: z
-    .preprocess(
-      // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
-      // Since NextAuth.js automatically uses the VERCEL_URL if present.
-      (str) => process.env.VERCEL_URL ?? str,
-      // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-      process.env.VERCEL ? z.string() : z.string().url()
-    )
-    .optional()
-    .default(""),
+  NEXTAUTH_URL:
+    process.env.NODE_ENV === "development"
+      ? z.string().optional().default("http://localhost:3000")
+      : z
+          .preprocess(
+            // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
+            // Since NextAuth.js automatically uses the VERCEL_URL if present.
+            (str) => process.env.VERCEL_URL ?? str,
+            // VERCEL_URL doesn't include `https` so it cant be validated as a URL
+            process.env.VERCEL ? z.string() : z.string().url()
+          )
+          .optional()
+          .default(""),
   GOOGLE_CLIENT_ID: z.string().optional().default(""),
   GOOGLE_CLIENT_SECRET: z.string().optional().default(""),
   SENDGRID_API_KEY: z.string().optional().default(""),

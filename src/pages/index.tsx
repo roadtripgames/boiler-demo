@@ -8,13 +8,19 @@ import { Button } from "../components/design-system/Button";
 import Link from "next/link";
 import { env as clientEnv } from "../env/client.mjs";
 import clsx from "clsx";
+import _ from "lodash";
 
 const filterMap = (obj: Record<string, string | undefined>, keys: string[]) =>
   Object.fromEntries(Object.entries(obj).filter(([key]) => keys.includes(key)));
 
 function Setup() {
   const backendVars = api.setup.vars.useQuery();
-  const env = { ...backendVars.data, ...clientEnv };
+  const env = {
+    ...backendVars.data,
+    ..._.mapValues(clientEnv, (x) =>
+      x === "" || x === "default" ? undefined : x
+    ),
+  };
   const optionalVars = [
     "GOOGLE_CLIENT_ID",
     "GOOGLE_CLIENT_SECRET",
