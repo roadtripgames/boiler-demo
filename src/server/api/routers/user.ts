@@ -3,7 +3,8 @@ import bcrypt from "bcrypt";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import { TRPCError } from "@trpc/server";
+
+export const ERROR_EMAIL_ALREADY_IN_USE = "ERROR_EMAIL_ALREADY_IN_USE";
 
 const userRouter = createTRPCRouter({
   registerWithEmailAndPassword: publicProcedure
@@ -22,11 +23,9 @@ const userRouter = createTRPCRouter({
       } catch (e) {
         if (e instanceof PrismaClientKnownRequestError) {
           if (e.code === "P2002") {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: `There's already a user with that email`,
-              cause: e,
-            });
+            return;
+          } else {
+            throw e;
           }
         }
       }

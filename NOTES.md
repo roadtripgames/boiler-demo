@@ -2,6 +2,7 @@
 
 ## General TODO
 
+- "TeamProtectedRoute" -- only show if you're in the team?
 - tackle quantity in pricing page
 - more pixel perfect components
 - responsiveness prototype
@@ -22,6 +23,11 @@
 
 - phone number, phone number confirm (letterloop)
 - add more auth providers
+
+## Jan 26
+
+- [x] if a signed up user tries to sign up, make them go thru the sign in flow
+- [x] make all env vars non-required, easy "deploy to vercel" button
 
 ## Jan 25
 
