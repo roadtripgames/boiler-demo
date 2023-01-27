@@ -101,7 +101,7 @@ export default function Onboarding() {
                 <p className="mb-4 text-sm text-slate-400">
                   {stepIndex + 1} of {ONBOARDING_STEPS.length}
                 </p>
-                <div envKey={step.key} className={"mb-8"}>
+                <div key={step.key} className={"mb-8"}>
                   <h2 className="mb-4 text-xl font-medium">{step.title}</h2>
                   <form
                     className="flex flex-col items-start gap-y-2"

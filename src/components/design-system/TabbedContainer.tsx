@@ -19,7 +19,7 @@ export const TabbedContainer: React.FC<TabbedContainerProps> = ({ tabs }) => {
       <div className="flex gap-x-8 rounded-t-lg border-b">
         {titles.map((t, i) => (
           <div
-            envKey={t}
+            key={t}
             onClick={() => setActiveTab(i)}
             className={clsx("cursor-pointer px-2 py-3", {
               "-mb-[1px] border-b-2 border-primary-500 font-semibold":

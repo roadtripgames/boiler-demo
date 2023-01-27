@@ -56,7 +56,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
     <DropdownMenuPrimitive.Root {...props}>
       <DropdownMenuContent className={clsx("", contentClassName)}>
         {values.map((v) => (
-          <DropdownMenuItem envKey={v} onSelect={() => handleSelect(v)}>
+          <DropdownMenuItem key={v} onSelect={() => handleSelect(v)}>
             {v}
           </DropdownMenuItem>
         ))}
