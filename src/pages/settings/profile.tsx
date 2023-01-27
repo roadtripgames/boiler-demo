@@ -14,14 +14,13 @@ type UserProfileFormProps = {
 
 function UserProfileForm({ user, onUpdate }: UserProfileFormProps) {
   const [name, setName] = useState(user.name ?? "");
-  const [title, setTitle] = useState(user.jobTitle ?? "");
 
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault();
         try {
-          await onUpdate?.mutateAsync({ name: name, jobTitle: title });
+          await onUpdate?.mutateAsync({ name: name });
           toast.success("Profile updated.");
         } catch (e) {
           toast.error(`Issue updating profile.`);
@@ -38,14 +37,6 @@ function UserProfileForm({ user, onUpdate }: UserProfileFormProps) {
           <TextInput
             value={name}
             onValueChange={(e) => setName(e)}
-            className="w-96"
-          />
-        </div>
-        <div>
-          <p className="mb-2 font-medium">Title</p>
-          <TextInput
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
             className="w-96"
           />
         </div>
