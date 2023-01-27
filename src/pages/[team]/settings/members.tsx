@@ -117,7 +117,7 @@ const InviteSection: React.FC<InviteSectionProps> = ({
       <div className="mt-4 flex flex-col gap-y-2">
         {invites.map(({ email, role }, i) => {
           return (
-            <div key={i} className="grid grid-cols-4 gap-x-3">
+            <div envKey={i} className="grid grid-cols-4 gap-x-3">
               <div className="col-span-3">
                 <TextInput
                   value={email}
@@ -223,7 +223,7 @@ export default function Team() {
                   return (
                     <div
                       className="flex justify-between border-b py-3 px-4 last-of-type:border-none"
-                      key={m.id}
+                      envKey={m.id}
                     >
                       <div className="flex items-center gap-x-2">
                         <Avatar name={m.name ?? m.email} src={m.image} />
@@ -273,7 +273,7 @@ export default function Team() {
                       return (
                         <div
                           className="flex justify-between border-b py-3 last-of-type:border-none"
-                          key={i.id}
+                          envKey={i.id}
                         >
                           <div className="flex items-center gap-x-2">
                             <div className="flex flex-col gap-y-1">

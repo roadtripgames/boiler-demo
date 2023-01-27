@@ -55,7 +55,7 @@ export default function NavigationSidebarWrapper({
               const hrefUrl = typeof href === "string" ? href : href.pathname;
               return (
                 <Page
-                  key={name}
+                  envKey={name}
                   name={name}
                   href={href}
                   isSelected={router.pathname === hrefUrl}

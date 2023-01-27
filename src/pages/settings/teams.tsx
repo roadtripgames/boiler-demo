@@ -42,7 +42,7 @@ export default function Team() {
           return (
             <div
               className="flex justify-between border-b px-4 py-3 last-of-type:border-none"
-              key={t.id}
+              envKey={t.id}
             >
               <div className="flex items-center gap-x-2">
                 <Avatar name={t.name} />

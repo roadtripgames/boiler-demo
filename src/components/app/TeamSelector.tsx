@@ -113,7 +113,7 @@ export default function TeamSelector() {
                   return (
                     <MenuItem
                       selected={t.slug === slug}
-                      key={t.id}
+                      envKey={t.id}
                       onClick={async () => {
                         if (!t.id || t.slug === slug) return;
 

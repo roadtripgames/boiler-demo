@@ -165,7 +165,7 @@ export default function Billing() {
             <div className="flex justify-between gap-x-2">
               {products?.map((p) => (
                 <Product
-                  key={p.id}
+                  envKey={p.id}
                   team={team}
                   selectedInterval={interval}
                   currentPrice={currentPrice}

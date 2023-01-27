@@ -40,7 +40,7 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({
       {values.map((v, i) => {
         return (
           <div
-            key={i}
+            envKey={i}
             className={clsx(
               "flex h-10 cursor-pointer items-center rounded-md border px-4 transition hover:border-primary-500",
               {
