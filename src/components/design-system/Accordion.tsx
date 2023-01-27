@@ -9,10 +9,7 @@ const Accordion = AccordionPrimitive.Root;
 
 const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
-  // unclear why we have to manually type `key`
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item> & {
-    key: string | number;
-  }
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
 >(({ className, ...props }, ref) => (
   <AccordionPrimitive.Item
     ref={ref}
