@@ -53,8 +53,6 @@ model User {
   accounts      Account[]
   sessions      Session[]
   hasOnboarded  Boolean        @default(false)
-  interest      String?        @db.Text
-  jobTitle      String?
   teams         Team[]         @relation("Teams")
   roles         UserTeamRole[]
 }

@@ -43,35 +43,19 @@ const ONBOARDING_STEPS: Step[] = [
     result: "",
   },
   {
-    key: "jobTitle",
-    title: "What is your job title?",
-    fieldType: "button-group",
-    selectMultiple: false,
-    options: [
-      "Entrepreneur",
-      "Designer",
-      "Software Engineer",
-      "Marketer",
-      "Other",
-    ],
+    key: "teamName",
+    title: "What do you want to name your workspace?",
+    fieldType: "text",
+    placeholder: "ex: Personal or Acme Corp",
     result: "",
-  },
-  {
-    key: "interest",
-    title: "What is your primary tool?",
-    fieldType: "button-group",
-    selectMultiple: false,
-    options: ["React", "Figma", "Notion", "Linear", "Other"],
-    result: [],
   },
 ];
 
 export default function Onboarding() {
   const [stepIndex, setStepIndex] = useState(0);
-  const [response, setResponse] = useState<any>({
+  const [response, setResponse] = useState<{ name: string; teamName: string }>({
     name: "",
-    jobTitle: "",
-    interest: "",
+    teamName: "",
   });
 
   const handleChangeResponse = useCallback((key: string, value: any) => {

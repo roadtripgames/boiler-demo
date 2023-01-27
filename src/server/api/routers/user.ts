@@ -1,6 +1,7 @@
 import { z } from "zod";
 import bcrypt from "bcrypt";
 
+import teams from "./teams";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
@@ -41,8 +42,6 @@ const userRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().optional(),
-        jobTitle: z.string().optional(),
-        interests: z.array(z.string()).optional(),
         image: z.string().optional(),
         billing_address: z.string().optional(),
         has_onboarded: z.boolean().optional(),
@@ -59,18 +58,19 @@ const userRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        jobTitle: z.string(),
-        interest: z.string(),
+        teamName: z.string().min(1).max(24),
       })
     )
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.user.update({
         where: { id: ctx.session.user.id },
         data: {
-          ...input,
+          name: input.name,
           hasOnboarded: true,
         },
       });
+
+      await teams.createCaller(ctx).create({ name: input.teamName });
     }),
 });
 

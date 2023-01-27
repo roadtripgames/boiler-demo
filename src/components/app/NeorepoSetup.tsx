@@ -150,12 +150,10 @@ export function Setup() {
     string[] | undefined
   >(undefined);
 
-  console.log(STEPS);
   useEffect(() => {
     const firstIncompleteStepIdx = STEPS.findIndex((s) => !s.isComplete);
     const step = STEPS[firstIncompleteStepIdx];
     if (step) {
-      console.log("setting", step.name);
       setOpenAccordionItems([step.name]);
     }
   }, [backendVars.data, hasUsers.data]);
