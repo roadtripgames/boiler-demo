@@ -115,9 +115,7 @@ export default function SignUpPage({
                   />
                   <label htmlFor="remember">Remember me</label>
                 </div> */}
-                <Button variant="primary" className="w-full">
-                  Sign up
-                </Button>
+                <Button className="w-full">Sign up</Button>
               </form>
               <p className="my-2 text-center text-slate-500">
                 Already have an account?{" "}

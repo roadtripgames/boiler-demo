@@ -41,7 +41,7 @@ function UserProfileForm({ user, onUpdate }: UserProfileFormProps) {
           />
         </div>
       </div>
-      <Button className="mt-8" disabled={onUpdate?.isLoading}>
+      <Button className="mt-8" loading={onUpdate?.isLoading}>
         Update
       </Button>
     </form>

@@ -89,12 +89,8 @@ export default function CreateTeamModal({
           </label>
           <div className="flex justify-between">
             <div />
-            <Button
-              className=""
-              loading={createMutation.isLoading}
-              loadingText="Creating"
-            >
-              Create team
+            <Button className="" loading={createMutation.isLoading}>
+              {createMutation.isLoading ? "Creating" : "Create team"}
             </Button>
           </div>
         </form>

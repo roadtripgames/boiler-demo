@@ -153,12 +153,11 @@ const InviteSection: React.FC<InviteSectionProps> = ({
         </Button>
         <Button
           loading={inviteMutation.isLoading}
-          loadingText="Sending invites"
           className="flex items-center gap-x-2"
           onClick={handleSendInvites}
         >
           <EnvelopeClosedIcon />
-          Send invites
+          {inviteMutation.isLoading ? "Sending invites" : "Send invites"}
         </Button>
       </div>
     </Section>

@@ -1,59 +1,61 @@
-import clsx from "clsx";
-import React from "react";
+import * as React from "react";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
+
+import cn from "../../lib/cn";
 import Spinner from "./Spinner";
 
-export type ButtonProps = {
-  className?: string;
-  variant?: "primary" | "outline" | "link";
-  loading?: boolean;
-  loadingText?: string;
-} & React.ComponentPropsWithoutRef<"button">;
-
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      loading = false,
-      loadingText = "",
-      children,
-      variant = "primary",
-      ...props
+const buttonVariants = cva(
+  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none data-[state=open]:bg-primary-100 ",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary-900 text-white hover:bg-primary-700",
+        destructive: "bg-red-500 text-white hover:bg-red-600",
+        outline:
+          "bg-transparent border border-primary-200 hover:bg-primary-100",
+        subtle: "bg-primary-100 text-primary-900 hover:bg-primary-200",
+        ghost:
+          "bg-transparent hover:bg-primary-100 data-[state=open]:bg-transparent ",
+        link: "bg-transparent underline-offset-4 hover:underline text-primary-900  hover:bg-transparent ",
+      },
+      size: {
+        default: "h-10 py-2 px-4",
+        sm: "h-9 px-2 rounded-md",
+        lg: "h-11 px-8 rounded-md",
+      },
     },
-    forwardedRef
-  ) => {
-    const unclickable = props.disabled || loading;
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
 
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  loading?: boolean;
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    { className, variant, size, loading, disabled, children, ...props },
+    ref
+  ) => {
     return (
       <button
-        ref={forwardedRef}
-        className={clsx(
-          "h-9 rounded-md border border-transparent outline-primary-500 transition",
-          {
-            "px-3 shadow-sm": variant !== "link",
-
-            "bg-primary-600 text-white": variant === "primary",
-            "hover:bg-primary-500": variant === "primary" && !unclickable,
-            "bg-primary-200": variant === "primary" && unclickable,
-
-            "border border-slate-200 bg-white": variant === "outline",
-            "hover:border-slate-300 hover:bg-slate-50":
-              variant === "outline" && !unclickable,
-
-            "font-semibold hover:text-primary-600":
-              variant === "link" && !unclickable,
-
-            "cursor-not-allowed": unclickable,
-            "flex items-center gap-x-2": loading && loadingText,
-          },
-          className
-        )}
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        disabled={disabled || loading}
         {...props}
       >
-        {loading && loadingText && loadingText}
-        {loading ? <Spinner size="small" /> : children}
+        {loading && <Spinner size="small" className="mr-2" />}
+        {children}
       </button>
     );
   }
 );
-
 Button.displayName = "Button";
+
+export { Button, buttonVariants };

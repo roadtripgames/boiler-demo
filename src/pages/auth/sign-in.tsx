@@ -120,9 +120,7 @@ export default function SignInPage({
                     onValueChange={setPassword}
                   />
                 </div>
-                <Button variant="primary" className="w-full">
-                  Sign in
-                </Button>
+                <Button className="w-full">Sign in</Button>
               </form>
               <p className="my-2 text-center text-slate-500">
                 Don&apos;t have an account?{" "}

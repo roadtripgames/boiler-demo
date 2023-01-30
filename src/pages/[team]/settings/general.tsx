@@ -119,7 +119,7 @@ export default function General() {
                 />
               </div>
             </div>
-            <Button className="mt-8" disabled={updateMutation.isLoading}>
+            <Button className="mt-8" loading={updateMutation.isLoading}>
               Update
             </Button>
           </form>
