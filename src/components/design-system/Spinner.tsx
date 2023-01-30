@@ -10,7 +10,7 @@ export default function Spinner({ className, size = "medium" }: SpinnerProps) {
     <div role="status" className={className}>
       <svg
         aria-hidden="true"
-        className={clsx("animate-spin fill-primary-400 text-gray-200", {
+        className={clsx("animate-spin fill-white text-gray-200", {
           "h-4 w-4": size === "small",
           "h-8 w-8": size === "medium",
           "h-12 w-12": size === "large",

@@ -3,6 +3,17 @@ import type { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../../components/design-system/AlertDialog";
 import { Button } from "../../../components/design-system/Button";
 import { Input } from "../../../components/design-system/Input";
 import { TeamRouteQueryType, useTeam } from "../../../lib/useTeam";
@@ -42,13 +53,12 @@ export default function General() {
 
     try {
       await deleteMutation.mutateAsync({ teamId: team.id });
+      router.push("/");
     } catch (e) {
       if (e instanceof TRPCClientError) {
         toast.error(e.message);
       }
     }
-
-    router.push("/");
   }, [deleteMutation, router, team]);
 
   const handleLeaveTeam = useCallback(async () => {
@@ -56,13 +66,12 @@ export default function General() {
 
     try {
       await leaveMutation.mutateAsync({ teamId: team.id });
+      router.push("/");
     } catch (e) {
       if (e instanceof TRPCClientError) {
         toast.error(e.message);
       }
     }
-
-    router.push("/");
   }, [leaveMutation, router, team]);
 
   const [name, setName] = useState(team?.name ?? "");
@@ -130,13 +139,32 @@ export default function General() {
               Selene platform. This action is not reversible, so please continue
               with caution.
             </p>
-            <Button
-              className="self-end"
-              onClick={handleDeleteTeam}
-              loading={deleteMutation.isLoading}
-            >
-              Delete team
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild className="self-end">
+                <Button variant={"destructive"}>Delete team</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Are you sure absolutely sure?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your team and remove your data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <Button
+                    onClick={handleDeleteTeam}
+                    variant="destructive"
+                    loading={deleteMutation.isLoading}
+                  >
+                    Delete Team
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
           <div className="mt-4 flex flex-col items-start justify-end gap-y-2 rounded border bg-white px-4 py-3">
             <div className="text-xl font-medium">Leave Team</div>
@@ -144,13 +172,30 @@ export default function General() {
               Revoke your access to this Team. Any resources you&apos;ve added
               to this team will remain.
             </p>
-            <Button
-              className="self-end"
-              onClick={handleLeaveTeam}
-              loading={leaveMutation.isLoading}
-            >
-              Leave team
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild className="self-end">
+                <Button>Leave team</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Are you sure absolutely sure?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    If you leave your team, you will have to be invited back in.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <Button
+                    onClick={handleLeaveTeam}
+                    loading={leaveMutation.isLoading}
+                  >
+                    Leave Team
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </>
       )}

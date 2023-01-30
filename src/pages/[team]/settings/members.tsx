@@ -22,6 +22,13 @@ import { TeamRouteQueryType, useTeam } from "../../../lib/useTeam";
 import { api } from "../../../utils/api";
 import { createSSG } from "../../../utils/ssg";
 import SettingsLayout from "./layout";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../../components/design-system/Select";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { req, res } = context;
@@ -132,12 +139,27 @@ const InviteSection: React.FC<InviteSectionProps> = ({
                 />
               </div>
               <div className="col-span-1">
-                <DropdownMenu
+                <Select
+                  onValueChange={(v) => handleChangeRole(i, v as Role)}
+                  defaultValue={role}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Admin" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ROLES.map((role) => (
+                      <SelectItem key={role} value={role}>
+                        {role}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {/* <DropdownMenu
                   value={role}
                   values={ROLES}
                   onSelect={(value) => handleChangeRole(i, value as Role)}
                   className="w-full"
-                />
+                /> */}
               </div>
             </div>
           );
