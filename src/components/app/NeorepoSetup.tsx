@@ -168,7 +168,6 @@ export function Setup() {
             create will be synced automatically to the Products table via the
             <Code>/stripe</Code> webhook.
           </div>
-
           <Var envKey="STRIPE_SECRET_KEY" value={env.STRIPE_SECRET_KEY} />
           <Var
             envKey="STRIPE_WEBHOOK_SECRET"
@@ -204,6 +203,13 @@ export function Setup() {
           >
             Sync Stripe Products and Prices to DB
           </Button>
+          {team && (
+            <div>
+              Once your products have been synced, you can view your products in
+              the{" "}
+              <Link href={`/${team.slug}/settings/billing`}>Billing page</Link>.
+            </div>
+          )}
         </div>
       ),
       isComplete: false,
