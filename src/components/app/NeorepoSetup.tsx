@@ -229,6 +229,17 @@ export function Setup() {
       isOptional: true,
       isComplete: false,
     },
+    {
+      name: "Cleanup",
+      content: (
+        <div>
+          Once you&apos;ve completed the setup steps, you can delete all
+          instances of <Code>NeorepoSetup</Code> and start building your app!
+        </div>
+      ),
+      isOptional: true,
+      isComplete: false,
+    },
   ];
 
   const [openAccordionItems, setOpenAccordionItems] = useState<
@@ -247,7 +258,7 @@ export function Setup() {
 
   return (
     <div className="w-[640px] py-4 ">
-      <h1 className="text-xl font-medium">Setup</h1>
+      <h1 className="text-xl font-medium">Neorepo Setup</h1>
       <p className="italic text-slate-500">
         Note that you might have to re-run `yarn dev` after changing an
         environment variable.
