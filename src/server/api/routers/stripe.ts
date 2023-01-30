@@ -5,6 +5,9 @@ import getBaseUrl from "../../../utils/getBaseUrl";
 import stripe from "../stripe-server";
 import { adminProcedure, createTRPCRouter, publicProcedure } from "../trpc";
 
+
+// TODO: consolidate code here
+
 const stripeRouter = createTRPCRouter({
   createCheckoutSession: adminProcedure
     .input(
@@ -165,6 +168,25 @@ const stripeRouter = createTRPCRouter({
         create: subscriptionData,
       });
     }),
+  syncProducts: publicProcedure.mutation(async ({ ctx }) => {
+    const products = await stripe.products.list();
+    for (const product of products.data) {
+      const data: Prisma.ProductCreateInput = {
+        id: product.id,
+        name: product.name,
+        active: product.active,
+        description: product.description ?? undefined,
+        image: product.images?.[0] ?? undefined,
+        metadata: product.metadata,
+      };
+
+      await ctx.prisma.product.upsert({
+        where: { id: product.id },
+        update: data,
+        create: data,
+      });
+    }
+  }),
   syncPrices: publicProcedure.mutation(async ({ ctx }) => {
     // get all products from prisma,
     // for each product, get the prices from stripe
@@ -172,7 +194,6 @@ const stripeRouter = createTRPCRouter({
     const products = await ctx.prisma.product.findMany();
     for (const p of products) {
       const prices = await stripe.prices.list({ product: p.id });
-      console.log(prices);
       for (const price of prices.data) {
         const productId =
           typeof price.product === "string" ? price.product : "";

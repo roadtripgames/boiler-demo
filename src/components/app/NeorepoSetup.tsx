@@ -2,11 +2,13 @@ import { CheckCircledIcon, CircleIcon } from "@radix-ui/react-icons";
 import _ from "lodash";
 import NextLink from "next/link";
 import type { env } from "process";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   clientEnv,
   DEFAULT_VALUE_DO_NOT_USE_IN_PRODUCTION,
 } from "../../env/schema.mjs";
+import cn from "../../lib/cn";
+import { useTeam } from "../../lib/useTeam";
 import { api } from "../../utils/api";
 import {
   Accordion,
@@ -47,14 +49,19 @@ const Var = ({
   envKey: keyof typeof env;
   value: string | undefined;
 }) => {
-  const valueStr =
-    value && value.length > 7 ? value.slice(0, 7) + "..." : "not set";
-  const displayValue = !isValidValue(value) ? "not set" : valueStr;
+  const isValid = isValidValue(value);
+  let displayValue = value;
+  if (value && isValid) {
+    if (value.length > 7) displayValue = value.slice(0, 7) + "...";
+    else displayValue = value;
+  } else {
+    displayValue = "not set";
+  }
 
   return (
     <div className="my-1 flex items-center justify-between border bg-slate-50 px-3 py-2 font-mono">
       <span>{envKey}</span>
-      <span>{displayValue}</span>
+      <span className={cn({ "text-green-600": isValid })}>{displayValue}</span>
     </div>
   );
 };
@@ -70,8 +77,10 @@ type SetupStep = {
 };
 
 export function Setup() {
+  const { data: team } = useTeam();
   const backendVars = api.setup.vars.useQuery();
   const hasUsers = api.setup.hasUsers.useQuery();
+  const sendWelcomeEmailMutation = api.setup.sendWelcomeEmail.useMutation();
   const env = {
     ...backendVars.data,
     ..._.mapValues(clientEnv, (x) =>
@@ -129,6 +138,76 @@ export function Setup() {
       ),
       isOptional: false,
       isComplete: hasUsers.data ?? false,
+    },
+    {
+      name: "Connect your email provider",
+      content: (
+        <div>
+          We provide a Sendgrid connector out of the box, but you can use any
+          email provider. Go to <Code>email.tsx</Code> to replace{" "}
+          <Code>sendgrid.send</Code> with a provider call of your choice.
+          <Button
+            className="my-2"
+            onClick={() => sendWelcomeEmailMutation.mutateAsync()}
+            loading={sendWelcomeEmailMutation.isLoading}
+          >
+            Send welcome email
+          </Button>
+          <Var envKey="SENDGRID_API_KEY" value={env.SENDGRID_API_KEY} />
+        </div>
+      ),
+      isOptional: true,
+      isComplete: isValidValue(env.SENDGRID_API_KEY),
+    },
+    {
+      name: "Connect Stripe",
+      content: (
+        <div>
+          <div>
+            Once you&apos;ve connected to Stripe, new products and prices you
+            create will be synced automatically to the Products table via the
+            <Code>/stripe</Code> webhook.
+          </div>
+
+          <Var envKey="STRIPE_SECRET_KEY" value={env.STRIPE_SECRET_KEY} />
+          <Var
+            envKey="STRIPE_WEBHOOK_SECRET"
+            value={env.STRIPE_WEBHOOK_SECRET}
+          />
+          <Var
+            envKey="NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"
+            value={env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+          />
+        </div>
+      ),
+      isComplete:
+        isValidValue(env.STRIPE_SECRET_KEY) &&
+        isValidValue(env.STRIPE_WEBHOOK_SECRET) &&
+        isValidValue(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY),
+      isOptional: true,
+    },
+    {
+      name: "Sync Stripe Products",
+      content: (
+        <div>
+          This button will be enabled when <Code>STRIPE_SECRET_KEY</Code> and{" "}
+          <Code>STRIPE_WEBHOOK_SECRET</Code> are set. It will sync all of your
+          Stripe products and prices to the Products table in your DB. This is
+          useful if you already have products in Stripe and want to sync them to
+          your DB.
+          <Button
+            className="my-2"
+            disabled={
+              !isValidValue(env.STRIPE_SECRET_KEY) ||
+              !isValidValue(env.STRIPE_WEBHOOK_SECRET)
+            }
+          >
+            Sync Stripe Products and Prices to DB
+          </Button>
+        </div>
+      ),
+      isComplete: false,
+      isOptional: true,
     },
     {
       name: "Make environment variables required",

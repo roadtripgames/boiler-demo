@@ -1,6 +1,8 @@
 import { render } from "@react-email/render";
 import sendgrid from "@sendgrid/mail";
 import { env } from "../../env/server.mjs";
+
+import WelcomeEmail from "../../../emails/welcome";
 import InviteUserEmail from "../../../emails/invite-user";
 import ResetPasswordEmail from "../../../emails/reset-password";
 
@@ -17,6 +19,7 @@ export type Email = Distribute<keyof typeof EMAILS>;
 const EMAILS = {
   "invite-user": InviteUserEmail,
   "reset-password": ResetPasswordEmail,
+  'welcome': WelcomeEmail,
 } as const;
 
 export async function send(

@@ -6,7 +6,7 @@ import { Button } from "../../components/design-system/Button";
 import Link from "next/link";
 import { useTeam } from "../../lib/useTeam";
 import { createSSG } from "../../utils/ssg";
-import Setup from "../../components/app/NeorepoSetup";
+import NeorepoSetup from "../../components/app/NeorepoSetup";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { req, res } = context;
@@ -46,7 +46,7 @@ export default function TeamHome() {
           </div>
         )}
         <div className="my-4">
-          <Setup />
+          <NeorepoSetup />
         </div>
         <BoilerAlert className="absolute bottom-4 right-4">
           This is a team&apos;s home page

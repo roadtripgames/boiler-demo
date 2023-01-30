@@ -7,7 +7,7 @@ import BoilerAlert from "../components/design-system/BoilerAlert";
 import { Button } from "../components/design-system/Button";
 import Link from "next/link";
 import _ from "lodash";
-import Setup from "../components/app/NeorepoSetup";
+import NeorepoSetup from "../components/app/NeorepoSetup";
 import CreateTeamModal from "../components/app/CreateTeamModal";
 import { useEffect, useState } from "react";
 
@@ -27,7 +27,7 @@ export default function Home() {
       <div className="relative flex h-full min-h-screen flex-col">
         <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center">
           <div className="flex flex-col items-center gap-y-4">
-            <Setup />
+            <NeorepoSetup />
           </div>
           <BoilerAlert className="absolute bottom-4 right-4">
             This is your un-authenticated page
@@ -58,7 +58,7 @@ export default function Home() {
             <div className="mb-4 text-xl font-medium">
               Welcome {user?.data?.name ?? "Unknown user"}!
             </div>
-            <Setup />
+            <NeorepoSetup />
           </div>
         </div>
         <CreateTeamModal
