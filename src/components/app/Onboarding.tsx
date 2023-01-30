@@ -3,7 +3,7 @@ import companyLogo from "../../../public/logo.svg";
 import { useCallback, useState } from "react";
 import { Button } from "../design-system/Button";
 import { DropdownMenu } from "../design-system/Dropdown";
-import { TextInput } from "../design-system/TextInput";
+import { Input } from "../design-system/Input";
 import { ButtonGroup } from "../design-system/ButtonGroup";
 import { api } from "../../utils/api";
 import { useRouter } from "next/router";
@@ -103,12 +103,14 @@ export default function Onboarding() {
                     }}
                   >
                     {step.fieldType === "text" && (
-                      <TextInput
+                      <Input
                         autoFocus
                         placeholder={step.placeholder}
                         variant="flush"
                         className="min-w-[300px]"
-                        onValueChange={(v) => handleChangeResponse(step.key, v)}
+                        onChange={(e) =>
+                          handleChangeResponse(step.key, e.target.value)
+                        }
                       />
                     )}
                     {step.fieldType === "button-group" && (

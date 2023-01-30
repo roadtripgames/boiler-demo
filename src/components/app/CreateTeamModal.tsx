@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../design-system/Dialog";
-import { TextInput } from "../design-system/TextInput";
+import { Input } from "../design-system/Input";
 
 type CreateTeamModalProps = {
   children?: React.ReactNode;
@@ -79,11 +79,11 @@ export default function CreateTeamModal({
           </div>
           <label className="w-full">
             <p className="mb-2 font-medium">Team name</p>
-            <TextInput
+            <Input
               className="w-full"
               placeholder=""
               value={name}
-              onValueChange={setName}
+              onChange={(e) => setName(e.target.value)}
               autoFocus
             />
           </label>

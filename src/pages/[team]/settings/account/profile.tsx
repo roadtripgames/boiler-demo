@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { Avatar } from "../../../../components/design-system/Avatar";
 import { Button } from "../../../../components/design-system/Button";
-import { TextInput } from "../../../../components/design-system/TextInput";
+import { Input } from "../../../../components/design-system/Input";
 import type { RouterOutputs } from "../../../../utils/api";
 import { api } from "../../../../utils/api";
 import SettingsLayout from "../layout";
@@ -34,9 +34,9 @@ function UserProfileForm({ user, onUpdate }: UserProfileFormProps) {
         </div>
         <div>
           <p className="mb-2 font-medium">Full name</p>
-          <TextInput
+          <Input
             value={name}
-            onValueChange={(e) => setName(e)}
+            onChange={(e) => setName(e.target.value)}
             className="w-96"
           />
         </div>

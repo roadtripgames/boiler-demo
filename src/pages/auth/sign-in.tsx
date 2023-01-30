@@ -5,7 +5,7 @@ import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { TextInput } from "../../components/design-system/TextInput";
+import { Input } from "../../components/design-system/Input";
 import { Button } from "../../components/design-system/Button";
 import type { InferGetServerSidePropsType } from "next";
 import type { GetServerSideProps } from "next";
@@ -97,27 +97,27 @@ export default function SignInPage({
                   <label className="mb-2 font-medium" htmlFor="email">
                     Email
                   </label>
-                  <TextInput
+                  <Input
                     className=""
                     autoComplete="email"
                     type="text"
                     name="email"
                     placeholder="jane@company.com"
-                    onValueChange={setEmail}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col">
                   <label htmlFor="password" className="mb-2 font-medium">
                     Password
                   </label>
-                  <TextInput
+                  <Input
                     autoComplete="current-password"
                     type="password"
                     name="password"
                     id="password"
                     placeholder="••••••••"
                     value={password}
-                    onValueChange={setPassword}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
                 <Button className="w-full">Sign in</Button>

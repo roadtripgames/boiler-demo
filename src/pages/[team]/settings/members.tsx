@@ -15,7 +15,7 @@ import {
   DropdownSimpleItem,
 } from "../../../components/design-system/DropdownSimple";
 import { TabbedContainer } from "../../../components/design-system/TabbedContainer";
-import { TextInput } from "../../../components/design-system/TextInput";
+import { Input } from "../../../components/design-system/Input";
 import type { Role } from "../../../lib/roles";
 import { ROLE_MEMBER, ROLES } from "../../../lib/roles";
 import { TeamRouteQueryType, useTeam } from "../../../lib/useTeam";
@@ -119,7 +119,7 @@ const InviteSection: React.FC<InviteSectionProps> = ({
           return (
             <div key={i} className="grid grid-cols-4 gap-x-3">
               <div className="col-span-3">
-                <TextInput
+                <Input
                   value={email}
                   id={`invite-email-${i}`}
                   type="text"
@@ -128,7 +128,7 @@ const InviteSection: React.FC<InviteSectionProps> = ({
                   iconLeft={<EnvelopeClosedIcon className="text-slate-400" />}
                   placeholder="Email"
                   className="w-full"
-                  onValueChange={(value) => handleChangeEmail(i, value)}
+                  onChange={(e) => handleChangeEmail(i, e.target.value)}
                 />
               </div>
               <div className="col-span-1">

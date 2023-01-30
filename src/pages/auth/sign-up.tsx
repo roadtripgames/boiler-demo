@@ -5,7 +5,7 @@ import companyLogo from "../../../public/logo.svg";
 import type { FormEvent } from "react";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
-import { TextInput } from "../../components/design-system/TextInput";
+import { Input } from "../../components/design-system/Input";
 import { Button } from "../../components/design-system/Button";
 import { api } from "../../utils/api";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
@@ -86,24 +86,24 @@ export default function SignUpPage({
                   <label className="mb-2 font-medium" htmlFor="email">
                     Email
                   </label>
-                  <TextInput
+                  <Input
                     className=""
                     type="email"
                     name="email"
                     placeholder="jane@company.com"
-                    onValueChange={setEmail}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="flex flex-col">
                   <label htmlFor="password" className="mb-2 font-medium">
                     Password
                   </label>
-                  <TextInput
+                  <Input
                     type="password"
                     name="password"
                     id="password"
                     placeholder="••••••••"
-                    onValueChange={setPassword}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
                 {/* <div className="flex items-center gap-x-2">

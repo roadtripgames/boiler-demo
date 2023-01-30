@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Button } from "../../../components/design-system/Button";
-import { TextInput } from "../../../components/design-system/TextInput";
+import { Input } from "../../../components/design-system/Input";
 import { TeamRouteQueryType, useTeam } from "../../../lib/useTeam";
 import { api } from "../../../utils/api";
 import { createSSG } from "../../../utils/ssg";
@@ -104,15 +104,15 @@ export default function General() {
             <div className="flex flex-col gap-y-5">
               <div>
                 <p className="mb-2 font-medium">Team name</p>
-                <TextInput
+                <Input
                   value={name}
-                  onValueChange={(e) => setName(e)}
+                  onChange={(e) => setName(e.target.value)}
                   className="w-96"
                 />
               </div>
               <div>
                 <p className="mb-2 font-medium">URL Slug</p>
-                <TextInput
+                <Input
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
                   className="w-96"
