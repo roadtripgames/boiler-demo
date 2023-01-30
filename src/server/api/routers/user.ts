@@ -34,6 +34,9 @@ const userRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },
+      include: {
+        teams: { select: { id: true, name: true, slug: true } },
+      },
     });
 
     return user;
@@ -70,7 +73,11 @@ const userRouter = createTRPCRouter({
         },
       });
 
-      await teams.createCaller(ctx).create({ name: input.teamName });
+      const team = await teams
+        .createCaller(ctx)
+        .create({ name: input.teamName });
+
+      return { team };
     }),
 });
 

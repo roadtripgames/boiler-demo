@@ -9,6 +9,7 @@ import clsx from "clsx";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
+import { useTeam } from "../../lib/useTeam";
 import { api } from "../../utils/api";
 // import { useUser } from "../../lib/user";
 import { Avatar } from "../design-system/Avatar";
@@ -38,6 +39,7 @@ function MenuItem({
 export default function UserProfileButton() {
   const router = useRouter();
   const user = api.user.get.useQuery()?.data;
+  const { slug } = useTeam();
 
   const handleSignOut = useCallback(async () => {
     signOut({ callbackUrl: "/" });
@@ -63,7 +65,7 @@ export default function UserProfileButton() {
               <p className="text-slate-500">{user?.email}</p>
             </div>
           </div>
-          <MenuItem onClick={() => router.push("/settings/profile")}>
+          <MenuItem onClick={() => router.push(`/${slug}/settings/general`)}>
             <GearIcon />
             Settings
           </MenuItem>

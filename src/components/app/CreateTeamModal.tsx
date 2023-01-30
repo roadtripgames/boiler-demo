@@ -28,12 +28,15 @@ export default function CreateTeamModal({
   const [open, setOpen] = useState(_open);
   const utils = api.useContext();
   const createMutation = api.teams.create.useMutation({
-    onSuccess: (team) => {
+    onSuccess: async (team) => {
+      await router.push(`/${team.slug}`);
       utils.invalidate(undefined, {
-        queryKey: [api.teams.get.getQueryKey({ slug: team.slug })],
+        queryKey: [
+          api.teams.get.getQueryKey({ slug: team.slug }),
+          api.user.get.getQueryKey(),
+        ],
       });
       setName("");
-      router.push(`/${team.slug}`);
       toast.success(`Created ${team.name}!`);
     },
   });

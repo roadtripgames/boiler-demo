@@ -6,6 +6,7 @@ import { DropdownMenu } from "../design-system/Dropdown";
 import { TextInput } from "../design-system/TextInput";
 import { ButtonGroup } from "../design-system/ButtonGroup";
 import { api } from "../../utils/api";
+import { useRouter } from "next/router";
 
 type BaseStep = {
   key: string;
@@ -57,6 +58,7 @@ export default function Onboarding() {
     name: "",
     teamName: "",
   });
+  const router = useRouter();
 
   const handleChangeResponse = useCallback((key: string, value: any) => {
     setResponse((prev: any) => ({ ...prev, [key]: value }));
@@ -67,7 +69,8 @@ export default function Onboarding() {
 
   const utils = api.useContext();
   const finishOnboardingMutation = api.user.finishOnboarding.useMutation({
-    onSuccess() {
+    async onSuccess({ team }) {
+      await router.push(`/${team.slug}`);
       utils.invalidate(undefined, { queryKey: [api.user.get.getQueryKey()] });
     },
   });
@@ -104,7 +107,7 @@ export default function Onboarding() {
                         autoFocus
                         placeholder={step.placeholder}
                         variant="flush"
-                        className="text-lg"
+                        className="min-w-[300px]"
                         onValueChange={(v) => handleChangeResponse(step.key, v)}
                       />
                     )}

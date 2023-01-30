@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { Avatar } from "../../components/design-system/Avatar";
-import { Button } from "../../components/design-system/Button";
-import { TextInput } from "../../components/design-system/TextInput";
-import type { RouterOutputs } from "../../utils/api";
-import { api } from "../../utils/api";
-import SettingsLayout from "./layout";
+import { Avatar } from "../../../../components/design-system/Avatar";
+import { Button } from "../../../../components/design-system/Button";
+import { TextInput } from "../../../../components/design-system/TextInput";
+import type { RouterOutputs } from "../../../../utils/api";
+import { api } from "../../../../utils/api";
+import SettingsLayout from "../layout";
 
 type UserProfileFormProps = {
   user: NonNullable<RouterOutputs["user"]["get"]>;

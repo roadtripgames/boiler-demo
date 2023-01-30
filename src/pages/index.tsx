@@ -8,10 +8,19 @@ import { Button } from "../components/design-system/Button";
 import Link from "next/link";
 import _ from "lodash";
 import Setup from "../components/app/NeorepoSetup";
+import CreateTeamModal from "../components/app/CreateTeamModal";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const user = api.user.get.useQuery(undefined, { enabled: !!session });
+  const [createTeamModalOpen, setCreateTeamModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (user.data && user.data.teams.length === 0) {
+      setCreateTeamModalOpen(true);
+    }
+  }, [user]);
 
   if (status === "unauthenticated") {
     return (
@@ -52,9 +61,10 @@ export default function Home() {
             <Setup />
           </div>
         </div>
-        <BoilerAlert className="absolute bottom-4 right-4">
-          This is a user&apos;s personal page
-        </BoilerAlert>
+        <CreateTeamModal
+          open={createTeamModalOpen}
+          onOpenChange={setCreateTeamModalOpen}
+        />
       </div>
     </>
   );

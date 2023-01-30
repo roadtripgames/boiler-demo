@@ -6,6 +6,7 @@ import { Button } from "../../components/design-system/Button";
 import Link from "next/link";
 import { useTeam } from "../../lib/useTeam";
 import { createSSG } from "../../utils/ssg";
+import Setup from "../../components/app/NeorepoSetup";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { req, res } = context;
@@ -31,10 +32,10 @@ export default function TeamHome() {
       <Header />
       <div className="mx-auto flex h-full w-full max-w-7xl animate-fadeIn flex-col p-4">
         {team && (
-          <>
-            <div className="text-xl font-medium">{team.name} workspace</div>
+          <div className="flex items-center gap-x-24">
+            <h1 className="text-xl font-medium">{team.name} workspace</h1>
             <Link
-              className="mt-2"
+              className=""
               href={{
                 pathname: `/[team]/settings/general`,
                 query: { team: team.slug },
@@ -42,8 +43,11 @@ export default function TeamHome() {
             >
               <Button>Manage team</Button>
             </Link>
-          </>
+          </div>
         )}
+        <div className="my-4">
+          <Setup />
+        </div>
         <BoilerAlert className="absolute bottom-4 right-4">
           This is a team&apos;s home page
         </BoilerAlert>

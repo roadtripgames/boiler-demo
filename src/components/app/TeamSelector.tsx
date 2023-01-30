@@ -48,10 +48,6 @@ export default function TeamSelector() {
   const user = api.user.get.useQuery();
   const teams = api.teams.getAllTeams.useQuery();
 
-  const handleSelectPersonalAccount = useCallback(() => {
-    router.push(`/`);
-  }, [router]);
-
   const handleSelectTeam = useCallback(
     (team: Team) => {
       router.push(`/${team.slug}`);
@@ -89,21 +85,6 @@ export default function TeamSelector() {
             align="start"
             sideOffset={4}
           >
-            <p className="select-none px-4 pt-2 pb-1 text-xs text-slate-500">
-              Personal account
-            </p>
-            <MenuItem
-              selected={slug === ""}
-              className="pr-12"
-              onClick={async () => {
-                handleSelectPersonalAccount();
-
-                // toast.success(`Switched to your personal account`);
-              }}
-            >
-              <Avatar size="sm" name={user.data?.name} src={user.data?.image} />
-              {user.data?.name}
-            </MenuItem>
             {(teams.data?.length ?? 0) > 0 && (
               <div className="flex flex-col">
                 <p className="select-none px-4 pt-2 pb-1 text-xs text-slate-500">
