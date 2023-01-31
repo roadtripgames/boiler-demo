@@ -1,4 +1,5 @@
 import {
+  ChevronDownIcon,
   DotsHorizontalIcon,
   EnvelopeClosedIcon,
   PlusIcon,
@@ -9,11 +10,12 @@ import React, { useCallback, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Avatar } from "../../../components/design-system/Avatar";
 import { Button } from "../../../components/design-system/Button";
-import { DropdownMenu } from "../../../components/design-system/Dropdown";
 import {
-  DropdownSimple,
-  DropdownSimpleItem,
-} from "../../../components/design-system/DropdownSimple";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../../../components/design-system/Dropdown";
 import { TabbedContainer } from "../../../components/design-system/TabbedContainer";
 import { Input } from "../../../components/design-system/Input";
 import type { Role } from "../../../lib/roles";
@@ -154,12 +156,6 @@ const InviteSection: React.FC<InviteSectionProps> = ({
                     ))}
                   </SelectContent>
                 </Select>
-                {/* <DropdownMenu
-                  value={role}
-                  values={ROLES}
-                  onSelect={(value) => handleChangeRole(i, value as Role)}
-                  className="w-full"
-                /> */}
               </div>
             </div>
           );
@@ -168,6 +164,7 @@ const InviteSection: React.FC<InviteSectionProps> = ({
       <div className="mt-3 flex items-center justify-between">
         <Button
           variant="link"
+          size="flush"
           className="flex items-center gap-x-2 text-slate-500"
           onClick={handleAddInvite}
         >
@@ -260,21 +257,31 @@ export default function Team() {
                           {user.id === m.id ? (
                             <span className="text-slate-500">{role}</span>
                           ) : (
-                            <DropdownMenu
-                              values={ROLES}
-                              value={role}
-                              disabled={updateRoleMutation.isLoading}
-                              onSelect={async (v) => {
-                                await updateRoleMutation.mutateAsync({
-                                  teamId: team.id,
-                                  userId: m.id,
-                                  role: v,
-                                });
+                            <DropdownMenu>
+                              <DropdownMenuTrigger className="flex items-center gap-x-1">
+                                <span className="text-slate-500">{role}</span>
+                                <ChevronDownIcon />
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent>
+                                {ROLES.map((r) => {
+                                  return (
+                                    <DropdownMenuItem
+                                      key={r}
+                                      onClick={async () => {
+                                        await updateRoleMutation.mutateAsync({
+                                          teamId: team.id,
+                                          userId: m.id,
+                                          role: r,
+                                        });
 
-                                toast.success(`${m.name} set to ${v}`);
-                              }}
-                            >
-                              {role}
+                                        toast.success(`${m.name} set to ${r}`);
+                                      }}
+                                    >
+                                      {r}
+                                    </DropdownMenuItem>
+                                  );
+                                })}
+                              </DropdownMenuContent>
                             </DropdownMenu>
                           )}
                         </p>
@@ -304,36 +311,36 @@ export default function Team() {
                               </p>
                             </div>
                           </div>
-                          <DropdownSimple
-                            align="end"
-                            trigger={
+                          <DropdownMenu>
+                            <DropdownMenuTrigger>
                               <DotsHorizontalIcon className="h-8 w-8 px-2" />
-                            }
-                          >
-                            <DropdownSimpleItem
-                              onSelect={async () => {
-                                await resendInviteEmailMutation.mutateAsync({
-                                  teamId: team.id,
-                                  inviteId: i.id,
-                                });
-                                toast.success(`Invite resent to ${i.email}`);
-                              }}
-                            >
-                              Resend invite
-                            </DropdownSimpleItem>
-                            <DropdownSimpleItem
-                              className="text-red-500"
-                              onSelect={async () => {
-                                await deleteInviteMutation.mutateAsync({
-                                  slug,
-                                  inviteId: i.id,
-                                });
-                                toast.success(`Invite to ${i.email} deleted`);
-                              }}
-                            >
-                              Delete invite
-                            </DropdownSimpleItem>
-                          </DropdownSimple>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem
+                                onClick={async () => {
+                                  await resendInviteEmailMutation.mutateAsync({
+                                    teamId: team.id,
+                                    inviteId: i.id,
+                                  });
+                                  toast.success(`Invite resent to ${i.email}`);
+                                }}
+                              >
+                                Resend invite
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="text-red-500"
+                                onClick={async () => {
+                                  await deleteInviteMutation.mutateAsync({
+                                    slug,
+                                    inviteId: i.id,
+                                  });
+                                  toast.success(`Invite to ${i.email} deleted`);
+                                }}
+                              >
+                                Delete invite
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       );
                     })}

@@ -2,7 +2,6 @@ import Image from "next/image";
 import companyLogo from "../../../public/logo.svg";
 import { useCallback, useState } from "react";
 import { Button } from "../design-system/Button";
-import { DropdownMenu } from "../design-system/Dropdown";
 import { Input } from "../design-system/Input";
 import { ButtonGroup } from "../design-system/ButtonGroup";
 import { api } from "../../utils/api";
@@ -125,13 +124,6 @@ export default function Onboarding() {
 
                           handleChangeResponse(step.key, value);
                         }}
-                      />
-                    )}
-                    {step.fieldType === "select" && (
-                      <DropdownMenu
-                        className="text-lg"
-                        placeholder={step.placeholder}
-                        values={step.options}
                       />
                     )}
                     <Button

@@ -1,54 +1,125 @@
-import React from "react";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Cross1Icon } from "@radix-ui/react-icons";
-import type {
-  DialogContentProps,
-  DialogTriggerProps,
-} from "@radix-ui/react-dialog";
-import clsx from "clsx";
+"use client";
 
-export const DialogContent = React.forwardRef<
-  HTMLDivElement,
-  DialogContentProps
->(({ children, ...props }, forwardedRef) => (
-  <DialogPrimitive.Portal>
-    <DialogPrimitive.Overlay className="fixed inset-0 animate-fadeIn bg-slate-900 opacity-20" />
+import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { Cross1Icon as X } from "@radix-ui/react-icons";
+import cn from "../../lib/cn";
+
+const Dialog = DialogPrimitive.Root;
+
+const DialogTrigger = DialogPrimitive.Trigger;
+
+const DialogPortal = ({
+  className,
+  children,
+  ...props
+}: DialogPrimitive.DialogPortalProps) => (
+  <DialogPrimitive.Portal className={cn(className)} {...props}>
+    <div className="fixed inset-0 z-50 flex items-start justify-center sm:items-center">
+      {children}
+    </div>
+  </DialogPrimitive.Portal>
+);
+DialogPortal.displayName = DialogPrimitive.Portal.displayName;
+
+const DialogOverlay = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+>(({ className, children, ...props }, ref) => (
+  <DialogPrimitive.Overlay
+    className={cn(
+      "animate-in fade-in fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-opacity",
+      className
+    )}
+    {...props}
+    ref={ref}
+  />
+));
+DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
+
+const DialogContent = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DialogPortal>
+    <DialogOverlay />
     <DialogPrimitive.Content
-      {...props}
-      ref={forwardedRef}
-      className={clsx(
-        props.className,
-        "px-8 pt-12 pb-8",
-        "rounded-lg bg-white shadow-xl",
-        "fixed will-change-transform",
-        "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-        "animate-modalFadeIn"
+      ref={ref}
+      className={cn(
+        "animate-in fade-in-90 slide-in-from-bottom-10 sm:zoom-in-90 sm:slide-in-from-bottom-0 fixed z-50 grid w-full scale-100 gap-4 bg-white p-6 opacity-100 sm:max-w-lg sm:rounded-lg",
+        "",
+        className
       )}
+      {...props}
     >
       {children}
-      <DialogPrimitive.Close
-        aria-label="Close"
-        className="absolute top-4 right-4 rounded-full p-1 text-slate-500 hover:bg-primary-50 hover:text-primary-500"
-      >
-        <Cross1Icon className="h-3 w-3" />
+      <DialogPrimitive.Close className="absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-slate-100 ">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
-  </DialogPrimitive.Portal>
+  </DialogPortal>
 ));
+DialogContent.displayName = DialogPrimitive.Content.displayName;
 
-DialogContent.displayName = "DialogContent";
+const DialogHeader = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      "flex flex-col space-y-2 text-center sm:text-left",
+      className
+    )}
+    {...props}
+  />
+);
+DialogHeader.displayName = "DialogHeader";
 
-export const Dialog = DialogPrimitive.Root;
+const DialogFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      className
+    )}
+    {...props}
+  />
+);
+DialogFooter.displayName = "DialogFooter";
 
-export const DialogTrigger = React.forwardRef<
-  HTMLButtonElement,
-  DialogTriggerProps
->(({ children, ...props }, forwardedRef) => (
-  <DialogPrimitive.Trigger {...props} ref={forwardedRef}>
-    {children}
-  </DialogPrimitive.Trigger>
+const DialogTitle = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Title
+    ref={ref}
+    className={cn("text-lg font-semibold text-slate-900", "", className)}
+    {...props}
+  />
 ));
+DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
-DialogTrigger.displayName = "DialogTrigger";
+const DialogDescription = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Description
+    ref={ref}
+    className={cn("text-sm text-slate-500", "", className)}
+    {...props}
+  />
+));
+DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
-export const DialogTitle = DialogPrimitive.Title;
+export {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+};

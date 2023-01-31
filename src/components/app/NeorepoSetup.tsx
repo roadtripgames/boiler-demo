@@ -1,8 +1,9 @@
 import { CheckCircledIcon, CircleIcon } from "@radix-ui/react-icons";
 import _ from "lodash";
+import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import type { env } from "process";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   clientEnv,
   DEFAULT_VALUE_DO_NOT_USE_IN_PRODUCTION,
@@ -78,8 +79,11 @@ type SetupStep = {
 
 export function Setup() {
   const { data: team } = useTeam();
+  const { data: session, status } = useSession();
   const backendVars = api.setup.vars.useQuery();
-  const hasUsers = api.setup.hasUsers.useQuery();
+  const hasUsers = api.setup.hasUsers.useQuery(undefined, {
+    enabled: status === "authenticated",
+  });
   const sendWelcomeEmailMutation = api.setup.sendWelcomeEmail.useMutation();
   const env = {
     ...backendVars.data,
@@ -131,9 +135,11 @@ export function Setup() {
             If auth and your DB have been successfully setup, sign up for an
             account and follow the rest of the steps after logging in.
           </p>
-          <NextLink href="/auth/sign-up">
-            <Button>Sign up</Button>
-          </NextLink>
+          <div className="my-4 flex">
+            <NextLink href="/auth/sign-up" className="mx-auto">
+              <Button>Sign up</Button>
+            </NextLink>
+          </div>
         </div>
       ),
       isOptional: false,
@@ -146,13 +152,15 @@ export function Setup() {
           We provide a Sendgrid connector out of the box, but you can use any
           email provider. Go to <Code>email.tsx</Code> to replace{" "}
           <Code>sendgrid.send</Code> with a provider call of your choice.
-          <Button
-            className="my-2"
-            onClick={() => sendWelcomeEmailMutation.mutateAsync()}
-            loading={sendWelcomeEmailMutation.isLoading}
-          >
-            Send welcome email
-          </Button>
+          <div className="my-4 flex">
+            <Button
+              className="mx-auto"
+              onClick={() => sendWelcomeEmailMutation.mutateAsync()}
+              loading={sendWelcomeEmailMutation.isLoading}
+            >
+              Send welcome email
+            </Button>
+          </div>
           <Var envKey="SENDGRID_API_KEY" value={env.SENDGRID_API_KEY} />
         </div>
       ),
@@ -194,15 +202,17 @@ export function Setup() {
           Stripe products and prices to the Products table in your DB. This is
           useful if you already have products in Stripe and want to sync them to
           your DB.
-          <Button
-            className="my-2"
-            disabled={
-              !isValidValue(env.STRIPE_SECRET_KEY) ||
-              !isValidValue(env.STRIPE_WEBHOOK_SECRET)
-            }
-          >
-            Sync Stripe Products and Prices to DB
-          </Button>
+          <div className="my-4 flex">
+            <Button
+              className="my-2 mx-auto"
+              disabled={
+                !isValidValue(env.STRIPE_SECRET_KEY) ||
+                !isValidValue(env.STRIPE_WEBHOOK_SECRET)
+              }
+            >
+              Sync Stripe Products and Prices to DB
+            </Button>
+          </div>
           {team && (
             <div>
               Once your products have been synced, you can view your products in
@@ -257,7 +267,7 @@ export function Setup() {
   if (backendVars.isLoading) return <Spinner />;
 
   return (
-    <div className="w-[640px] py-4 ">
+    <div className="max-h-full w-[640px] overflow-auto">
       <h1 className="text-xl font-medium">Neorepo Setup</h1>
       <p className="italic text-slate-500">
         Note that you might have to re-run `yarn dev` after changing an
@@ -294,18 +304,6 @@ export function Setup() {
             </AccordionItem>
           );
         })}
-        {/* {Item("Connect to Sendgrid", <div>env</div>, {
-          isOptional: true,
-          isComplete: false,
-        })}
-        {Item("Connect to Stripe", <div>env</div>, {
-          isOptional: true,
-          isComplete: false,
-        })}
-        {Item("Connect to 3rd party providers", <div>env</div>, {
-          isOptional: true,
-          isComplete: false,
-        })} */}
       </Accordion>
     </div>
   );

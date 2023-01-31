@@ -44,13 +44,23 @@ module.exports = {
             transform: "translate(-50%, -50%)",
           },
         },
+        "accordion-down": {
+          from: { height: 0 },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: 0 },
+        },
       },
       animation: {
         fadeIn: "fadeIn 0.2s ease",
         slideDownAndFadeIn: "slideDownAndFadeIn 0.2s ease",
         modalFadeIn: "modalFadeIn 0.2s ease",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 };

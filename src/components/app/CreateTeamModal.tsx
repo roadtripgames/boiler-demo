@@ -7,8 +7,11 @@ import { Button } from "../design-system/Button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "../design-system/Dialog";
 import { Input } from "../design-system/Input";
 
@@ -59,40 +62,42 @@ export default function CreateTeamModal({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent>
-        <CubeIcon className="mb-4 -mt-4 h-12 w-12 rounded-lg border p-3 shadow-sm" />
+
+      <DialogContent className="">
+        <DialogHeader>
+          <CubeIcon className="h-12 w-12 rounded-lg border p-3 shadow-sm" />
+          <DialogTitle className="text-lg font-medium">Create team</DialogTitle>
+          <DialogDescription className="">
+            Collaborate with others and manage your tasks together.
+          </DialogDescription>
+        </DialogHeader>
         <form
           onSubmit={async (e) => {
             e.preventDefault();
             await createMutation.mutateAsync({ name });
             handleOpenChange(false);
           }}
-          className="flex w-[400px] flex-col gap-y-5"
+          className="flex flex-col gap-y-5"
         >
-          <div>
-            <DialogTitle className="text-lg font-medium">
-              Create team
-            </DialogTitle>
-            <p className="text-slate-500">
-              Collaborate with others and manage your tasks together.
-            </p>
-          </div>
           <label className="w-full">
             <p className="mb-2 font-medium">Team name</p>
             <Input
               className="w-full"
-              placeholder=""
+              placeholder="My Team Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               autoFocus
             />
           </label>
-          <div className="flex justify-between">
-            <div />
-            <Button className="" loading={createMutation.isLoading}>
+          <DialogFooter>
+            <Button
+              className=""
+              loading={createMutation.isLoading}
+              type="submit"
+            >
               {createMutation.isLoading ? "Creating" : "Create team"}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

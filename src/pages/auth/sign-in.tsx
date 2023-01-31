@@ -33,8 +33,7 @@ export default function SignInPage({
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  console.log(providers?.credentials);
+  const [loading, setLoading] = useState(false);
 
   return (
     <div className="flex h-full flex-col">
@@ -76,6 +75,7 @@ export default function SignInPage({
                 className="flex flex-col gap-y-6"
                 onSubmit={async (e) => {
                   e.preventDefault();
+                  setLoading(true);
                   const resp = await signIn(providers?.credentials.id, {
                     email,
                     password,
@@ -120,7 +120,9 @@ export default function SignInPage({
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                <Button className="w-full">Sign in</Button>
+                <Button className="w-full" loading={loading}>
+                  Sign in
+                </Button>
               </form>
               <p className="my-2 text-center text-slate-500">
                 Don&apos;t have an account?{" "}
