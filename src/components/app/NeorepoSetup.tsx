@@ -336,6 +336,16 @@ export function Setup() {
           <div className="flex w-full flex-col rounded border bg-slate-100 px-4 py-3">
             <Code>npm run prisma db push</Code>
           </div>
+          <p>
+            You also need to tunnel to Planetscale by running this command in a
+            separate terminal and keeping it open.
+          </p>
+          <div className="flex w-full flex-col rounded border bg-slate-100 px-4 py-3">
+            <Code>
+              pscale connect your-db-name your-db-branch-name --port 3309
+            </Code>
+            <Code># example: pscale connect kitchbook-db main --port 3309</Code>
+          </div>
           <Button
             onClick={() => setIsRunPlanetscaleStepComplete("done")}
             className="my-2 self-center"
