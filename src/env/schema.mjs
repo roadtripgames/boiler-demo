@@ -39,7 +39,10 @@ export const serverSchema = z.object({
           .default(""),
   GOOGLE_CLIENT_ID: z.string().optional().default(""),
   GOOGLE_CLIENT_SECRET: z.string().optional().default(""),
-  SENDGRID_API_KEY: z.string().optional().default(""),
+  SENDGRID_API_KEY: z
+    .string()
+    .optional()
+    .default("SG." + DEFAULT_VALUE_DO_NOT_USE_IN_PRODUCTION),
   STRIPE_SECRET_KEY: z.string().default(""),
   STRIPE_WEBHOOK_SECRET: z.string().optional().default(""),
 });

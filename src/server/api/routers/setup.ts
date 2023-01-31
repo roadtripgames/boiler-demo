@@ -8,9 +8,9 @@ import { send } from "../email";
 const setupRouter = createTRPCRouter({
   vars: publicProcedure.query(async () => {
     return _.mapValues(env, (value) =>
-      !value || value === DEFAULT_VALUE_DO_NOT_USE_IN_PRODUCTION
+      !value || value.includes(DEFAULT_VALUE_DO_NOT_USE_IN_PRODUCTION)
         ? undefined
-        : "✅"
+        : "set"
     );
   }),
   hasUsers: protectedProcedure.query(async ({ ctx }) => {
