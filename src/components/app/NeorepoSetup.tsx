@@ -121,6 +121,11 @@ export function Setup() {
           your own value. You can generate one by running{" "}
           <Code>openssl rand -base64 32</Code> in your terminal or generating a
           secret <Link href="https://generate-secret.vercel.app/32">here</Link>.
+          <div className="my-2">
+            <Code>NEXTAUTH_URL</Code> should be set to{" "}
+            <Code>http://localhost:3000</Code> for &quot;local&quot; only.
+          </div>
+          <Var envKey="NEXTAUTH_URL" value={env.NEXTAUTH_URL} />
           <Var envKey="NEXTAUTH_SECRET" value={env.NEXTAUTH_SECRET} />
         </div>
       ),
