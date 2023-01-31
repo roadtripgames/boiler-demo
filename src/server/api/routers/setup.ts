@@ -14,7 +14,7 @@ const setupRouter = createTRPCRouter({
     );
   }),
   hasUsers: protectedProcedure.query(async ({ ctx }) => {
-    return (await ctx.prisma.user.count()) > 1;
+    return (await ctx.prisma.user.count()) > 0;
   }),
   sendWelcomeEmail: protectedProcedure.mutation(async ({ ctx }) => {
     const user = ctx.session.user;
