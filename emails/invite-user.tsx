@@ -26,13 +26,13 @@ export default function InviteUserEmail({
   //   ? `https://${process.env.VERCEL_URL}`
   //   : "http://localhost:3000";
 
-  const baseUrl = "https://boiler-omega.vercel.app";
+  const baseUrl = "https://neorepo-omega.vercel.app";
   const toName = toEmail.split("@")[0];
 
   return (
     <Html>
       <Head />
-      <Preview>{`Join ${team.name} on Selene`}</Preview>
+      <Preview>{`Join ${team.name} on Neorepo`}</Preview>
       <Section style={main}>
         <Container style={container}>
           <Section style={{ marginTop: "32px" }}>
@@ -45,7 +45,7 @@ export default function InviteUserEmail({
             />
           </Section>
           <Text style={h1}>
-            Join <strong>{team.name}</strong> on <strong>Selene</strong>
+            Join <strong>{team.name}</strong> on <strong>Neorepo</strong>
           </Text>
           <Text style={text}>Hello {toName},</Text>
           <Text style={text}>

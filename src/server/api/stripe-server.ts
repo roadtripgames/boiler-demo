@@ -7,7 +7,7 @@ const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   // Register this as an official Stripe plugin.
   // https://stripe.com/docs/building-plugins#setappinfo
   appInfo: {
-    name: "Boiler Stripe Connector",
+    name: "Neorepo Stripe Connector",
     version: "0.0.1",
   },
 });

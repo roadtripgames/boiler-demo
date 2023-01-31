@@ -1,4 +1,4 @@
-# Boiler Demo
+# Neorepo Demo
 
 ## Stack
 
@@ -19,7 +19,7 @@
 In your terminal, run these commands and follow the instructions.
 
 ```
-git clone git@github.com:roadtripgames/boiler-demo.git
+git clone git@github.com:roadtripgames/neorepo-demo.git
 
 # planetscale
 brew install planetscale/tap/pscale

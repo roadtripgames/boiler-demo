@@ -27,7 +27,7 @@ const App: AppType<{ session: Session | null }> = ({
       </style>
       <SessionProvider session={session}>
         <Head>
-          <title>Boiler</title>
+          <title>Neorepo</title>
           <meta name="description" content="The best product ever built." />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />

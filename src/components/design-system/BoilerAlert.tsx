@@ -1,11 +1,11 @@
 import clsx from "clsx";
 
-type BoilerAlertProps = {
+type NeorepoAlertProps = {
   className?: string;
   children?: React.ReactNode;
 };
 
-export const BoilerAlert: React.FC<BoilerAlertProps> = ({
+export const NeorepoAlert: React.FC<NeorepoAlertProps> = ({
   children,
   className,
 }) => {
@@ -23,4 +23,4 @@ export const BoilerAlert: React.FC<BoilerAlertProps> = ({
   );
 };
 
-export default BoilerAlert;
+export default NeorepoAlert;

@@ -155,7 +155,7 @@ const teamsRouter = createTRPCRouter({
         input.invites.map((invite) =>
           send(
             invite.email,
-            `${ctx.session.user.name} has invited you to join ${team.name} on Selene`,
+            `${ctx.session.user.name} has invited you to join ${team.name} on Neorepo`,
             {
               type: "invite-user",
               props: {
@@ -197,7 +197,7 @@ const teamsRouter = createTRPCRouter({
 
       send(
         invite.email,
-        `${ctx.session.user.name} has invited you to join ${ctx.team.name} on Selene`,
+        `${ctx.session.user.name} has invited you to join ${ctx.team.name} on Neorepo`,
         {
           type: "invite-user",
           props: {

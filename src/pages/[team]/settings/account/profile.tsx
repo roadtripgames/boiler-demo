@@ -58,7 +58,7 @@ export default function Profile() {
   });
 
   return (
-    <SettingsLayout title="Profile" description="Manage your Selene profile">
+    <SettingsLayout title="Profile" description="Manage your Neorepo profile">
       {user && <UserProfileForm user={user} onUpdate={updateUserMutation} />}
     </SettingsLayout>
   );

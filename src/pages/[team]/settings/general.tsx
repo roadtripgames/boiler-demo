@@ -136,8 +136,8 @@ export default function General() {
             <div className="text-xl font-medium">Delete Team</div>
             <p className="">
               Permanently delete your team and all of its contents from the
-              Selene platform. This action is not reversible, so please continue
-              with caution.
+              Neorepo platform. This action is not reversible, so please
+              continue with caution.
             </p>
             <AlertDialog>
               <AlertDialogTrigger asChild className="self-end">

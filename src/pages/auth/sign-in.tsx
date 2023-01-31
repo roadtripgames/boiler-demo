@@ -9,7 +9,7 @@ import { Input } from "../../components/design-system/Input";
 import { Button } from "../../components/design-system/Button";
 import type { InferGetServerSidePropsType } from "next";
 import type { GetServerSideProps } from "next";
-import BoilerAlert from "../../components/design-system/BoilerAlert";
+import NeorepoAlert from "../../components/design-system/NeorepoAlert";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 
@@ -37,9 +37,9 @@ export default function SignInPage({
 
   return (
     <div className="flex h-full flex-col">
-      <BoilerAlert className="absolute bottom-4 right-4">
+      <NeorepoAlert className="absolute bottom-4 right-4">
         Only Google sign in has been implemented
-      </BoilerAlert>
+      </NeorepoAlert>
       <div className="flex flex-auto overflow-y-auto">
         <div className="flex flex-1 flex-col overflow-y-auto">
           <div className="ml-8 mt-8">
@@ -137,7 +137,7 @@ export default function SignInPage({
         <div className="hidden flex-1 items-center justify-center border-l bg-slate-50 lg:flex">
           <div className="mx-8 flex flex-col gap-y-4">
             <h2 className="max-w-lg text-3xl">
-              &ldquo;Selene has been the greatest help to our operations since
+              &ldquo;Neorepo has been the greatest help to our operations since
               we started our business.&rdquo;
             </h2>
             <div>

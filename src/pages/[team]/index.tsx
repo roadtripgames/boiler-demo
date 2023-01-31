@@ -1,6 +1,6 @@
 import type { GetServerSideProps } from "next/types";
 import Header from "../../components/app/Header";
-import BoilerAlert from "../../components/design-system/BoilerAlert";
+import NeorepoAlert from "../../components/design-system/NeorepoAlert";
 
 import { Button } from "../../components/design-system/Button";
 import Link from "next/link";
@@ -48,9 +48,9 @@ export default function TeamHome() {
         <div className="my-4">
           <NeorepoSetup />
         </div>
-        <BoilerAlert className="absolute bottom-4 right-4">
+        <NeorepoAlert className="absolute bottom-4 right-4">
           This is a team&apos;s home page
-        </BoilerAlert>
+        </NeorepoAlert>
       </div>
     </div>
   );
