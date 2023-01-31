@@ -10,6 +10,8 @@ import { Button } from "../../components/design-system/Button";
 import { api } from "../../utils/api";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getProviders, signIn } from "next-auth/react";
+import { TRPCClientError } from "@trpc/client";
+import { toast } from "react-hot-toast";
 
 type Providers = Awaited<ReturnType<typeof getProviders>>;
 
@@ -35,7 +37,24 @@ export default function SignUpPage({
     async (e: FormEvent) => {
       e.preventDefault();
 
-      await registerMutation.mutateAsync({ email, password });
+      try {
+        await registerMutation.mutateAsync({ email, password });
+      } catch (e) {
+        if (!(e instanceof TRPCClientError)) {
+          toast.error("Something went wrong");
+          return;
+        }
+
+        try {
+          const body = JSON.parse(e.message);
+          const message = body?.[0].message;
+          if (message) {
+            toast.error(message);
+          }
+        } catch (e) {
+          toast.error("Something went wrong");
+        }
+      }
 
       const signInResp = await signIn(providers?.credentials.id, {
         email,

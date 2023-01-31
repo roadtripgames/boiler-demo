@@ -12,7 +12,7 @@ const userRouter = createTRPCRouter({
     .input(
       z.object({
         email: z.string().email(),
-        password: z.string(),
+        password: z.string().min(8, 'Password is not long enough'),
       })
     )
     .mutation(async ({ ctx, input }) => {
