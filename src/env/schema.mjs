@@ -26,7 +26,7 @@ export const serverSchema = z.object({
 
   NEXTAUTH_URL:
     process.env.NODE_ENV === "development"
-      ? z.string().optional().default("http://localhost:3000")
+      ? z.string().optional()
       : z
           .preprocess(
             // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
