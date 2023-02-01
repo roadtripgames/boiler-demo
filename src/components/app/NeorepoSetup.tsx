@@ -119,12 +119,9 @@ type SetupStep = {
 
 export function Setup() {
   const { data: team } = useTeam();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const backendVars = api.setup.vars.useQuery();
-  const hasUsers = api.setup.hasUsers.useQuery(undefined, {
-    enabled: status === "authenticated",
-  });
-  const sendWelcomeEmailMutation = api.setup.sendWelcomeEmail.useMutation();
+
   const env = {
     ...backendVars.data,
     ..._.mapValues(clientEnv, (x) =>
@@ -132,18 +129,25 @@ export function Setup() {
     ),
   };
 
+  const syncStripeProductsMutation = api.setup.syncStripeProducts.useMutation();
+  const sendWelcomeEmailMutation = api.setup.sendWelcomeEmail.useMutation();
+  const hasUsers = api.setup.hasUsers.useQuery(undefined, {
+    enabled: status === "authenticated",
+  });
+  const hasProducts = api.setup.hasProducts.useQuery(undefined, {
+    enabled: isValidValue(env.STRIPE_SECRET_KEY),
+  });
+
   const [isInstallStepComplete, setIsInstallStepComplete] = useLocalStorage(
     "neorepo_isInstallStepComplete",
-    ""
-  );
-  const [isLinkStepComplete, setIsLinkStepComplete] = useLocalStorage(
-    "neorepo_isLinkStepComplete",
     ""
   );
   const [isRunPlanetscaleStepComplete, setIsRunPlanetscaleStepComplete] =
     useLocalStorage("neorepo_isRunPlanetscaleStepComplete", "");
   const [isStripeWebhookSetupComplete, setIsStripeWebhookSetupComplete] =
     useLocalStorage("neorepo_isStripeWebhookSetupComplete", "");
+  const [isThirdPartyAuthStepComplete, setIsThirdPartyAuthStepComplete] =
+    useLocalStorage("neorepo_isThirdPartyAuthStepComplete", "");
 
   const STEPS: SetupStep[] = [
     {
@@ -485,6 +489,8 @@ export function Setup() {
                 !isValidValue(env.STRIPE_SECRET_KEY) ||
                 !isValidValue(env.STRIPE_WEBHOOK_SECRET)
               }
+              loading={syncStripeProductsMutation.isLoading}
+              onClick={() => syncStripeProductsMutation.mutateAsync()}
             >
               Sync Stripe Products and Prices to DB
             </Button>
@@ -498,8 +504,47 @@ export function Setup() {
           )}
         </div>
       ),
-      isComplete: false,
+      isComplete: !!hasProducts.data,
       isOptional: true,
+    },
+    {
+      name: "Add a third party auth provider",
+      content: (
+        <div className="flex flex-col space-y-2">
+          <p>
+            To add a third party auth provider, you&apos;ll need to add it to
+            NextAuth. Check out their{" "}
+            <Link href="https://next-auth.js.org/v3/configuration/providers">
+              docs
+            </Link>{" "}
+            for more info.
+          </p>
+          <p>
+            As an example, wee&apos;ve included a Google provider. Once you add
+            the <Code>GOOGLE_CLIENT_SECRET</Code> and{" "}
+            <Code>GOOGLE_CLIENT_ID</Code> env vars, you&apos;ll see the option
+            enabled in the <Link href="/auth/sign-in">sign in</Link> page.
+          </p>
+          <Var
+            envKey="GOOGLE_CLIENT_ID"
+            value={env.GOOGLE_CLIENT_ID}
+            environments={["preview", "development", "production"]}
+          />
+          <Var
+            envKey="GOOGLE_CLIENT_SECRET"
+            value={env.GOOGLE_CLIENT_SECRET}
+            environments={["preview", "development", "production"]}
+          />
+          <Button
+            onClick={() => setIsThirdPartyAuthStepComplete("done")}
+            className="my-2 self-center"
+          >
+            Mark done
+          </Button>
+        </div>
+      ),
+      isOptional: true,
+      isComplete: !!isThirdPartyAuthStepComplete,
     },
     {
       name: "Make environment variables required",
@@ -544,9 +589,11 @@ export function Setup() {
   }, [
     backendVars.data,
     hasUsers.data,
-    isLinkStepComplete,
+    hasProducts.data,
     isInstallStepComplete,
     isRunPlanetscaleStepComplete,
+    isStripeWebhookSetupComplete,
+    isThirdPartyAuthStepComplete,
   ]);
 
   if (backendVars.isLoading) return <Spinner />;
