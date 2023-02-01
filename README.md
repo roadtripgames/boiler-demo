@@ -14,31 +14,6 @@
 
 **Emails**: Sendgrid, react-email
 
-### Clone and setup
-
-In your terminal, run these commands and follow the instructions.
-
-```
-git clone git@github.com:roadtripgames/neorepo-demo.git
-
-# planetscale
-brew install planetscale/tap/pscale
-brew install mysql-client
-pscale auth login
-pscale org list
-pscale org switch your-planetscale-org-name
-
-# vercel
-vercel login
-vercel link
-vercel env pull .env.local
-
-# app, db
-yarn
-yarn prisma db push
-
-```
-
 ## General development
 
 Once all this is setup, for daily development, you'll only need to run two commands in two separate terminals:
