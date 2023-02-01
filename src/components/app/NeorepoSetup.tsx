@@ -368,8 +368,8 @@ export function Setup() {
             account and follow the rest of the steps after logging in.
           </p>
           <div className="my-4 flex">
-            <NextLink href="/auth/sign-up" className="mx-auto">
-              <Button>Sign up</Button>
+            <NextLink href="/auth/sign-in" className="mx-auto">
+              <Button>Go to auth page</Button>
             </NextLink>
           </div>
         </div>

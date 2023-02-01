@@ -1,16 +1,16 @@
+import Link from "next/link";
 import Image from "next/image";
-import { getProviders, signIn } from "next-auth/react";
-
 import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";
-import { useState } from "react";
+import type { FormEvent } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import { Input } from "../../components/design-system/Input";
 import { Button } from "../../components/design-system/Button";
-import type { InferGetServerSidePropsType } from "next";
-import type { GetServerSideProps } from "next";
-import NeorepoAlert from "../../components/design-system/NeorepoAlert";
-import Link from "next/link";
+import { api } from "../../utils/api";
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { getProviders, signIn } from "next-auth/react";
+import { TRPCClientError } from "@trpc/client";
 import { toast } from "react-hot-toast";
 
 type Providers = Awaited<ReturnType<typeof getProviders>>;
@@ -19,11 +19,8 @@ export const getServerSideProps: GetServerSideProps<{
   providers: Providers;
 }> = async () => {
   const providers = await getProviders();
-
   return {
-    props: {
-      providers,
-    },
+    props: { providers },
   };
 };
 
@@ -33,13 +30,48 @@ export default function SignInPage({
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const registerMutation = api.user.registerWithEmailAndPassword.useMutation();
+
+  const handleSignIn = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
+
+      try {
+        await registerMutation.mutateAsync({ email, password });
+      } catch (e) {
+        if (!(e instanceof TRPCClientError)) {
+          toast.error("Something went wrong");
+          return;
+        }
+
+        try {
+          const body = JSON.parse(e.message);
+          const message = body?.[0].message;
+          if (message) {
+            toast.error(message);
+          }
+        } catch (e) {
+          toast.error("Something went wrong");
+        }
+      }
+
+      const signInResp = await signIn(providers?.credentials.id, {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: "/",
+      });
+
+      if (signInResp?.ok) {
+        router.push("/");
+      }
+    },
+    [email, password, providers, registerMutation, router]
+  );
 
   return (
     <div className="flex h-full flex-col">
-      <NeorepoAlert className="absolute bottom-4 right-4">
-        Only Google sign in has been implemented
-      </NeorepoAlert>
       <div className="flex flex-auto overflow-y-auto">
         <div className="flex flex-1 flex-col overflow-y-auto">
           <div className="ml-8 mt-8">
@@ -47,60 +79,38 @@ export default function SignInPage({
           </div>
           <div className="my-8 flex flex-auto items-center">
             <div className="mx-auto w-full max-w-sm">
-              <h1 className="text-3xl font-semibold">Sign in</h1>
-              <div className="mt-4 flex flex-col gap-y-6">
-                <Button
-                  variant="outline"
-                  className="flex w-full items-center justify-center gap-x-2 rounded-lg py-2"
-                  onClick={async () => {
-                    await signIn(providers?.google.id, {
-                      redirect: false,
-                      callbackUrl: "/",
-                    });
-                  }}
-                >
-                  <Image priority src={googleIcon} alt={"google icon"} />
-                  <span>Sign in with Google</span>
-                </Button>
-              </div>
-
-              <div className="relative my-4 flex items-center">
-                <div className="w-full border-b" />
-                <span className="z-10 mx-4 bg-white text-center text-xs font-medium text-slate-500">
-                  OR
-                </span>
-                <div className="w-full border-b" />
-              </div>
-              <form
-                className="flex flex-col gap-y-6"
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  setLoading(true);
-                  const resp = await signIn(providers?.credentials.id, {
-                    email,
-                    password,
-                    callbackUrl: `/`,
+              <h1 className="text-3xl font-semibold">Log in or sign up</h1>
+              <Button
+                variant="outline"
+                className="my-4 flex w-full items-center justify-center gap-x-2 rounded-lg py-2"
+                onClick={() => {
+                  signIn(providers?.google.id, {
                     redirect: false,
+                    callbackUrl: "/",
                   });
-
-                  if (resp?.ok) {
-                    router.push("/");
-                  } else {
-                    toast.error("Invalid email or password", {
-                      duration: 1000,
-                    });
-                    setPassword("");
-                  }
                 }}
               >
+                <Image priority src={googleIcon} alt={"google icon"} />
+                <span>Continue with Google</span>
+              </Button>
+              <form
+                className="my-4 flex flex-col space-y-4"
+                onSubmit={handleSignIn}
+              >
+                <div className="relative flex items-center">
+                  <div className="w-full border-b" />
+                  <span className="z-10 mx-4 bg-white text-center text-xs font-medium text-slate-500">
+                    OR
+                  </span>
+                  <div className="w-full border-b" />
+                </div>
                 <div className="flex flex-col">
                   <label className="mb-2 font-medium" htmlFor="email">
                     Email
                   </label>
                   <Input
                     className=""
-                    autoComplete="email"
-                    type="text"
+                    type="email"
                     name="email"
                     placeholder="jane@company.com"
                     onChange={(e) => setEmail(e.target.value)}
@@ -111,26 +121,15 @@ export default function SignInPage({
                     Password
                   </label>
                   <Input
-                    autoComplete="current-password"
                     type="password"
                     name="password"
                     id="password"
                     placeholder="••••••••"
-                    value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                <Button className="w-full" loading={loading}>
-                  Sign in
-                </Button>
+                <Button className="w-full">Continue</Button>
               </form>
-              <p className="my-2 text-center text-slate-500">
-                Don&apos;t have an account?{" "}
-                <Link href="/auth/sign-up" className="text-primary-500">
-                  Sign up
-                </Link>{" "}
-                instead
-              </p>
             </div>
           </div>
         </div>
