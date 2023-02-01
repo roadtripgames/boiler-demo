@@ -24,6 +24,7 @@ const stripeRouter = createTRPCRouter({
         const stripeCustomer = await stripe.customers.create({
           metadata: { teamId: ctx.team.id },
           email: ctx.session.user.email ?? undefined,
+          name: ctx.team.name,
         });
 
         customer = await ctx.prisma.customer.create({
