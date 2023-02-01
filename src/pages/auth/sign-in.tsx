@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import googleIcon from "../../../public/icons/google.svg";
 import companyLogo from "../../../public/logo.svg";
@@ -12,6 +11,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getProviders, signIn } from "next-auth/react";
 import { TRPCClientError } from "@trpc/client";
 import { toast } from "react-hot-toast";
+import Separator from "../../components/design-system/Separator";
 
 type Providers = Awaited<ReturnType<typeof getProviders>>;
 
@@ -70,6 +70,8 @@ export default function SignInPage({
     [email, password, providers, registerMutation, router]
   );
 
+  console.log(providers);
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex flex-auto overflow-y-auto">
@@ -80,30 +82,28 @@ export default function SignInPage({
           <div className="my-8 flex flex-auto items-center">
             <div className="mx-auto w-full max-w-sm">
               <h1 className="text-3xl font-semibold">Log in or sign up</h1>
-              <Button
-                variant="outline"
-                className="my-4 flex w-full items-center justify-center gap-x-2 rounded-lg py-2"
-                onClick={() => {
-                  signIn(providers?.google.id, {
-                    redirect: false,
-                    callbackUrl: "/",
-                  });
-                }}
-              >
-                <Image priority src={googleIcon} alt={"google icon"} />
-                <span>Continue with Google</span>
-              </Button>
+              {providers?.google && (
+                <Button
+                  variant="outline"
+                  className="my-4 flex w-full items-center justify-center gap-x-2 rounded-lg py-2"
+                  onClick={() => {
+                    signIn(providers.google.id, {
+                      redirect: false,
+                      callbackUrl: "/",
+                    });
+                  }}
+                >
+                  <Image priority src={googleIcon} alt={"google icon"} />
+                  <span>Continue with Google</span>
+                </Button>
+              )}
               <form
                 className="my-4 flex flex-col space-y-4"
                 onSubmit={handleSignIn}
               >
-                <div className="relative flex items-center">
-                  <div className="w-full border-b" />
-                  <span className="z-10 mx-4 bg-white text-center text-xs font-medium text-slate-500">
-                    OR
-                  </span>
-                  <div className="w-full border-b" />
-                </div>
+                {Object.keys(providers ?? {}).length >= 2 && (
+                  <Separator>OR</Separator>
+                )}
                 <div className="flex flex-col">
                   <label className="mb-2 font-medium" htmlFor="email">
                     Email
