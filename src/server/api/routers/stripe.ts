@@ -5,7 +5,6 @@ import getBaseUrl from "../../../utils/getBaseUrl";
 import stripe from "../stripe-server";
 import { adminProcedure, createTRPCRouter, publicProcedure } from "../trpc";
 
-
 // TODO: consolidate code here
 
 const stripeRouter = createTRPCRouter({
@@ -23,7 +22,7 @@ const stripeRouter = createTRPCRouter({
       // Create customer if not found
       if (!customer) {
         const stripeCustomer = await stripe.customers.create({
-          metadata: { userId: ctx.session.user.id },
+          metadata: { teamId: ctx.team.id },
           email: ctx.session.user.email ?? undefined,
         });
 
