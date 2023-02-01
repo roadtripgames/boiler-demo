@@ -142,6 +142,8 @@ export function Setup() {
   );
   const [isRunPlanetscaleStepComplete, setIsRunPlanetscaleStepComplete] =
     useLocalStorage("neorepo_isRunPlanetscaleStepComplete", "");
+  const [isStripeWebhookSetupComplete, setIsStripeWebhookSetupComplete] =
+    useLocalStorage("neorepo_isStripeWebhookSetupComplete", "");
 
   const STEPS: SetupStep[] = [
     {
@@ -162,6 +164,11 @@ export function Setup() {
             <Code>brew install mysql-client</Code>
             <Code>npm run dev</Code>
           </div>
+          <p>
+            You might see some errors in the console and we&apos;ll fix them
+            over the next few steps. If your local server crashes, you can find
+            the instructions in our docs or on your Vercel deployment.
+          </p>
           <Button
             onClick={() => setIsInstallStepComplete("done")}
             className="my-2 self-center"
@@ -174,48 +181,21 @@ export function Setup() {
       isComplete: !!isInstallStepComplete,
     },
     {
-      name: "Link to Vercel",
-      content: (
-        <div className="flex flex-col space-y-2">
-          <p>
-            We will be adding environment variables to Vercel, and we will need
-            to pull them down to your local development environment.
-          </p>
-          <div className="flex w-full flex-col rounded border bg-slate-100 px-4 py-3">
-            <Code>vercel login</Code>
-            <Code>vercel link # choose your project</Code>
-            <Code>vercel env pull .env.local</Code>
-          </div>
-          <p>
-            Your <Code>.env.local</Code> file should look something like this.
-          </p>
-          <div className="flex w-full flex-col rounded border bg-slate-100 px-4 py-3">
-            <Code># Created by Vercel CLI</Code>
-            <Code>VERCEL=&quot;1&quot;</Code>
-            <Code>VERCEL_ENV=&quot;development&quot;</Code>
-            <Code>... some more lines ...</Code>
-          </div>
-          <Button
-            onClick={() => setIsLinkStepComplete("done")}
-            className="my-2 self-center"
-          >
-            Mark done
-          </Button>
-        </div>
-      ),
-      isOptional: false,
-      isComplete: !!isLinkStepComplete,
-    },
-    {
       name: "Setup NextAuth",
       content: (
         <div className="space-y-2">
           <p>
-            We need to set two environment variables in Vercel for NextAuth to
-            work. <Code>NEXTAUTH_URL</Code> only needs to be set for
-            development, and <Code>NEXTAUTH_SECRET</Code> needs to be set for
-            all environments. We&apos;ve marked this with checkboxes and will be
-            following the same convention for the rest of this setup.
+            We need to set two environment variables{" "}
+            <Link href="https://vercel.com/docs/concepts/projects/environment-variables">
+              in Vercel
+            </Link>{" "}
+            for NextAuth to work. <Code>NEXTAUTH_URL</Code> only needs to be set
+            for development, and <Code>NEXTAUTH_SECRET</Code> needs to be set
+            for all environments.
+          </p>
+          <p>
+            We&apos;ve marked this with checkboxes and will be following the
+            same convention for the rest of this setup.
           </p>
           <Var
             envKey="NEXTAUTH_URL"
@@ -259,9 +239,30 @@ export function Setup() {
             }
           />
           <p>
-            Run <Code>vercel env pull .env.local</Code> to pull your changes.
-            Restart your dev server.
+            Now we need to pull down environment variables from Vercel to your
+            local development environment.
           </p>
+          <p>
+            <span className="font-medium text-orange-500">Warning</span> Do not
+            pull down your environment without setting the above variables in
+            Vercel first. It will lead to a broken state.
+          </p>
+          <div className="flex w-full flex-col rounded border bg-slate-100 px-4 py-3">
+            <Code>vercel login</Code>
+            <Code>vercel link # choose your project</Code>
+            <Code>vercel env pull .env.local</Code>
+          </div>
+          <p>
+            Your <Code>.env.local</Code> file should look something like this.
+          </p>
+          <div className="flex w-full flex-col rounded border bg-slate-100 px-4 py-3">
+            <Code># Created by Vercel CLI</Code>
+            <Code>VERCEL=&quot;1&quot;</Code>
+            <Code>VERCEL_ENV=&quot;development&quot;</Code>
+            <Code>... some more lines ...</Code>
+            <Code>NEXTAUTH_URL=&quot;http://localhost:3000&quot;</Code>
+            <Code>NEXTAUTH_SECRET=&quot;some-secret-value&quot;</Code>
+          </div>
         </div>
       ),
       isOptional: false,
@@ -332,10 +333,6 @@ export function Setup() {
             <Code>pscale org list</Code>
             <Code>pscale org switch your-planetscale-org-name</Code>
           </div>
-          <p>Then, push the local database to Planetscale by running</p>
-          <div className="flex w-full flex-col rounded border bg-slate-100 px-4 py-3">
-            <Code>npm run prisma db push</Code>
-          </div>
           <p>
             You also need to tunnel to Planetscale by running this command in a
             separate terminal and keeping it open.
@@ -346,6 +343,11 @@ export function Setup() {
             </Code>
             <Code># example: pscale connect kitchbook-db main --port 3309</Code>
           </div>
+          <p>Then, push the local database to Planetscale by running</p>
+          <div className="flex w-full flex-col rounded border bg-slate-100 px-4 py-3">
+            <Code>npm run prisma db push</Code>
+          </div>
+
           <Button
             onClick={() => setIsRunPlanetscaleStepComplete("done")}
             className="my-2 self-center"
@@ -402,9 +404,9 @@ export function Setup() {
       content: (
         <div>
           <div>
-            Once you&apos;ve connected to Stripe, new products and prices you
-            create will be synced automatically to the Products table via the
-            <Code>/stripe</Code> webhook.
+            Once you&apos;ve connected to Stripe, customers can manage their
+            payments from the Stripe billing portal on the <Code>/billing</Code>{" "}
+            page.
           </div>
           <Var envKey="STRIPE_SECRET_KEY" value={env.STRIPE_SECRET_KEY} />
           <Var
@@ -421,6 +423,50 @@ export function Setup() {
         isValidValue(env.STRIPE_SECRET_KEY) &&
         isValidValue(env.STRIPE_WEBHOOK_SECRET) &&
         isValidValue(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY),
+      isOptional: true,
+    },
+    {
+      name: "Configure Stripe Webhooks",
+      content: (
+        <div className="flex flex-col space-y-2">
+          <p>
+            To sync new products, prices, customers, and subscriptions, we need
+            to configure a webhook for Stripe to call. In production, Stripe
+            will call the webhook deployed in Vercel. For local development, you
+            can download the Stripe CLI and use a local listener.
+          </p>
+          <ol className="list-decimal pl-4">
+            <li>
+              Click the &quot;Add Endpoint&quot; button on the test{" "}
+              <Link href="https://dashboard.stripe.com/test/webhooks">
+                webhooks
+              </Link>{" "}
+              page in Stripe.
+            </li>
+            <li>
+              Set the endpoint URL to
+              https://your-deployment-url.vercel.app/api/webhooks
+            </li>
+            <li>
+              Click Select events under the Select events to listen to heading.
+            </li>
+            <li>
+              Click Select all events in the Select events to send section.
+            </li>
+            <li>
+              Click &quot;Add endpoint&quot; to finish creating the endpoint
+            </li>
+          </ol>
+
+          <Button
+            onClick={() => setIsStripeWebhookSetupComplete("done")}
+            className="my-2 self-center"
+          >
+            Mark done
+          </Button>
+        </div>
+      ),
+      isComplete: !!isStripeWebhookSetupComplete,
       isOptional: true,
     },
     {
