@@ -170,6 +170,7 @@ export function Setup() {
             <Code>yarn global add vercel</Code>
             <Code>brew install planetscale/tap/pscale</Code>
             <Code>brew install mysql-client</Code>
+            <Code>yarn install</Code>
             <Code>yarn dev</Code>
           </div>
           <p>
@@ -271,6 +272,7 @@ export function Setup() {
             <Code>NEXTAUTH_URL=&quot;http://localhost:3000&quot;</Code>
             <Code>NEXTAUTH_SECRET=&quot;some-secret-value&quot;</Code>
           </div>
+          <p>Restart your dev server to see the changes.</p>
         </div>
       ),
       isOptional: false,
