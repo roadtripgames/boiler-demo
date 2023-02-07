@@ -6,7 +6,7 @@ import { Button } from "../../components/design-system/Button";
 import Link from "next/link";
 import { useTeam } from "../../lib/useTeam";
 import { createSSG } from "../../utils/ssg";
-import NeorepoSetup from "../../components/app/NeorepoSetup";
+import Todos from "../../components/app/Todos";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { req, res } = context;
@@ -25,32 +25,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default function TeamHome() {
-  const { data: team } = useTeam();
-
   return (
     <div className="flex h-full min-h-screen flex-col">
       <Header />
       <div className="mx-auto flex h-full w-full max-w-7xl animate-fadeIn flex-col p-4">
-        {team && (
-          <div className="flex items-center gap-x-24">
-            <h1 className="text-xl font-medium">{team.name} workspace</h1>
-            <Link
-              className=""
-              href={{
-                pathname: `/[team]/settings/general`,
-                query: { team: team.slug },
-              }}
-            >
-              <Button>Manage team</Button>
-            </Link>
-          </div>
-        )}
-        <div className="my-4">
-          <NeorepoSetup />
+        <div className="container mx-auto w-full">
+          <Todos />
         </div>
-        <NeorepoAlert className="absolute bottom-4 right-4">
-          This is a team&apos;s home page
-        </NeorepoAlert>
       </div>
     </div>
   );

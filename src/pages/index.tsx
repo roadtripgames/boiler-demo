@@ -1,10 +1,11 @@
 import { useSession } from "next-auth/react";
 import Onboarding from "../components/app/Onboarding";
 import { api } from "../utils/api";
-import NeorepoSetup from "../components/app/NeorepoSetup";
 import CreateTeamModal from "../components/app/CreateTeamModal";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import { Button } from "../components/design-system/Button";
 
 export default function Home() {
   const router = useRouter();
@@ -30,8 +31,13 @@ export default function Home() {
   if (status === "unauthenticated") {
     return (
       <div className="relative flex h-full min-h-screen flex-col">
-        <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center overflow-auto">
-          <NeorepoSetup />
+        <div className="mx-auto flex h-full w-full max-w-7xl flex-col items-center justify-center overflow-auto">
+          <h1 className="mb-4 text-xl font-medium">
+            Welcome to the Neorepo demo
+          </h1>
+          <Link href="/auth/sign-in" className="mx-auto">
+            <Button>Sign in</Button>
+          </Link>
         </div>
       </div>
     );

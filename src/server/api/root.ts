@@ -4,6 +4,7 @@ import userRouter from "./routers/user";
 import teamsRouter from "./routers/teams";
 import billingRouter from "./routers/billing";
 import stripeRouter from "./routers/stripe";
+import todoRouter from "./routers/todos";
 
 /**
  * This is the primary router for your server.
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
   teams: teamsRouter,
   billing: billingRouter,
   stripe: stripeRouter,
+  todos: todoRouter,
 });
 
 // export type definition of API
