@@ -15,6 +15,7 @@ export default function Home() {
       enabled: !!session,
     }
   );
+
   const [createTeamModalOpen, setCreateTeamModalOpen] = useState(false);
 
   useEffect(() => {
