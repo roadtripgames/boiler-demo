@@ -600,7 +600,7 @@ export function Setup() {
 
   return (
     <div className="max-h-full w-[640px] overflow-auto">
-      <h1 className="text-xl font-medium">Neorepo Setup</h1>
+      <h1 className="text-xl font-medium">Project setup</h1>
       <Accordion
         type="multiple"
         value={openAccordionItems}
