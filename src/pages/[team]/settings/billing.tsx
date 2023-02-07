@@ -87,8 +87,9 @@ export function Product({
         }).format((price.unitAmount || 0) / 100)}
       </h4>
       <p className="mb-4 text-slate-500">per user, per month</p>
-      <h4 className="mb-2 h-12 text-sm text-slate-500">{description}</h4>
-
+      <h4 className="mb-2 min-h-[50px] text-sm text-slate-500">
+        {description}
+      </h4>
       <Button
         className="self-center px-5"
         loading={

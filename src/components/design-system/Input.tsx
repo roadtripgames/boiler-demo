@@ -10,7 +10,7 @@ const inputVariants = cva(
     variants: {
       variant: {
         default:
-          "border border-slate-300 px-3 focus:ring-2 focus:ring-primary-400 focus:ring-offset-2",
+          "bg-white border border-slate-300 px-3 focus:ring-2 focus:ring-primary-400 focus:ring-offset-2",
         flush: "border-none",
       },
     },
