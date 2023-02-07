@@ -1,6 +1,5 @@
 import type { GetServerSideProps } from "next/types";
 import Header from "../../components/app/Header";
-import NeorepoAlert from "../../components/design-system/NeorepoAlert";
 
 import { Button } from "../../components/design-system/Button";
 import Link from "next/link";

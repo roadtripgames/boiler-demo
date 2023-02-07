@@ -526,7 +526,7 @@ export function Setup() {
             for more info.
           </p>
           <p>
-            As an example, wee&apos;ve included a Google provider. Once you add
+            As an example, we&apos;ve included a Google provider. Once you add
             the <Code>GOOGLE_CLIENT_SECRET</Code> and{" "}
             <Code>GOOGLE_CLIENT_ID</Code> env vars, you&apos;ll see the option
             enabled in the <Link href="/auth/sign-in">sign in</Link> page.
