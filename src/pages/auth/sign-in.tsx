@@ -30,6 +30,7 @@ export default function SignInPage({
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const registerMutation = api.user.registerWithEmailAndPassword.useMutation();
 
@@ -38,10 +39,12 @@ export default function SignInPage({
       e.preventDefault();
 
       try {
+        setIsLoading(true);
         await registerMutation.mutateAsync({ email, password });
       } catch (e) {
         if (!(e instanceof TRPCClientError)) {
-          toast.error("Something went wrong");
+          toast.error("Could not sign in. Try again.");
+          setIsLoading(false);
           return;
         }
 
@@ -52,7 +55,7 @@ export default function SignInPage({
             toast.error(message);
           }
         } catch (e) {
-          toast.error("Something went wrong");
+          toast.error("Could not sign in. Try again.");
         }
       }
 
@@ -63,6 +66,7 @@ export default function SignInPage({
         callbackUrl: "/",
       });
 
+      setIsLoading(false);
       if (signInResp?.ok) {
         router.push("/");
       }
@@ -128,7 +132,9 @@ export default function SignInPage({
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                <Button className="w-full">Continue</Button>
+                <Button className="w-full" loading={isLoading}>
+                  Continue
+                </Button>
               </form>
             </div>
           </div>

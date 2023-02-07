@@ -148,6 +148,10 @@ export function Setup() {
     useLocalStorage("neorepo_isStripeWebhookSetupComplete", "");
   const [isThirdPartyAuthStepComplete, setIsThirdPartyAuthStepComplete] =
     useLocalStorage("neorepo_isThirdPartyAuthStepComplete", "");
+  const [
+    isEnvVariableRequiredStepComplete,
+    setIsEnvVariableRequiredStepComplete,
+  ] = useLocalStorage("neorepo_isEnvVariableRequiredStepComplete", "");
 
   const STEPS: SetupStep[] = [
     {
@@ -163,10 +167,10 @@ export function Setup() {
               git clone
               https://github.com/your-account/this-repo-you-deployed.git
             </Code>
-            <Code>npm i -g vercel</Code>
+            <Code>yarn global add vercel</Code>
             <Code>brew install planetscale/tap/pscale</Code>
             <Code>brew install mysql-client</Code>
-            <Code>npm run dev</Code>
+            <Code>yarn dev</Code>
           </div>
           <p>
             You might see some errors in the console and we&apos;ll fix them
@@ -349,7 +353,7 @@ export function Setup() {
           </div>
           <p>Then, push the local database to Planetscale by running</p>
           <div className="flex w-full flex-col rounded border bg-slate-100 px-4 py-3">
-            <Code>npm run prisma db push</Code>
+            <Code>yarn prisma db push</Code>
           </div>
 
           <Button
@@ -549,16 +553,25 @@ export function Setup() {
     {
       name: "Make environment variables required",
       content: (
-        <div>
-          To get this repo deployed quickly, Neorepo makes all of its env vars
-          optional. As you go through these steps, you should remove the{" "}
-          <Code>.optional()</Code> and <Code>.default()</Code> calls from the
-          Zod types in <Code>schema.mjs</Code>. Making these variables required
-          will help prevent pushing invalid configurations to your users.
+        <div className="flex flex-col space-y-2">
+          <p>
+            To get this repo deployed quickly, Neorepo makes all of its env vars
+            optional. As you go through these steps, you should remove the{" "}
+            <Code>.optional()</Code> and <Code>.default()</Code> calls from the
+            Zod types in <Code>schema.mjs</Code>. Making these variables
+            required will help prevent pushing invalid configurations to your
+            users.
+          </p>
+          <Button
+            onClick={() => setIsEnvVariableRequiredStepComplete("done")}
+            className="my-2 self-center"
+          >
+            Mark done
+          </Button>
         </div>
       ),
       isOptional: true,
-      isComplete: false,
+      isComplete: isEnvVariableRequiredStepComplete,
     },
     {
       name: "Cleanup",
@@ -594,6 +607,7 @@ export function Setup() {
     isRunPlanetscaleStepComplete,
     isStripeWebhookSetupComplete,
     isThirdPartyAuthStepComplete,
+    isEnvVariableRequiredStepComplete,
   ]);
 
   if (backendVars.isLoading) return <Spinner />;
