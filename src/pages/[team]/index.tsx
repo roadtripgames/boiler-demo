@@ -32,7 +32,7 @@ export default function TeamHome() {
 
   useEffect(() => {
     if (isError) {
-      router.push("@/");
+      router.push("/");
     } else {
       console.log("not pushing!");
     }
