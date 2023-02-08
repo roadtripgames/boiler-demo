@@ -3,8 +3,8 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import bcrypt from "bcrypt";
-import { prisma } from "../../../server/db";
-import { env } from "../../../env/server.mjs";
+import { prisma } from "@/server/db";
+import { env } from "@/env/server.mjs";
 import type { Provider } from "next-auth/providers";
 
 /**

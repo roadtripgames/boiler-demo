@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import Spinner from "../../components/design-system/Spinner";
-import { api } from "../../utils/api";
+import Spinner from "@/components/design-system/Spinner";
+import { api } from "@/utils/api";
 
 const AcceptInviteParams = z.object({
   email: z.string(),

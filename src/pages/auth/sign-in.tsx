@@ -1,17 +1,17 @@
 import Image from "next/image";
-import googleIcon from "../../../public/icons/google.svg";
-import companyLogo from "../../../public/logo.svg";
+import googleIcon from "@/public/icons/google.svg";
+import companyLogo from "@/public/logo.svg";
 import type { FormEvent } from "react";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
-import { Input } from "../../components/design-system/Input";
-import { Button } from "../../components/design-system/Button";
-import { api } from "../../utils/api";
+import { Input } from "@/components/design-system/Input";
+import { Button } from "@/components/design-system/Button";
+import { api } from "@/utils/api";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getProviders, signIn } from "next-auth/react";
 import { TRPCClientError } from "@trpc/client";
 import { toast } from "react-hot-toast";
-import Separator from "../../components/design-system/Separator";
+import Separator from "@/components/design-system/Separator";
 import { z } from "zod";
 
 type Providers = Awaited<ReturnType<typeof getProviders>>;

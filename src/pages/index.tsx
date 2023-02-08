@@ -1,11 +1,13 @@
 import { useSession } from "next-auth/react";
-import Onboarding from "../components/app/Onboarding";
-import { api } from "../utils/api";
-import CreateTeamModal from "../components/app/CreateTeamModal";
+import Onboarding from "@/components/app/Onboarding";
+import { api } from "@/utils/api";
+import NeorepoSetup from "@/components/app/NeorepoSetup";
+import CreateTeamModal from "@/components/app/CreateTeamModal";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
-import { Button } from "../components/design-system/Button";
+import { Button } from "@/components/design-system/Button";
+import { PlusIcon } from "@radix-ui/react-icons";
+import Header from "@/components/app/Header";
 
 export default function Home() {
   const router = useRouter();

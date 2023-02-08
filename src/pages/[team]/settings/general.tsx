@@ -13,12 +13,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../../../components/design-system/AlertDialog";
-import { Button } from "../../../components/design-system/Button";
-import { Input } from "../../../components/design-system/Input";
-import { TeamRouteQueryType, useTeam } from "../../../lib/useTeam";
-import { api } from "../../../utils/api";
-import { createSSG } from "../../../utils/ssg";
+} from "@/components/design-system/AlertDialog";
+import { Button } from "@/components/design-system/Button";
+import { Input } from "@/components/design-system/Input";
+import { TeamRouteQueryType, useTeam } from "@/lib/useTeam";
+import { api } from "@/utils/api";
+import { createSSG } from "@/utils/ssg";
 import SettingsLayout from "./layout";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {

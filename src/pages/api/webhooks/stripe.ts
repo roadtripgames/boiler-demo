@@ -1,10 +1,10 @@
 import type Stripe from "stripe";
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { Readable } from "node:stream";
-import { env } from "../../../env/server.mjs";
-import { createTRPCContext } from "../../../server/api/trpc";
-import { appRouter } from "../../../server/api/root";
-import stripe from "../../../server/api/stripe-server";
+import { env } from "@/env/server.mjs";
+import { createTRPCContext } from "@/server/api/trpc";
+import { appRouter } from "@/server/api/root";
+import stripe from "@/server/api/stripe-server";
 
 // Stripe requires the raw body to construct the event.
 export const config = {

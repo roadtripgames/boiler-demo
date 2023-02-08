@@ -1,9 +1,9 @@
 import type { LinkProps } from "next/link";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import Header from "../../../components/app/Header";
-import cn from "../../../lib/cn";
-import { useTeam } from "../../../lib/useTeam";
+import Header from "@/components/app/Header";
+import cn from "@/lib/cn";
+import { useTeam } from "@/lib/useTeam";
 
 function PageLink({
   name,

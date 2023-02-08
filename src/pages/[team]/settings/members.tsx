@@ -8,21 +8,21 @@ import clsx from "clsx";
 import type { GetServerSideProps } from "next";
 import React, { useCallback, useState } from "react";
 import { toast } from "react-hot-toast";
-import { Avatar } from "../../../components/design-system/Avatar";
-import { Button } from "../../../components/design-system/Button";
+import { Avatar } from "@/components/design-system/Avatar";
+import { Button } from "@/components/design-system/Button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../../components/design-system/Dropdown";
-import { TabbedContainer } from "../../../components/design-system/TabbedContainer";
-import { Input } from "../../../components/design-system/Input";
-import type { Role } from "../../../lib/roles";
-import { ROLE_MEMBER, ROLES } from "../../../lib/roles";
-import { TeamRouteQueryType, useTeam } from "../../../lib/useTeam";
-import { api } from "../../../utils/api";
-import { createSSG } from "../../../utils/ssg";
+} from "@/components/design-system/Dropdown";
+import { TabbedContainer } from "@/components/design-system/TabbedContainer";
+import { Input } from "@/components/design-system/Input";
+import type { Role } from "@/lib/roles";
+import { ROLE_MEMBER, ROLES } from "@/lib/roles";
+import { TeamRouteQueryType, useTeam } from "@/lib/useTeam";
+import { api } from "@/utils/api";
+import { createSSG } from "@/utils/ssg";
 import SettingsLayout from "./layout";
 import {
   Select,
@@ -30,7 +30,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../../components/design-system/Select";
+} from "@/components/design-system/Select";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { req, res } = context;

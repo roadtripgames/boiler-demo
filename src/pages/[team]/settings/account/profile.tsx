@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { Avatar } from "../../../../components/design-system/Avatar";
-import { Button } from "../../../../components/design-system/Button";
-import { Input } from "../../../../components/design-system/Input";
-import type { RouterOutputs } from "../../../../utils/api";
-import { api } from "../../../../utils/api";
+import { Avatar } from "@/components/design-system/Avatar";
+import { Button } from "@/components/design-system/Button";
+import { Input } from "@/components/design-system/Input";
+import type { RouterOutputs } from "@/utils/api";
+import { api } from "@/utils/api";
 import SettingsLayout from "../layout";
 
 type UserProfileFormProps = {

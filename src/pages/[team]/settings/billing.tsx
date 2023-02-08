@@ -3,18 +3,18 @@ import { PricingPlanInterval } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "../../../components/design-system/Button";
-import Spinner from "../../../components/design-system/Spinner";
+import { Button } from "@/components/design-system/Button";
+import Spinner from "@/components/design-system/Spinner";
 import {
   Tabs,
   TabsList,
   TabsTrigger,
-} from "../../../components/design-system/TabSelector";
-import cn from "../../../lib/cn";
-import getStripe from "../../../lib/stripe-client";
-import { useTeam } from "../../../lib/useTeam";
-import type { RouterOutputs } from "../../../utils/api";
-import { api } from "../../../utils/api";
+} from "@/components/design-system/TabSelector";
+import cn from "@/lib/cn";
+import getStripe from "@/lib/stripe-client";
+import { useTeam } from "@/lib/useTeam";
+import type { RouterOutputs } from "@/utils/api";
+import { api } from "@/utils/api";
 import SettingsLayout from "./layout";
 
 export function Product({

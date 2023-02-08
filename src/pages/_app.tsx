@@ -2,8 +2,8 @@ import Head from "next/head";
 import { Toaster } from "react-hot-toast";
 import { Inter } from "@next/font/google";
 import type { AppType } from "next/app";
-import "../styles/globals.css";
-import { api } from "../utils/api";
+import "@/styles/globals.css";
+import { api } from "@/utils/api";
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 
