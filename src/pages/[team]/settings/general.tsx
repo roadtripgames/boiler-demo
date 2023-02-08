@@ -53,26 +53,36 @@ export default function General() {
 
     try {
       await deleteMutation.mutateAsync({ teamId: team.id });
+      utils.invalidate(undefined, {
+        queryKey: api.user.getQueryKey(),
+      });
+      utils.invalidate(undefined, {
+        queryKey: api.teams.get.getQueryKey({ slug: team.slug }),
+      });
       router.push("/");
     } catch (e) {
       if (e instanceof TRPCClientError) {
         toast.error(e.message);
       }
     }
-  }, [deleteMutation, router, team]);
+  }, [deleteMutation, router, team, utils]);
 
   const handleLeaveTeam = useCallback(async () => {
     if (!team) return;
 
     try {
       await leaveMutation.mutateAsync({ teamId: team.id });
+      utils.invalidate(undefined, { queryKey: [api.user.getQueryKey()] });
+      utils.invalidate(undefined, {
+        queryKey: api.teams.get.getQueryKey({ slug: team.slug }),
+      });
       router.push("/");
     } catch (e) {
       if (e instanceof TRPCClientError) {
         toast.error(e.message);
       }
     }
-  }, [leaveMutation, router, team]);
+  }, [leaveMutation, router, team, utils]);
 
   const [name, setName] = useState(team?.name ?? "");
   const [slug, setSlug] = useState(team?.slug ?? "");

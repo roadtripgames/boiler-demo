@@ -22,9 +22,9 @@ export default function Home() {
   useEffect(() => {
     const team = user?.teams[0];
     if (team) {
-      router.push(`${team.slug}/`);
+      // router.push(`${team.slug}/`);
     } else if (!userIsLoading) {
-      setCreateTeamModalOpen(true);
+      // setCreateTeamModalOpen(true);
     }
   }, [router, user, userIsLoading]);
 
@@ -48,20 +48,39 @@ export default function Home() {
   }
 
   if (!user.hasOnboarded) {
-    return (
-      <>
-        <Onboarding />;
-      </>
-    );
+    return <Onboarding />;
   }
 
   return (
     <>
       <div className="flex h-full min-h-screen flex-col">
+        <Header />
         <CreateTeamModal
           open={createTeamModalOpen}
           onOpenChange={setCreateTeamModalOpen}
         />
+        <div className="container mx-auto mt-8 max-w-7xl">
+          <h1 className="mb-4 text-xl font-medium">Teams</h1>
+          {user.teams && (
+            <>
+              <div className="flex flex-wrap gap-4">
+                {user.teams.map((team) => (
+                  <div key={team.id} className="h-48 w-48 rounded border">
+                    {team.name}
+                  </div>
+                ))}
+                <Button
+                  variant={"outline"}
+                  className="h-48 w-48 space-x-2"
+                  onClick={() => setCreateTeamModalOpen(true)}
+                >
+                  <PlusIcon className="" />
+                  <span>Create team</span>
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </>
   );

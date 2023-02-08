@@ -12,8 +12,14 @@ import { getProviders, signIn } from "next-auth/react";
 import { TRPCClientError } from "@trpc/client";
 import { toast } from "react-hot-toast";
 import Separator from "../../components/design-system/Separator";
+import { z } from "zod";
 
 type Providers = Awaited<ReturnType<typeof getProviders>>;
+
+const AcceptInviteParams = z.object({
+  email: z.string(),
+  code: z.string(),
+});
 
 export const getServerSideProps: GetServerSideProps<{
   providers: Providers;
@@ -31,6 +37,12 @@ export default function SignInPage({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const acceptInviteParams = AcceptInviteParams.safeParse(router.query);
+  const callbackUrl = acceptInviteParams.success
+    ? `/auth/accept-invite?email=${encodeURIComponent(
+        acceptInviteParams.data.email
+      )}&code=${encodeURIComponent(acceptInviteParams.data.code)}`
+    : "/";
 
   const registerMutation = api.user.registerWithEmailAndPassword.useMutation();
 
@@ -63,18 +75,16 @@ export default function SignInPage({
         email,
         password,
         redirect: false,
-        callbackUrl: "/",
+        callbackUrl,
       });
 
       setIsLoading(false);
       if (signInResp?.ok) {
-        router.push("/");
+        router.push(callbackUrl);
       }
     },
-    [email, password, providers, registerMutation, router]
+    [email, password, providers, registerMutation, router, callbackUrl]
   );
-
-  console.log(providers);
 
   return (
     <div className="flex h-full flex-col">
@@ -93,7 +103,7 @@ export default function SignInPage({
                   onClick={() => {
                     signIn(providers.google.id, {
                       redirect: false,
-                      callbackUrl: "/",
+                      callbackUrl,
                     });
                   }}
                 >

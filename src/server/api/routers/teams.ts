@@ -1,5 +1,6 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { TRPCError } from "@trpc/server";
+import { nanoid } from "nanoid";
 import { z } from "zod";
 import { ROLE_ADMIN, ROLE_MEMBER } from "../../../lib/roles";
 import { send } from "../email";
@@ -9,6 +10,7 @@ import {
   createTRPCRouter,
   memberProcedure,
   protectedProcedure,
+  publicProcedure,
 } from "../trpc";
 
 const teamsRouter = createTRPCRouter({
@@ -147,6 +149,7 @@ const teamsRouter = createTRPCRouter({
           email,
           role,
           teamId: team.id,
+          code: nanoid(),
         })),
         skipDuplicates: true,
       });
@@ -171,7 +174,7 @@ const teamsRouter = createTRPCRouter({
         )
       );
     }),
-  invites: adminProcedure.query(async ({ ctx }) => {
+  invites: memberProcedure.query(async ({ ctx }) => {
     const invites = await ctx.prisma.userInvite.findMany({
       where: {
         teamId: ctx.team.id,
@@ -232,6 +235,40 @@ const teamsRouter = createTRPCRouter({
         },
         data: { name: input.role },
       });
+    }),
+  acceptInvite: protectedProcedure
+    .input(z.object({ code: z.string(), email: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const invite = await ctx.prisma.userInvite.findFirst({
+        where: { code: input.code, email: input.email },
+        include: { team: true },
+      });
+
+      if (!invite) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Invite not found`,
+        });
+      }
+
+      await ctx.prisma.userInvite.delete({ where: { id: invite.id } });
+      const team = await ctx.prisma.team.update({
+        data: {
+          users: {
+            connect: { id: ctx.session.user.id },
+          },
+          roles: {
+            create: {
+              name: invite.role,
+              user: { connect: { id: ctx.session.user.id } },
+            },
+          },
+        },
+        where: { id: invite.teamId },
+        select: { id: true, name: true, slug: true },
+      });
+
+      return team;
     }),
 });
 

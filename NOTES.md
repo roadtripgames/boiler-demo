@@ -1,6 +1,11 @@
 # Notes
 
-## General TODO
+## Scoped todo
+
+- magic link auth
+- accept email invite functionality
+
+## Icebox
 
 - "TeamProtectedRoute" -- only show if you're in the team?
 - tackle quantity in pricing page
@@ -8,7 +13,6 @@
 - responsiveness prototype
 - magic link auth
 - implement reset password functionality
-- implement email invite functionality
 - implement loading screens for some components
 - use get serverside props for everything
 - delete confirm modal
