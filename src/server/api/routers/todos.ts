@@ -10,7 +10,11 @@ const todoRouter = createTRPCRouter({
     .input(z.object({ text: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.todo.create({
-        data: { text: input.text, teamId: ctx.team.id },
+        data: {
+          text: input.text,
+          teamId: ctx.team.id,
+          createdByUserId: ctx.session.user.id,
+        },
       });
     }),
 });

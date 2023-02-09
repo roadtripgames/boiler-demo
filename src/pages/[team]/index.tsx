@@ -1,14 +1,8 @@
 import type { GetServerSideProps } from "next/types";
 import Header from "@/components/app/Header";
 
-import { Button } from "@/components/design-system/Button";
-import Link from "next/link";
-import { useTeam } from "@/lib/useTeam";
 import { createSSG } from "@/utils/ssg";
-import NeorepoSetup from "@/components/app/NeorepoSetup";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import Spinner from "@/components/design-system/Spinner";
+import Todos from "@/components/app/Todos";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { req, res } = context;
@@ -27,25 +21,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default function TeamHome() {
-  const router = useRouter();
-  const { data: team, isError } = useTeam();
-
-  useEffect(() => {
-    if (isError) {
-      router.push("/");
-    } else {
-      console.log("not pushing!");
-    }
-  }, [isError, router]);
-
-  if (!team) {
-    return (
-      <div className="flex h-full w-full items-center justify-between">
-        <Spinner />
-      </div>
-    );
-  }
-
   return (
     <div className="flex h-full min-h-screen flex-col">
       <Header />

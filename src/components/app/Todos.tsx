@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useTeam } from "../../lib/useTeam";
-import { api } from "../../utils/api";
-import { Button } from "../design-system/Button";
-import { Input } from "../design-system/Input";
+import { useTeam } from "@/lib/useTeam";
+import { api } from "@/utils/api";
+import { Button } from "@/components/design-system/Button";
+import { Input } from "@/components/design-system/Input";
 
 function CreateInput() {
   const { data: team } = useTeam();
